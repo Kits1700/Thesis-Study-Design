@@ -7,6 +7,11 @@ const openai = new OpenAI({
 
 export async function generateLiteratureReview(topic: string): Promise<string> {
   try {
+    // Check if OpenAI API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OpenAI API key not configured. Please provide your API key to enable AI-powered content generation.");
+    }
+
     const prompt = `Generate a comprehensive academic literature review on the topic: "${topic}".
 
 The review should include:
@@ -45,7 +50,12 @@ Include realistic but fictitious citations in the format: (Author et al., Year).
     return content;
   } catch (error: any) {
     console.error("Error generating literature review:", error);
-    throw new Error(`Failed to generate literature review: ${error.message}`);
+    // Return an error message that will be displayed to the user
+    return `<div class="p-4 border border-red-500 rounded-lg bg-red-50 text-red-800">
+      <h3 class="font-semibold mb-2">Unable to Generate Literature Review</h3>
+      <p>OpenAI API key is required to generate AI-powered content. Please provide your API key to enable this feature.</p>
+      <p class="text-sm mt-2">Error: ${error.message}</p>
+    </div>`;
   }
 }
 
@@ -55,6 +65,11 @@ export async function generateArgumentExploration(
   counterarguments?: string
 ): Promise<string> {
   try {
+    // Check if OpenAI API key is available
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OpenAI API key not configured. Please provide your API key to enable AI-powered content generation.");
+    }
+
     let prompt = `Generate a comprehensive argument exploration for the topic: "${topic}".
 
 The exploration should include:
@@ -102,7 +117,12 @@ The content should be thorough (600-1000 words) and demonstrate critical thinkin
     return content;
   } catch (error: any) {
     console.error("Error generating argument exploration:", error);
-    throw new Error(`Failed to generate argument exploration: ${error.message}`);
+    // Return an error message that will be displayed to the user
+    return `<div class="p-4 border border-red-500 rounded-lg bg-red-50 text-red-800">
+      <h3 class="font-semibold mb-2">Unable to Generate Argument Exploration</h3>
+      <p>OpenAI API key is required to generate AI-powered content. Please provide your API key to enable this feature.</p>
+      <p class="text-sm mt-2">Error: ${error.message}</p>
+    </div>`;
   }
 }
 

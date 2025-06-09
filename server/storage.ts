@@ -40,6 +40,8 @@ export class MemStorage implements IStorage {
       id,
       startTime: new Date(),
       completedAt: null,
+      currentStep: insertParticipant.currentStep || "overview",
+      studyData: insertParticipant.studyData || {},
     };
     this.participants.set(insertParticipant.participantId, participant);
     return participant;
@@ -61,8 +63,15 @@ export class MemStorage implements IStorage {
   async createTask(insertTask: InsertTask): Promise<Task> {
     const id = this.taskIdCounter++;
     const task: Task = {
-      ...insertTask,
       id,
+      participantId: insertTask.participantId,
+      taskId: insertTask.taskId,
+      taskType: insertTask.taskType,
+      frictionType: insertTask.frictionType,
+      topic: insertTask.topic ?? null,
+      initialThoughts: insertTask.initialThoughts ?? null,
+      counterarguments: insertTask.counterarguments ?? null,
+      generatedContent: insertTask.generatedContent ?? {},
       startTime: new Date(),
       completedAt: null,
     };

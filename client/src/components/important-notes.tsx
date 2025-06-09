@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useStudyStore } from "@/lib/study-store";
 import { Lightbulb, Clock, Target, Users } from "lucide-react";
 
-function ImportantNotes() {
+export default function ImportantNotes() {
   const { setCurrentStep } = useStudyStore();
 
   const handleNext = () => {
@@ -102,5 +102,3 @@ function ImportantNotes() {
     </div>
   );
 }
-
-export default ImportantNotes;

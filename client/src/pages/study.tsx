@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useStudyStore } from "@/lib/study-store";
 import StudyHeader from "@/components/study-header";
 import TaskOverview from "@/components/task-overview";
+import ImportantNotes from "@/components/important-notes";
+import TaskSelection from "@/components/task-selection";
 import LiteratureReview from "@/components/literature-review";
 import ArgumentExploration from "@/components/argument-exploration";
 import Questionnaire from "@/components/questionnaire";
@@ -39,6 +41,10 @@ export default function StudyPage() {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case "overview":
+        return <TaskOverview />;
+      case "important_notes":
+        return <ImportantNotes />;
+      case "task_overview":
         return <TaskOverview />;
       case "literature_review":
         return <LiteratureReview />;

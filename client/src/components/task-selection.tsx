@@ -70,21 +70,21 @@ export default function TaskSelection() {
   };
 
   return (
-    <section className="py-8 px-6">
+    <div className="min-h-screen bg-gray-900 py-8 px-6">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold mb-4">Complete Four Tasks</h1>
+          <h1 className="text-3xl font-bold mb-4 text-white">Complete Four Tasks</h1>
           <div className="space-y-4">
             <div className="flex items-center justify-center space-x-2">
-              <Circle className="w-3 h-3 fill-secondary text-secondary" />
-              <span className="text-lg">
-                <strong>Full AI Assistance:</strong> Immediate access to AI responses
+              <Circle className="w-3 h-3 fill-teal-400 text-teal-400" />
+              <span className="text-lg text-gray-300">
+                <strong>Summative Task:</strong> Immediate access to AI responses
               </span>
             </div>
             <div className="flex items-center justify-center space-x-2">
-              <Circle className="w-3 h-3 fill-primary text-primary" />
-              <span className="text-lg">
-                <strong>Selective Friction AI Assistance:</strong> Complete preparatory work before accessing AI
+              <Circle className="w-3 h-3 fill-purple-400 text-purple-400" />
+              <span className="text-lg text-gray-300">
+                <strong>Generative Task:</strong> Complete preparatory work before accessing AI
               </span>
             </div>
           </div>
@@ -100,14 +100,14 @@ export default function TaskSelection() {
             return (
               <Card 
                 key={task.id}
-                className={`surface border border-border transition-colors ${
-                  isAvailable ? `hover:border-${task.color}/50 cursor-pointer` : 'opacity-50 cursor-not-allowed'
+                className={`bg-gray-800 border border-gray-700 transition-colors ${
+                  isAvailable ? 'hover:border-gray-500 cursor-pointer' : 'opacity-50 cursor-not-allowed'
                 }`}
                 onClick={isAvailable ? () => handleStartTask(task) : undefined}
               >
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className={`w-10 h-10 ${isSecondary ? 'bg-secondary text-black' : 'bg-primary text-white'} rounded-full flex items-center justify-center font-bold ${
+                    <div className={`w-10 h-10 ${isSecondary ? 'bg-teal-500 text-white' : 'bg-purple-600 text-white'} rounded-full flex items-center justify-center font-bold ${
                       !isAvailable ? 'opacity-50' : ''
                     }`}>
                       {isCompleted ? (
@@ -117,19 +117,19 @@ export default function TaskSelection() {
                       )}
                     </div>
                     <div className="flex-1">
-                      <h3 className={`text-xl font-semibold mb-2 ${!isAvailable ? 'text-muted-foreground' : ''}`}>
+                      <h3 className={`text-xl font-semibold mb-2 ${!isAvailable ? 'text-gray-500' : 'text-white'}`}>
                         {task.title}
                       </h3>
                       <p className={`text-sm font-medium mb-1 ${
-                        !isAvailable ? 'text-muted-foreground' : isSecondary ? 'text-secondary' : 'text-primary'
+                        !isAvailable ? 'text-gray-500' : isSecondary ? 'text-teal-400' : 'text-purple-400'
                       }`}>
-                        {task.type}
+                        {isSecondary ? 'Summative Task' : 'Generative Task'}
                       </p>
-                      <p className={`text-sm ${!isAvailable ? 'text-muted-foreground' : 'text-secondary'}`}>
+                      <p className={`text-sm ${!isAvailable ? 'text-gray-500' : 'text-gray-300'}`}>
                         {task.description}
                       </p>
                       {!isAvailable && !isCompleted && (
-                        <p className="text-xs text-muted-foreground mt-2 italic">
+                        <p className="text-xs text-gray-500 mt-2 italic">
                           Complete previous tasks first
                         </p>
                       )}
@@ -145,12 +145,12 @@ export default function TaskSelection() {
           <Button 
             onClick={handleBack}
             variant="outline" 
-            className="px-8 py-3 btn-surface"
+            className="px-8 py-3 border-gray-600 text-gray-300 hover:bg-gray-700"
           >
             Back
           </Button>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

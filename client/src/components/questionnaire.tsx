@@ -77,32 +77,13 @@ export default function Questionnaire() {
     onSuccess: () => {
       markTaskComplete(currentTask?.id || 0);
       
-      // Get the next task after completing current one
-      const currentTaskId = currentTask?.id || 0;
-      const nextTaskId = currentTaskId + 1;
-      
       // Check if all tasks are completed
-      if (nextTaskId > 4) {
+      const completedCount = (currentTask?.id || 0);
+      if (completedCount >= 4) {
         setCurrentStep("completion");
       } else {
-        // Set the next task and navigate directly to it
-        const tasks = [
-          { id: 1, title: "Literature Review", taskType: "literature_review", frictionType: "full_ai", color: "secondary" },
-          { id: 2, title: "Literature Review", taskType: "literature_review", frictionType: "selective_friction", color: "primary" },
-          { id: 3, title: "Argument Exploration", taskType: "argument_exploration", frictionType: "full_ai", color: "secondary" },
-          { id: 4, title: "Argument Exploration", taskType: "argument_exploration", frictionType: "selective_friction", color: "primary" }
-        ];
-        
-        const nextTask = tasks.find(t => t.id === nextTaskId);
-        if (nextTask) {
-          const { setCurrentTask: updateCurrentTask } = useStudyStore.getState();
-          updateCurrentTask(nextTask as any);
-          if (nextTask.taskType === "literature_review") {
-            setCurrentStep("literature_review");
-          } else {
-            setCurrentStep("argument_exploration");
-          }
-        }
+        // Return to task selection to show sequential progress
+        setCurrentStep("task_selection");
       }
     },
   });

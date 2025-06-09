@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useStudyStore } from "@/lib/study-store";
 import { apiRequest } from "@/lib/queryClient";
-import { Loader2, RefreshCw } from "lucide-react";
+import { Loader2, RefreshCw, CheckCircle } from "lucide-react";
 
 export default function ArgumentExploration() {
   const { currentTask, setCurrentStep } = useStudyStore();
@@ -52,41 +52,41 @@ export default function ArgumentExploration() {
   const isSelectiveFriction = currentTask?.frictionType === "selective_friction";
 
   return (
-    <section className="py-8 px-6">
+    <div className="min-h-screen bg-gray-900 py-8 px-6">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">
-            Task {currentTask?.id}: Brainstorming & Argument Exploration{" "}
-            <span className={isSelectiveFriction ? "text-primary" : "text-secondary"}>
-              ({isSelectiveFriction ? "Selective Friction" : "Full AI Assistance"})
+          <h1 className="text-3xl font-bold mb-2 text-white">
+            Task {currentTask?.id}: Argument Exploration{" "}
+            <span className={isSelectiveFriction ? "text-purple-400" : "text-teal-400"}>
+              ({isSelectiveFriction ? "Generative Task" : "Summative Task"})
             </span>
           </h1>
-          <p className="text-secondary">
+          <p className="text-gray-300">
             {isSelectiveFriction 
               ? "Complete your preparatory brainstorming work first, then unlock AI assistance to enhance and expand your ideas."
-              : "Enter your topic or question and receive immediate AI assistance for comprehensive brainstorming and argument exploration"
+              : "Your goal is to explore complex arguments on a topic of your choice by directly receiving help from the AI to develop comprehensive perspectives."
             }
           </p>
         </div>
 
         {!isSelectiveFriction ? (
-          <Card className="surface border border-border mb-8">
+          <Card className="bg-gray-800 border border-gray-700 mb-8">
             <CardHeader>
-              <CardTitle>Topic or Question</CardTitle>
-              <p className="text-secondary text-sm">Provide any topic, question, or problem you'd like to explore. AI will immediately help you brainstorm ideas and arguments</p>
+              <CardTitle className="text-white">Topic or Question</CardTitle>
+              <p className="text-gray-300 text-sm">Provide any topic, question, or problem you'd like to explore. AI will immediately help you brainstorm ideas and arguments</p>
             </CardHeader>
             <CardContent>
               <Textarea
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder="e.g. Should students pursue Masters in the US?"
-                className="bg-accent border-border text-foreground placeholder-secondary mb-4"
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 mb-4"
                 rows={3}
               />
               <Button 
                 onClick={handleGenerateArguments}
                 disabled={generateArgumentsMutation.isPending}
-                className="w-full bg-primary hover:bg-primary/90"
+                className="w-full bg-teal-600 hover:bg-teal-700 text-white"
               >
                 {generateArgumentsMutation.isPending ? (
                   <>
@@ -100,95 +100,113 @@ export default function ArgumentExploration() {
             </CardContent>
           </Card>
         ) : (
-          !isPreparatoryComplete && (
-            <>
-              <Card className="surface border border-border mb-6">
+          <>
+            {!isPreparatoryComplete && (
+              <>
+                <Card className="bg-gray-800 border border-gray-700 mb-8">
+                  <CardHeader>
+                    <CardTitle className="text-white">Topic or Question</CardTitle>
+                    <p className="text-gray-300 text-sm">What topic, question, or problem would you like to explore?</p>
+                  </CardHeader>
+                  <CardContent>
+                    <Textarea
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                      placeholder="e.g. Should students pursue Masters in the US?"
+                      className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                      rows={3}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-800 border border-gray-700 mb-8">
+                  <CardHeader>
+                    <CardTitle className="text-white">Initial Thoughts</CardTitle>
+                    <p className="text-gray-300 text-sm">Before getting AI help, brainstorm your own initial thoughts and ideas about this topic</p>
+                  </CardHeader>
+                  <CardContent>
+                    <Textarea
+                      value={initialThoughts}
+                      onChange={(e) => setInitialThoughts(e.target.value)}
+                      placeholder="Write your initial thoughts, ideas, or perspectives on this topic..."
+                      className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                      rows={5}
+                    />
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-800 border border-gray-700 mb-8">
+                  <CardHeader>
+                    <CardTitle className="text-white">Counterarguments</CardTitle>
+                    <p className="text-gray-300 text-sm">Think of potential counterarguments or opposing viewpoints to your initial thoughts</p>
+                  </CardHeader>
+                  <CardContent>
+                    <Textarea
+                      value={counterarguments}
+                      onChange={(e) => setCounterarguments(e.target.value)}
+                      placeholder="What are the potential counterarguments or opposing views..."
+                      className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                      rows={5}
+                    />
+                  </CardContent>
+                </Card>
+
+                <div className="text-center mb-8">
+                  <Button 
+                    onClick={handleGenerateArguments}
+                    disabled={generateArgumentsMutation.isPending || !topic || !initialThoughts || !counterarguments}
+                    className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3"
+                  >
+                    {generateArgumentsMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Generating Arguments...
+                      </>
+                    ) : (
+                      "Generate Enhanced Arguments"
+                    )}
+                  </Button>
+                </div>
+              </>
+            )}
+
+            {isPreparatoryComplete && (
+              <Card className="bg-gray-800 border border-gray-700 mb-8">
                 <CardHeader>
-                  <CardTitle>Topic or Question</CardTitle>
-                  <p className="text-secondary text-sm">Provide a clear topic or question you want to explore</p>
+                  <CardTitle className="text-white">Topic Summary</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <Textarea
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    placeholder="e.g. Should students pursue Masters in the US?"
-                    className="bg-accent border-border text-foreground placeholder-secondary"
-                    rows={4}
-                  />
+                <CardContent className="space-y-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-300 mb-2">Topic:</h4>
+                    <p className="text-gray-400">{topic}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-300 mb-2">Your Initial Thoughts:</h4>
+                    <p className="text-gray-400">{initialThoughts}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-300 mb-2">Counterarguments:</h4>
+                    <p className="text-gray-400">{counterarguments}</p>
+                  </div>
                 </CardContent>
               </Card>
-
-              <Card className="surface border border-border mb-6">
-                <CardHeader>
-                  <CardTitle>Your Initial Thoughts & Ideas</CardTitle>
-                  <p className="text-secondary text-sm">Write your own initial brainstorming and thoughts on this topic:</p>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    value={initialThoughts}
-                    onChange={(e) => setInitialThoughts(e.target.value)}
-                    placeholder="Share your initial thoughts, ideas"
-                    className="bg-accent border-border text-foreground placeholder-secondary"
-                    rows={4}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card className="surface border border-border mb-8">
-                <CardHeader>
-                  <CardTitle>Potential Counterarguments</CardTitle>
-                  <p className="text-secondary text-sm">Identify potential counterarguments or challenges to your ideas</p>
-                </CardHeader>
-                <CardContent>
-                  <Textarea
-                    value={counterarguments}
-                    onChange={(e) => setCounterarguments(e.target.value)}
-                    placeholder="What are the potential counterarguments"
-                    className="bg-accent border-border text-foreground placeholder-secondary"
-                    rows={4}
-                  />
-                </CardContent>
-              </Card>
-
-              <div className="flex justify-center mb-8">
-                <Button 
-                  onClick={handleGenerateArguments}
-                  disabled={generateArgumentsMutation.isPending}
-                  className="w-full max-w-md bg-primary hover:bg-primary/90"
-                >
-                  {generateArgumentsMutation.isPending ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Generating Arguments...
-                    </>
-                  ) : (
-                    "Generate Arguments"
-                  )}
-                </Button>
-              </div>
-            </>
-          )
+            )}
+          </>
         )}
 
         {generatedContent && (
-          <Card className="surface border border-border mb-8">
-            <CardContent className="p-6">
-              <div className="mb-4">
-                <p className="text-secondary text-sm mb-4">
-                  Whether students should pursue a Master's degree in the US depends on several personal, professional, and financial factors. Here's a breakdown of the key pros and cons to help with a well-informed decision:
-                </p>
-              </div>
-
-              <div className="space-y-6">
-                <div dangerouslySetInnerHTML={{ __html: generatedContent }} />
-              </div>
-
-              <div className="flex justify-center mt-8">
-                <Button variant="outline" className="btn-surface">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Start New Session
-                </Button>
-              </div>
+          <Card className="bg-gray-800 border border-gray-700 mb-8">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2 text-green-400" />
+                Generated Argument Exploration
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div 
+                className="prose prose-invert max-w-none text-gray-300"
+                dangerouslySetInnerHTML={{ __html: generatedContent }} 
+              />
             </CardContent>
           </Card>
         )}
@@ -197,7 +215,7 @@ export default function ArgumentExploration() {
           <Button 
             onClick={handleBack}
             variant="outline" 
-            className="px-6 py-2"
+            className="px-6 py-2 border-gray-600 text-gray-300 hover:bg-gray-700"
           >
             Back
           </Button>
@@ -212,22 +230,22 @@ export default function ArgumentExploration() {
                     setIsPreparatoryComplete(false);
                   }
                 }}
-                className="btn-surface"
+                className="border-gray-600 text-gray-300 hover:bg-gray-700"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
-                Start New Session
+                Generate New Arguments
               </Button>
             )}
             <Button 
               onClick={handleNext} 
               disabled={!generatedContent}
-              className="bg-primary hover:bg-primary/90 px-6 py-2"
+              className={`px-6 py-2 ${isSelectiveFriction ? 'bg-purple-600 hover:bg-purple-700' : 'bg-teal-600 hover:bg-teal-700'} text-white`}
             >
               Next
             </Button>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

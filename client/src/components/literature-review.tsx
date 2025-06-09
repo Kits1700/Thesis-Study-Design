@@ -133,22 +133,42 @@ export default function LiteratureReview() {
         {(!isSelectiveFriction || isPreparatoryComplete) && (
           <>
             {!generatedContent && (
-              <div className="text-center mb-8">
-                <Button 
-                  onClick={handleGenerateReview}
-                  disabled={generateReviewMutation.isPending}
-                  className="bg-primary hover:bg-primary/90 px-8 py-3"
-                >
-                  {generateReviewMutation.isPending ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Generating Review...
-                    </>
-                  ) : (
-                    "Generate Literature Review"
-                  )}
-                </Button>
-              </div>
+              <>
+                <Card className="surface border border-border mb-8">
+                  <CardHeader>
+                    <CardTitle>Research Topic</CardTitle>
+                    <p className="text-secondary text-sm">
+                      Provide a clear and specific research topic for your literature review. The more detailed your topic, the better the AI can assist you.
+                    </p>
+                  </CardHeader>
+                  <CardContent>
+                    <Textarea
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                      placeholder="Enter Research Topic for Literature Review (e.g. Human LLM interaction)"
+                      className="bg-accent border-border text-foreground placeholder-secondary mb-4"
+                      rows={3}
+                    />
+                  </CardContent>
+                </Card>
+
+                <div className="text-center mb-8">
+                  <Button 
+                    onClick={handleGenerateReview}
+                    disabled={generateReviewMutation.isPending || !topic.trim()}
+                    className="bg-primary hover:bg-primary/90 px-8 py-3 w-full max-w-md"
+                  >
+                    {generateReviewMutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Generating Review...
+                      </>
+                    ) : (
+                      "Generate Literature Review"
+                    )}
+                  </Button>
+                </div>
+              </>
             )}
 
             {generatedContent && (

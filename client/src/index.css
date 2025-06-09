@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(0, 0%, 100%);
+  --muted: hsl(0, 0%, 10.2%);
+  --muted-foreground: hsl(0, 0%, 63.1%);
+  --popover: hsl(0, 0%, 10.2%);
+  --popover-foreground: hsl(0, 0%, 100%);
+  --card: hsl(0, 0%, 10.2%);
+  --card-foreground: hsl(0, 0%, 100%);
+  --border: hsl(0, 0%, 25.1%);
+  --input: hsl(0, 0%, 16.5%);
+  --primary: hsl(246, 85%, 67%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(151, 82%, 56%);
+  --secondary-foreground: hsl(0, 0%, 0%);
+  --accent: hsl(0, 0%, 16.5%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(246, 85%, 67%);
+  --radius: 0.75rem;
+  
+  --surface: hsl(0, 0%, 10.2%);
+  --surface-variant: hsl(0, 0%, 16.5%);
+  --text-secondary: hsl(0, 0%, 63.1%);
+}
+
+.dark {
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(0, 0%, 100%);
+  --muted: hsl(0, 0%, 10.2%);
+  --muted-foreground: hsl(0, 0%, 63.1%);
+  --popover: hsl(0, 0%, 10.2%);
+  --popover-foreground: hsl(0, 0%, 100%);
+  --card: hsl(0, 0%, 10.2%);
+  --card-foreground: hsl(0, 0%, 100%);
+  --border: hsl(0, 0%, 25.1%);
+  --input: hsl(0, 0%, 16.5%);
+  --primary: hsl(246, 85%, 67%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(151, 82%, 56%);
+  --secondary-foreground: hsl(0, 0%, 0%);
+  --accent: hsl(0, 0%, 16.5%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(246, 85%, 67%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+/* Custom styles for the study interface */
+.surface {
+  background-color: var(--surface);
+}
+
+.surface-variant {
+  background-color: var(--surface-variant);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+/* Radio button custom styling */
+input[type="radio"] {
+  @apply appearance-none w-4 h-4 border border-border rounded-full bg-surface-variant;
+  @apply checked:bg-primary checked:border-primary;
+  @apply focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+}
+
+input[type="radio"]:checked::after {
+  content: '';
+  @apply w-2 h-2 bg-white rounded-full absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Textarea custom styling */
+textarea {
+  @apply resize-none;
+}
+
+/* Button hover effects */
+.btn-surface:hover {
+  background-color: var(--border);
+}
+
+/* Progress bar styling */
+.progress-bar {
+  transition: width 0.3s ease-in-out;
+}

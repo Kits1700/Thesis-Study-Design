@@ -44,8 +44,8 @@ export default function StudyPage() {
         return <TaskOverview />;
       case "important_notes":
         return <ImportantNotes />;
-      case "task_overview":
-        return <TaskOverview />;
+      case "task_selection":
+        return <TaskSelection />;
       case "literature_review":
         return <LiteratureReview />;
       case "argument_exploration":

@@ -29,7 +29,7 @@ export default function CompletionScreen() {
   };
 
   const handleReturnToMenu = () => {
-    setCurrentStep("overview");
+    setCurrentStep("task_selection");
   };
 
   return (

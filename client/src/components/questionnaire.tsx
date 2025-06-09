@@ -76,7 +76,15 @@ export default function Questionnaire() {
     },
     onSuccess: () => {
       markTaskComplete(currentTask?.id || 0);
-      setCurrentStep("overview");
+      // Check if all tasks are completed
+      const allTaskIds = [1, 2, 3, 4];
+      const newCompletedTasks = [...useStudyStore.getState().completedTasks, currentTask?.id || 0];
+      
+      if (newCompletedTasks.length >= allTaskIds.length) {
+        setCurrentStep("completion");
+      } else {
+        setCurrentStep("task_selection");
+      }
     },
   });
 

@@ -46,6 +46,12 @@ export default function TaskSelection() {
   ];
 
   const handleStartTask = (task: any) => {
+    // Only allow sequential task completion
+    const nextTaskId = completedTasks.length + 1;
+    if (task.id !== nextTaskId) {
+      return; // Prevent clicking on non-sequential tasks
+    }
+    
     setCurrentTask(task);
     if (task.taskType === "literature_review") {
       setCurrentStep("literature_review");
@@ -53,6 +59,8 @@ export default function TaskSelection() {
       setCurrentStep("argument_exploration");
     }
   };
+
+  const getNextTaskId = () => completedTasks.length + 1;
 
   const handleBack = () => {
     setCurrentStep("important_notes");
@@ -82,17 +90,23 @@ export default function TaskSelection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {tasks.map((task) => {
             const isCompleted = completedTasks.includes(task.id);
+            const isNext = task.id === getNextTaskId();
+            const isAvailable = isCompleted || isNext;
             const isSecondary = task.color === "secondary";
             
             return (
               <Card 
                 key={task.id}
-                className={`surface border border-border hover:border-${task.color}/50 transition-colors cursor-pointer`}
-                onClick={() => handleStartTask(task)}
+                className={`surface border border-border transition-colors ${
+                  isAvailable ? `hover:border-${task.color}/50 cursor-pointer` : 'opacity-50 cursor-not-allowed'
+                }`}
+                onClick={isAvailable ? () => handleStartTask(task) : undefined}
               >
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className={`w-10 h-10 ${isSecondary ? 'bg-secondary text-black' : 'bg-primary text-white'} rounded-full flex items-center justify-center font-bold`}>
+                    <div className={`w-10 h-10 ${isSecondary ? 'bg-secondary text-black' : 'bg-primary text-white'} rounded-full flex items-center justify-center font-bold ${
+                      !isAvailable ? 'opacity-50' : ''
+                    }`}>
                       {isCompleted ? (
                         <CheckCircle className="w-6 h-6" />
                       ) : (
@@ -100,11 +114,22 @@ export default function TaskSelection() {
                       )}
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold mb-2">{task.title}</h3>
-                      <p className={`text-sm font-medium ${isSecondary ? 'text-secondary' : 'text-primary'} mb-1`}>
+                      <h3 className={`text-xl font-semibold mb-2 ${!isAvailable ? 'text-muted-foreground' : ''}`}>
+                        {task.title}
+                      </h3>
+                      <p className={`text-sm font-medium mb-1 ${
+                        !isAvailable ? 'text-muted-foreground' : isSecondary ? 'text-secondary' : 'text-primary'
+                      }`}>
                         {task.type}
                       </p>
-                      <p className="text-secondary text-sm">{task.description}</p>
+                      <p className={`text-sm ${!isAvailable ? 'text-muted-foreground' : 'text-secondary'}`}>
+                        {task.description}
+                      </p>
+                      {!isAvailable && !isCompleted && (
+                        <p className="text-xs text-muted-foreground mt-2 italic">
+                          Complete previous tasks first
+                        </p>
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -113,19 +138,13 @@ export default function TaskSelection() {
           })}
         </div>
 
-        <div className="flex justify-center space-x-4">
+        <div className="flex justify-center">
           <Button 
             onClick={handleBack}
             variant="outline" 
             className="px-8 py-3 btn-surface"
           >
             Back
-          </Button>
-          <Button 
-            onClick={() => handleStartTask(tasks[0])}
-            className="px-8 py-3 bg-primary hover:bg-primary/90"
-          >
-            Start Task
           </Button>
         </div>
       </div>

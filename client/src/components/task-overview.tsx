@@ -72,14 +72,14 @@ export default function TaskOverview() {
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="flex items-start space-x-4">
+              <div className="flex items-start space-x-4 p-4 bg-muted/30 rounded-lg">
                 <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white font-bold text-sm">1</div>
                 <div>
                   <h4 className="font-semibold mb-1">Literature Review</h4>
                   <p className="text-sm text-secondary">Generate comprehensive reviews with AI assistance</p>
                 </div>
               </div>
-              <div className="flex items-start space-x-4">
+              <div className="flex items-start space-x-4 p-4 bg-muted/30 rounded-lg">
                 <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white font-bold text-sm">2</div>
                 <div>
                   <h4 className="font-semibold mb-1">Argument Exploration</h4>

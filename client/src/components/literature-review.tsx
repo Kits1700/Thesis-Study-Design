@@ -11,7 +11,13 @@ export default function LiteratureReview() {
   const { currentTask, setCurrentStep } = useStudyStore();
   const [topic, setTopic] = useState("");
   const [initialThoughts, setInitialThoughts] = useState("");
-  const [paperAbstracts, setPaperAbstracts] = useState("");
+  const [paperAbstracts, setPaperAbstracts] = useState([
+    { id: 1, abstract: "", ranking: 0 },
+    { id: 2, abstract: "", ranking: 0 },
+    { id: 3, abstract: "", ranking: 0 },
+    { id: 4, abstract: "", ranking: 0 },
+    { id: 5, abstract: "", ranking: 0 }
+  ]);
   const [generatedContent, setGeneratedContent] = useState("");
   const [isPreparatoryComplete, setIsPreparatoryComplete] = useState(false);
 
@@ -25,10 +31,31 @@ export default function LiteratureReview() {
     },
   });
 
+  const updatePaperAbstract = (id: number, abstract: string) => {
+    setPaperAbstracts(prev => 
+      prev.map(paper => 
+        paper.id === id ? { ...paper, abstract } : paper
+      )
+    );
+  };
+
+  const updatePaperRanking = (id: number, ranking: number) => {
+    setPaperAbstracts(prev => 
+      prev.map(paper => 
+        paper.id === id ? { ...paper, ranking } : paper
+      )
+    );
+  };
+
   const handleGenerateReview = () => {
     if (currentTask?.frictionType === "selective_friction") {
-      if (!topic || !initialThoughts || !paperAbstracts) {
-        alert("Please complete all preparatory work before generating the review.");
+      if (!topic.trim()) {
+        alert("Please enter a research topic.");
+        return;
+      }
+      const filledAbstracts = paperAbstracts.filter(p => p.abstract.trim());
+      if (filledAbstracts.length < 5) {
+        alert("Please complete all 5 paper abstracts before generating the review.");
         return;
       }
       setIsPreparatoryComplete(true);
@@ -65,14 +92,16 @@ export default function LiteratureReview() {
           <>
             <Card className="surface border border-border mb-8">
               <CardHeader>
-                <CardTitle>Topic or Question</CardTitle>
-                <p className="text-secondary text-sm">Provide a clear topic or question you want to explore</p>
+                <CardTitle>Research Topic</CardTitle>
+                <p className="text-secondary text-sm">
+                  Provide a clear and specific research topic for your literature review. The more detailed your topic, the better the AI can assist you.
+                </p>
               </CardHeader>
               <CardContent>
                 <Textarea
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
-                  placeholder="e.g. Should students pursue Masters in the US?"
+                  placeholder="Enter Research Topic for Literature Review (e.g. Human LLM interaction)"
                   className="bg-accent border-border text-foreground placeholder-secondary"
                   rows={3}
                 />
@@ -81,40 +110,31 @@ export default function LiteratureReview() {
 
             <Card className="surface border border-border mb-8">
               <CardHeader>
-                <CardTitle>Your Initial Research & Thoughts</CardTitle>
-                <p className="text-secondary text-sm">Write your own initial research findings and thoughts on this topic:</p>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  value={initialThoughts}
-                  onChange={(e) => setInitialThoughts(e.target.value)}
-                  placeholder="Share your initial research findings, key insights, and thoughts"
-                  className="bg-accent border-border text-foreground placeholder-secondary"
-                  rows={4}
-                />
-              </CardContent>
-            </Card>
-
-            <Card className="surface border border-border mb-8">
-              <CardHeader>
                 <CardTitle>Paper Abstracts & Rankings</CardTitle>
-                <p className="text-secondary text-sm">Find and list 5-7 academic paper abstracts relevant to your topic, ranked by relevance:</p>
+                <p className="text-secondary text-sm">
+                  Find 5 paper abstracts and rank them by relevance (1 = most relevant, 5 = least relevant).
+                </p>
               </CardHeader>
-              <CardContent>
-                <Textarea
-                  value={paperAbstracts}
-                  onChange={(e) => setPaperAbstracts(e.target.value)}
-                  placeholder="1. [Most relevant] Title: ... Abstract: ... &#10;2. Title: ... Abstract: ... &#10;3. Title: ... Abstract: ..."
-                  className="bg-accent border-border text-foreground placeholder-secondary"
-                  rows={6}
-                />
+              <CardContent className="space-y-6">
+                {paperAbstracts.map((paper) => (
+                  <div key={paper.id} className="space-y-3">
+                    <label className="block text-sm font-medium text-foreground">Paper {paper.id}</label>
+                    <Textarea
+                      value={paper.abstract}
+                      onChange={(e) => updatePaperAbstract(paper.id, e.target.value)}
+                      placeholder="Copy Paste the Abstract"
+                      className="bg-accent border-border text-foreground placeholder-secondary min-h-[120px]"
+                      rows={5}
+                    />
+                  </div>
+                ))}
               </CardContent>
             </Card>
 
             <div className="flex justify-center mb-8">
               <Button 
                 onClick={handleGenerateReview}
-                disabled={generateReviewMutation.isPending}
+                disabled={generateReviewMutation.isPending || !topic.trim() || paperAbstracts.filter(p => p.abstract.trim()).length < 5}
                 className="w-full max-w-md bg-primary hover:bg-primary/90"
               >
                 {generateReviewMutation.isPending ? (

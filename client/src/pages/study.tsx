@@ -15,8 +15,14 @@ export default function StudyPage() {
     participantId, 
     currentStep, 
     initializeParticipant, 
-    updateProgress 
+    updateProgress,
+    resetStudy
   } = useStudyStore();
+
+  // Reset study data on first load to ensure clean state
+  useEffect(() => {
+    resetStudy();
+  }, []);
 
   const { data: participant } = useQuery({
     queryKey: [`/api/participant/${participantId}`],

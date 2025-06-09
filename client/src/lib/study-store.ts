@@ -22,6 +22,7 @@ interface StudyStore {
   setCurrentTask: (task: Task) => void;
   markTaskComplete: (taskId: number) => void;
   updateProgress: () => void;
+  resetStudy: () => void;
 }
 
 export const useStudyStore = create<StudyStore>()(
@@ -34,7 +35,12 @@ export const useStudyStore = create<StudyStore>()(
       progress: 0,
 
       initializeParticipant: (id: string) => {
-        set({ participantId: id });
+        set({ 
+          participantId: id,
+          completedTasks: [],
+          currentTask: null,
+          progress: 0
+        });
       },
 
       setCurrentStep: (step: string) => {
@@ -70,6 +76,16 @@ export const useStudyStore = create<StudyStore>()(
         const totalProgress = Math.min(baseProgress + taskBonus, 100);
         
         set({ progress: totalProgress });
+      },
+
+      resetStudy: () => {
+        set({
+          participantId: '',
+          currentStep: 'overview',
+          currentTask: null,
+          completedTasks: [],
+          progress: 0
+        });
       },
     }),
     {

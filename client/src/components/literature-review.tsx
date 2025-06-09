@@ -81,9 +81,9 @@ export default function LiteratureReview() {
         alert("Please enter a research topic.");
         return;
       }
-      const filledAbstracts = paperAbstracts.filter(p => p.abstract.trim());
+      const filledAbstracts = paperAbstracts.filter(p => p.abstract.trim().length > 10);
       if (filledAbstracts.length < 5) {
-        alert("Please complete all 5 paper abstracts before generating the review.");
+        alert("Please complete all 5 paper abstracts with at least 10 characters each before generating the review.");
         return;
       }
       setIsPreparatoryComplete(true);
@@ -181,6 +181,23 @@ export default function LiteratureReview() {
                 ))}
               </CardContent>
             </Card>
+
+            <div className="text-center mb-8">
+              <Button 
+                onClick={checkPreparatoryWork}
+                disabled={generateReviewMutation.isPending || !topic.trim() || paperAbstracts.filter(p => p.abstract.trim().length > 10).length < 5}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3"
+              >
+                {generateReviewMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Generating Literature Review...
+                  </>
+                ) : (
+                  "Generate Literature Review"
+                )}
+              </Button>
+            </div>
           </>
         )}
 

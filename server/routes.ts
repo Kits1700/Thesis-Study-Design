@@ -125,6 +125,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Submit final questionnaire
+  app.post("/api/questionnaire/final", async (req, res) => {
+    try {
+      const questionnaireData = insertQuestionnaireSchema.parse(req.body);
+      const questionnaire = await storage.createQuestionnaire(questionnaireData);
+      res.json(questionnaire);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
   // Get questionnaires by participant
   app.get("/api/questionnaires/:participantId", async (req, res) => {
     try {

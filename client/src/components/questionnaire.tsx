@@ -8,7 +8,7 @@ import { useStudyStore } from "@/lib/study-store";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function Questionnaire() {
-  const { currentTask, participantId, setCurrentStep, setCurrentTask, markTaskComplete } = useStudyStore();
+  const { currentTask, participantId, setCurrentStep, setCurrentTask, markTaskComplete, updateProgress } = useStudyStore();
   const [responses, setResponses] = useState<Record<string, string>>({});
 
   const questions = [
@@ -75,11 +75,12 @@ export default function Questionnaire() {
       return response.json();
     },
     onSuccess: () => {
-      markTaskComplete(currentTask?.id || 0);
+      const taskId = currentTask?.id || 0;
+      markTaskComplete(taskId);
+      updateProgress();
       
       // Check if all tasks are completed
-      const completedCount = (currentTask?.id || 0);
-      if (completedCount >= 4) {
+      if (taskId >= 4) {
         setCurrentStep("completion");
       } else {
         // Return to task selection to show sequential progress

@@ -51,6 +51,13 @@ export default function TaskSelection() {
   const handleStartTask = (task: any) => {
     // Only allow sequential task completion
     const nextTaskId = completedTasks.length + 1;
+    console.log('Task selection debug:', { 
+      taskId: task.id, 
+      nextTaskId, 
+      completedTasks,
+      canStart: task.id === nextTaskId 
+    });
+    
     if (task.id !== nextTaskId) {
       return; // Prevent clicking on non-sequential tasks
     }

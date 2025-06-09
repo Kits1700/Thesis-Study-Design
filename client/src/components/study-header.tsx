@@ -19,21 +19,21 @@ export default function StudyHeader() {
   };
 
   return (
-    <header className="surface border-b border-border py-4">
+    <header className="bg-gray-900 border-b border-gray-700 py-4">
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         <div>
-          <h1 className="text-sm font-medium text-secondary">
+          <h1 className="text-sm font-medium text-gray-300">
             {getStudyTitle()}
           </h1>
-          <p className="text-xs text-secondary mt-1">
+          <p className="text-xs text-gray-400 mt-1">
             Participant ID: <span className="font-mono">{participantId}</span>
           </p>
         </div>
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-secondary">Progress</span>
-          <div className="w-32 h-2 bg-surface-variant rounded-full overflow-hidden">
+        <div className="flex items-center space-x-3">
+          <span className="text-sm text-gray-300">Progress</span>
+          <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-primary rounded-full transition-all duration-300 progress-bar" 
+              className="h-full bg-purple-600 rounded-full transition-all duration-300" 
               style={{ width: `${progress}%` }}
             />
           </div>

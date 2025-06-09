@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useStudyStore } from "@/lib/study-store";
 import { Lightbulb, Clock, Target, Users } from "lucide-react";
 
-export default function ImportantNotes() {
+function ImportantNotes() {
   const { setCurrentStep } = useStudyStore();
 
   const handleNext = () => {
@@ -15,21 +15,21 @@ export default function ImportantNotes() {
   };
 
   return (
-    <section className="py-12 px-6">
+    <div className="min-h-screen bg-gray-900 text-white py-12 px-6">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-8">Important Notes</h1>
         </div>
 
         <div className="space-y-6 mb-12">
-          <Card className="surface border border-border">
+          <Card className="bg-gray-800 border border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 surface border border-border rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <Lightbulb className="w-4 h-4 text-secondary" />
+                <div className="w-8 h-8 bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <Lightbulb className="w-4 h-4 text-gray-400" />
                 </div>
                 <div>
-                  <p className="text-foreground">
+                  <p className="text-gray-300">
                     Choose topics you're genuinely interested in exploring
                   </p>
                 </div>
@@ -37,14 +37,14 @@ export default function ImportantNotes() {
             </CardContent>
           </Card>
 
-          <Card className="surface border border-border">
+          <Card className="bg-gray-800 border border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 surface border border-border rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <Clock className="w-4 h-4 text-secondary" />
+                <div className="w-8 h-8 bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <Clock className="w-4 h-4 text-gray-400" />
                 </div>
                 <div>
-                  <p className="text-foreground">
+                  <p className="text-gray-300">
                     Take your time - quality over speed
                   </p>
                 </div>
@@ -52,14 +52,14 @@ export default function ImportantNotes() {
             </CardContent>
           </Card>
 
-          <Card className="surface border border-border">
+          <Card className="bg-gray-800 border border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 surface border border-border rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <Target className="w-4 h-4 text-secondary" />
+                <div className="w-8 h-8 bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <Target className="w-4 h-4 text-gray-400" />
                 </div>
                 <div>
-                  <p className="text-foreground">
+                  <p className="text-gray-300">
                     Each task builds different skills in working with AI
                   </p>
                 </div>
@@ -67,14 +67,14 @@ export default function ImportantNotes() {
             </CardContent>
           </Card>
 
-          <Card className="surface border border-border">
+          <Card className="bg-gray-800 border border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 surface border border-border rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <Users className="w-4 h-4 text-secondary" />
+                <div className="w-8 h-8 bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                  <Users className="w-4 h-4 text-gray-400" />
                 </div>
                 <div>
-                  <p className="text-foreground">
+                  <p className="text-gray-300">
                     Your responses help improve AI collaboration tools
                   </p>
                 </div>
@@ -87,18 +87,20 @@ export default function ImportantNotes() {
           <Button 
             onClick={handleBack}
             variant="outline" 
-            className="px-8 py-3 btn-surface"
+            className="px-8 py-3 border-gray-600 text-gray-300 hover:bg-gray-700"
           >
             Back
           </Button>
           <Button 
             onClick={handleNext}
-            className="px-8 py-3 bg-primary hover:bg-primary/90"
+            className="px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white"
           >
             Next
           </Button>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
+
+export default ImportantNotes;

@@ -45,6 +45,10 @@ export default function ArgumentExploration() {
     setCurrentStep("questionnaire");
   };
 
+  const handleBack = () => {
+    setCurrentStep("task_selection");
+  };
+
   const isSelectiveFriction = currentTask?.frictionType === "selective_friction";
 
   return (
@@ -189,13 +193,39 @@ export default function ArgumentExploration() {
           </Card>
         )}
 
-        <div className="flex justify-center space-x-4">
-          <Button variant="outline" className="btn-surface">
+        <div className="flex justify-between">
+          <Button 
+            onClick={handleBack}
+            variant="outline" 
+            className="px-6 py-2"
+          >
             Back
           </Button>
-          <Button onClick={handleNext} className="bg-primary hover:bg-primary/90">
-            Next
-          </Button>
+          
+          <div className="flex space-x-4">
+            {generatedContent && (
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setGeneratedContent("");
+                  if (isSelectiveFriction) {
+                    setIsPreparatoryComplete(false);
+                  }
+                }}
+                className="btn-surface"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Start New Session
+              </Button>
+            )}
+            <Button 
+              onClick={handleNext} 
+              disabled={!generatedContent}
+              className="bg-primary hover:bg-primary/90 px-6 py-2"
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </section>

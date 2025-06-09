@@ -60,23 +60,22 @@ export default function LiteratureReview() {
     const dragIndex = parseInt(e.dataTransfer.getData("text/plain"));
     
     if (dragIndex !== dropIndex) {
-      const newAbstracts = [...paperAbstracts];
-      const draggedItem = newAbstracts[dragIndex];
-      newAbstracts.splice(dragIndex, 1);
-      newAbstracts.splice(dropIndex, 0, draggedItem);
+      const newPapers = [...paperAbstracts];
+      const draggedPaper = newPapers[dragIndex];
+      newPapers.splice(dragIndex, 1);
+      newPapers.splice(dropIndex, 0, draggedPaper);
       
-      // Update IDs to reflect new order (1 = most relevant)
-      const reorderedAbstracts = newAbstracts.map((paper, index) => ({
+      // Update rankings based on new order
+      const updatedPapers = newPapers.map((paper, index) => ({
         ...paper,
-        id: index + 1,
         ranking: index + 1
       }));
       
-      setPaperAbstracts(reorderedAbstracts);
+      setPaperAbstracts(updatedPapers);
     }
   };
 
-  const handleGenerateReview = () => {
+  const checkPreparatoryWork = () => {
     if (currentTask?.frictionType === "selective_friction") {
       if (!topic.trim()) {
         alert("Please enter a research topic.");
@@ -104,29 +103,29 @@ export default function LiteratureReview() {
   const isSelectiveFriction = currentTask?.frictionType === "selective_friction";
 
   return (
-    <section className="py-8 px-6">
+    <div className="min-h-screen bg-gray-900 py-8 px-6">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">
+          <h1 className="text-3xl font-bold mb-2 text-white">
             Task {currentTask?.id}: Literature Review{" "}
-            <span className={isSelectiveFriction ? "text-primary" : "text-secondary"}>
-              ({isSelectiveFriction ? "Selective Friction" : "Full AI Assistance"})
+            <span className={isSelectiveFriction ? "text-purple-400" : "text-teal-400"}>
+              ({isSelectiveFriction ? "Generative Task" : "Summative Task"})
             </span>
           </h1>
-          <p className="text-secondary">
+          <p className="text-gray-300">
             {isSelectiveFriction 
               ? "Complete your preparatory work first. Find 5-7 paper abstracts on your topic and rank them by relevance before accessing AI assistance."
-              : "Receive immediate AI assistance for comprehensive literature review generation."
+              : "Your goal is to create a short literature review on a topic of your choice by directly receiving help from the AI to generate a structured summary"
             }
           </p>
         </div>
 
         {isSelectiveFriction && !isPreparatoryComplete && (
           <>
-            <Card className="surface border border-border mb-8">
+            <Card className="bg-gray-800 border border-gray-700 mb-8">
               <CardHeader>
-                <CardTitle>Research Topic</CardTitle>
-                <p className="text-secondary text-sm">
+                <CardTitle className="text-white">Research Topic</CardTitle>
+                <p className="text-gray-300 text-sm">
                   Provide a clear and specific research topic for your literature review. The more detailed your topic, the better the AI can assist you.
                 </p>
               </CardHeader>
@@ -135,140 +134,112 @@ export default function LiteratureReview() {
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="Enter Research Topic for Literature Review (e.g. Human LLM interaction)"
-                  className="bg-accent border-border text-foreground placeholder-secondary"
+                  className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
                   rows={3}
                 />
               </CardContent>
             </Card>
 
-            <Card className="surface border border-border mb-8">
+            <Card className="bg-gray-800 border border-gray-700 mb-8">
               <CardHeader>
-                <CardTitle>Paper Abstracts & Rankings</CardTitle>
-                <p className="text-secondary text-sm">
-                  Find 5 paper abstracts and rank them by relevance (1 = most relevant, 5 = least relevant).
+                <CardTitle className="text-white">Paper Abstracts</CardTitle>
+                <p className="text-gray-300 text-sm">
+                  Find and input 5 paper abstracts related to your topic. Drag and drop to rank them by relevance (1 = most relevant).
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 {paperAbstracts.map((paper, index) => (
-                  <div 
-                    key={paper.id} 
-                    className="border border-border rounded-lg p-4 bg-card cursor-move hover:bg-accent/50 transition-colors"
+                  <div
+                    key={paper.id}
                     draggable
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, index)}
+                    className="bg-gray-700 border border-gray-600 rounded-lg p-4 cursor-move hover:bg-gray-600 transition-colors"
                   >
-                    <div className="flex items-center gap-3 mb-3">
-                      <GripVertical className="w-4 h-4 text-muted-foreground" />
-                      <div className="flex items-center gap-2">
-                        <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium">
+                    <div className="flex items-start space-x-3">
+                      <div className="flex flex-col items-center space-y-1">
+                        <GripVertical className="w-4 h-4 text-gray-400" />
+                        <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
                           {index + 1}
-                        </span>
-                        <label className="text-sm font-medium text-foreground">Paper {index + 1}</label>
+                        </div>
                       </div>
-                      {index === 0 && <span className="text-xs text-green-600 font-medium">Most Relevant</span>}
-                      {index === 4 && <span className="text-xs text-orange-600 font-medium">Least Relevant</span>}
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                          Paper {paper.id} Abstract
+                        </label>
+                        <Textarea
+                          value={paper.abstract}
+                          onChange={(e) => updatePaperAbstract(paper.id, e.target.value)}
+                          placeholder={`Enter abstract for paper ${paper.id}...`}
+                          className="bg-gray-600 border-gray-500 text-white placeholder-gray-400"
+                          rows={3}
+                        />
+                      </div>
                     </div>
-                    <Textarea
-                      value={paper.abstract}
-                      onChange={(e) => updatePaperAbstract(paper.id, e.target.value)}
-                      placeholder="Copy Paste the Abstract"
-                      className="bg-background border-border text-foreground placeholder-secondary min-h-[100px]"
-                      rows={4}
-                    />
                   </div>
                 ))}
-                <div className="text-center text-sm text-muted-foreground mt-4 p-3 bg-muted/50 rounded-lg">
-                  💡 Drag papers up and down to rank them by relevance (1 = most relevant, 5 = least relevant)
-                </div>
               </CardContent>
             </Card>
+          </>
+        )}
 
-            <div className="flex justify-center mb-8">
+        {(!isSelectiveFriction || isPreparatoryComplete) && (
+          <Card className="bg-gray-800 border border-gray-700 mb-8">
+            <CardHeader>
+              <CardTitle className="text-white">Research Topic</CardTitle>
+              <p className="text-gray-300 text-sm">
+                Provide a clear and specific research topic for your literature review. The more detailed your topic, the better the AI can assist you.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+                placeholder="Enter Research Topic for Literature Review (e.g. Human LLM interaction)"
+                className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 mb-4"
+                rows={3}
+              />
               <Button 
-                onClick={handleGenerateReview}
-                disabled={generateReviewMutation.isPending || !topic.trim() || paperAbstracts.filter(p => p.abstract.trim()).length < 5}
-                className="w-full max-w-md bg-primary hover:bg-primary/90"
+                onClick={checkPreparatoryWork}
+                disabled={generateReviewMutation.isPending || !topic.trim()}
+                className={`w-full ${isSelectiveFriction ? 'bg-purple-600 hover:bg-purple-700' : 'bg-teal-600 hover:bg-teal-700'} text-white`}
               >
                 {generateReviewMutation.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Generating Review...
+                    Generating Literature Review...
                   </>
                 ) : (
                   "Generate Literature Review"
                 )}
               </Button>
-            </div>
-          </>
+            </CardContent>
+          </Card>
         )}
 
-        {(!isSelectiveFriction || isPreparatoryComplete) && (
-          <>
-            {!generatedContent && (
-              <>
-                <Card className="surface border border-border mb-8">
-                  <CardHeader>
-                    <CardTitle>Research Topic</CardTitle>
-                    <p className="text-secondary text-sm">
-                      Provide a clear and specific research topic for your literature review. The more detailed your topic, the better the AI can assist you.
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <Textarea
-                      value={topic}
-                      onChange={(e) => setTopic(e.target.value)}
-                      placeholder="Enter Research Topic for Literature Review (e.g. Human LLM interaction)"
-                      className="bg-accent border-border text-foreground placeholder-secondary mb-4"
-                      rows={3}
-                    />
-                  </CardContent>
-                </Card>
-
-                <div className="text-center mb-8">
-                  <Button 
-                    onClick={handleGenerateReview}
-                    disabled={generateReviewMutation.isPending || !topic.trim()}
-                    className="bg-primary hover:bg-primary/90 px-8 py-3 w-full max-w-md"
-                  >
-                    {generateReviewMutation.isPending ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Generating Review...
-                      </>
-                    ) : (
-                      "Generate Literature Review"
-                    )}
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {generatedContent && (
-              <Card className="surface border border-border mb-8">
-                <CardHeader>
-                  <CardTitle>Literature Review: Cancer Vaccines</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6 text-sm leading-relaxed">
-                  <div dangerouslySetInnerHTML={{ __html: generatedContent }} />
-                  
-                  <div className="p-4 surface-variant rounded-lg">
-                    <div className="flex items-center space-x-2 text-secondary">
-                      <CheckCircle className="w-4 h-4" />
-                      <span className="text-sm font-medium">Literature Review Generated Successfully</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </>
+        {generatedContent && (
+          <Card className="bg-gray-800 border border-gray-700 mb-8">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center">
+                <CheckCircle className="w-5 h-5 mr-2 text-green-400" />
+                Generated Literature Review
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div 
+                className="prose prose-invert max-w-none text-gray-300"
+                dangerouslySetInnerHTML={{ __html: generatedContent }} 
+              />
+            </CardContent>
+          </Card>
         )}
 
         <div className="flex justify-between">
           <Button 
             onClick={handleBack}
             variant="outline" 
-            className="px-6 py-2"
+            className="px-6 py-2 border-gray-600 text-gray-300 hover:bg-gray-700"
           >
             Back
           </Button>
@@ -283,7 +254,7 @@ export default function LiteratureReview() {
                     setIsPreparatoryComplete(false);
                   }
                 }}
-                className="btn-surface"
+                className="border-gray-600 text-gray-300 hover:bg-gray-700"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Generate New Review
@@ -292,13 +263,13 @@ export default function LiteratureReview() {
             <Button 
               onClick={handleNext} 
               disabled={!generatedContent}
-              className="bg-primary hover:bg-primary/90 px-6 py-2"
+              className={`px-6 py-2 ${isSelectiveFriction ? 'bg-purple-600 hover:bg-purple-700' : 'bg-teal-600 hover:bg-teal-700'} text-white`}
             >
               Next
             </Button>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

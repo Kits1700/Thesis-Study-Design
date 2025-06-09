@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useStudyStore } from "@/lib/study-store";
 import { apiRequest } from "@/lib/queryClient";
-import { Loader2, RefreshCw, CheckCircle } from "lucide-react";
+import { Loader2, RefreshCw, CheckCircle, GripVertical } from "lucide-react";
 
 export default function LiteratureReview() {
   const { currentTask, setCurrentStep } = useStudyStore();
@@ -45,6 +45,35 @@ export default function LiteratureReview() {
         paper.id === id ? { ...paper, ranking } : paper
       )
     );
+  };
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    e.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    const dragIndex = parseInt(e.dataTransfer.getData("text/plain"));
+    
+    if (dragIndex !== dropIndex) {
+      const newAbstracts = [...paperAbstracts];
+      const draggedItem = newAbstracts[dragIndex];
+      newAbstracts.splice(dragIndex, 1);
+      newAbstracts.splice(dropIndex, 0, draggedItem);
+      
+      // Update IDs to reflect new order (1 = most relevant)
+      const reorderedAbstracts = newAbstracts.map((paper, index) => ({
+        ...paper,
+        id: index + 1,
+        ranking: index + 1
+      }));
+      
+      setPaperAbstracts(reorderedAbstracts);
+    }
   };
 
   const handleGenerateReview = () => {
@@ -115,19 +144,39 @@ export default function LiteratureReview() {
                   Find 5 paper abstracts and rank them by relevance (1 = most relevant, 5 = least relevant).
                 </p>
               </CardHeader>
-              <CardContent className="space-y-6">
-                {paperAbstracts.map((paper) => (
-                  <div key={paper.id} className="space-y-3">
-                    <label className="block text-sm font-medium text-foreground">Paper {paper.id}</label>
+              <CardContent className="space-y-4">
+                {paperAbstracts.map((paper, index) => (
+                  <div 
+                    key={paper.id} 
+                    className="border border-border rounded-lg p-4 bg-card cursor-move hover:bg-accent/50 transition-colors"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, index)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, index)}
+                  >
+                    <div className="flex items-center gap-3 mb-3">
+                      <GripVertical className="w-4 h-4 text-muted-foreground" />
+                      <div className="flex items-center gap-2">
+                        <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-medium">
+                          {index + 1}
+                        </span>
+                        <label className="text-sm font-medium text-foreground">Paper {index + 1}</label>
+                      </div>
+                      {index === 0 && <span className="text-xs text-green-600 font-medium">Most Relevant</span>}
+                      {index === 4 && <span className="text-xs text-orange-600 font-medium">Least Relevant</span>}
+                    </div>
                     <Textarea
                       value={paper.abstract}
                       onChange={(e) => updatePaperAbstract(paper.id, e.target.value)}
                       placeholder="Copy Paste the Abstract"
-                      className="bg-accent border-border text-foreground placeholder-secondary min-h-[120px]"
-                      rows={5}
+                      className="bg-background border-border text-foreground placeholder-secondary min-h-[100px]"
+                      rows={4}
                     />
                   </div>
                 ))}
+                <div className="text-center text-sm text-muted-foreground mt-4 p-3 bg-muted/50 rounded-lg">
+                  💡 Drag papers up and down to rank them by relevance (1 = most relevant, 5 = least relevant)
+                </div>
               </CardContent>
             </Card>
 

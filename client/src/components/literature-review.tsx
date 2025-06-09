@@ -73,7 +73,7 @@ export default function LiteratureReview() {
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="e.g. Should students pursue Masters in the US?"
-                  className="surface-variant border-border bg-accent text-foreground placeholder-secondary"
+                  className="bg-accent border-border text-foreground placeholder-secondary"
                   rows={3}
                 />
               </CardContent>
@@ -89,7 +89,7 @@ export default function LiteratureReview() {
                   value={initialThoughts}
                   onChange={(e) => setInitialThoughts(e.target.value)}
                   placeholder="Share your initial research findings, key insights, and thoughts"
-                  className="surface-variant border-border bg-accent text-foreground placeholder-secondary"
+                  className="bg-accent border-border text-foreground placeholder-secondary"
                   rows={4}
                 />
               </CardContent>
@@ -105,7 +105,7 @@ export default function LiteratureReview() {
                   value={paperAbstracts}
                   onChange={(e) => setPaperAbstracts(e.target.value)}
                   placeholder="1. [Most relevant] Title: ... Abstract: ... &#10;2. Title: ... Abstract: ... &#10;3. Title: ... Abstract: ..."
-                  className="surface-variant border-border bg-accent text-foreground placeholder-secondary"
+                  className="bg-accent border-border text-foreground placeholder-secondary"
                   rows={6}
                 />
               </CardContent>

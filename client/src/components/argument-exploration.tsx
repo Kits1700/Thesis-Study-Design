@@ -76,7 +76,7 @@ export default function ArgumentExploration() {
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder="e.g. Should students pursue Masters in the US?"
-                className="surface-variant border-border bg-accent text-foreground placeholder-secondary mb-4"
+                className="bg-accent border-border text-foreground placeholder-secondary mb-4"
                 rows={3}
               />
               <Button 
@@ -108,7 +108,7 @@ export default function ArgumentExploration() {
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="e.g. Should students pursue Masters in the US?"
-                    className="surface-variant border-border bg-accent text-foreground placeholder-secondary"
+                    className="bg-accent border-border text-foreground placeholder-secondary"
                     rows={4}
                   />
                 </CardContent>
@@ -124,7 +124,7 @@ export default function ArgumentExploration() {
                     value={initialThoughts}
                     onChange={(e) => setInitialThoughts(e.target.value)}
                     placeholder="Share your initial thoughts, ideas"
-                    className="surface-variant border-border bg-accent text-foreground placeholder-secondary"
+                    className="bg-accent border-border text-foreground placeholder-secondary"
                     rows={4}
                   />
                 </CardContent>
@@ -140,7 +140,7 @@ export default function ArgumentExploration() {
                     value={counterarguments}
                     onChange={(e) => setCounterarguments(e.target.value)}
                     placeholder="What are the potential counterarguments"
-                    className="surface-variant border-border bg-accent text-foreground placeholder-secondary"
+                    className="bg-accent border-border text-foreground placeholder-secondary"
                     rows={4}
                   />
                 </CardContent>

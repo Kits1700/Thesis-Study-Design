@@ -76,7 +76,7 @@
 
 /* Radio button custom styling */
 input[type="radio"] {
-  @apply appearance-none w-4 h-4 border border-border rounded-full bg-surface-variant;
+  @apply appearance-none w-4 h-4 border border-border rounded-full bg-accent;
   @apply checked:bg-primary checked:border-primary;
   @apply focus:ring-2 focus:ring-primary focus:ring-opacity-50;
 }

@@ -57,8 +57,8 @@ export default function ArgumentExploration() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2 text-white">
             Task {currentTask?.id}: Argument Exploration{" "}
-            <span className={isSelectiveFriction ? "text-purple-400" : "text-teal-400"}>
-              ({isSelectiveFriction ? "Generative Task" : "Summative Task"})
+            <span className="text-purple-400">
+              (Generative Task)
             </span>
           </h1>
           <p className="text-gray-300">
@@ -86,7 +86,7 @@ export default function ArgumentExploration() {
               <Button 
                 onClick={handleGenerateArguments}
                 disabled={generateArgumentsMutation.isPending}
-                className="w-full bg-teal-600 hover:bg-teal-700 text-white"
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white"
               >
                 {generateArgumentsMutation.isPending ? (
                   <>
@@ -239,7 +239,7 @@ export default function ArgumentExploration() {
             <Button 
               onClick={handleNext} 
               disabled={!generatedContent}
-              className={`px-6 py-2 ${isSelectiveFriction ? 'bg-purple-600 hover:bg-purple-700' : 'bg-teal-600 hover:bg-teal-700'} text-white`}
+              className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white"
             >
               Next
             </Button>

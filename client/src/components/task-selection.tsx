@@ -15,7 +15,7 @@ export default function TaskSelection() {
       title: "Literature Review",
       type: "Full AI Assistance",
       description: "Immediate access to AI responses",
-      color: "secondary",
+      color: "teal",
       taskType: "literature_review",
       frictionType: "full_ai",
     },
@@ -24,7 +24,7 @@ export default function TaskSelection() {
       title: "Literature Review", 
       type: "Selective Friction AI Assistance",
       description: "Complete preparatory work before accessing AI",
-      color: "primary",
+      color: "teal",
       taskType: "literature_review",
       frictionType: "selective_friction",
     },
@@ -33,7 +33,7 @@ export default function TaskSelection() {
       title: "Argument Exploration",
       type: "Full AI Assistance", 
       description: "Immediate access to AI responses",
-      color: "secondary",
+      color: "purple",
       taskType: "argument_exploration",
       frictionType: "full_ai",
     },
@@ -42,7 +42,7 @@ export default function TaskSelection() {
       title: "Argument Exploration",
       type: "Selective Friction AI Assistance",
       description: "Complete preparatory work before accessing AI",
-      color: "primary",
+      color: "purple",
       taskType: "argument_exploration", 
       frictionType: "selective_friction",
     },
@@ -107,7 +107,7 @@ export default function TaskSelection() {
               >
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">
-                    <div className={`w-10 h-10 ${isSecondary ? 'bg-teal-500 text-white' : 'bg-purple-600 text-white'} rounded-full flex items-center justify-center font-bold ${
+                    <div className={`w-10 h-10 ${task.color === 'teal' ? 'bg-teal-500 text-white' : 'bg-purple-600 text-white'} rounded-full flex items-center justify-center font-bold ${
                       !isAvailable ? 'opacity-50' : ''
                     }`}>
                       {isCompleted ? (
@@ -121,9 +121,9 @@ export default function TaskSelection() {
                         {task.title}
                       </h3>
                       <p className={`text-sm font-medium mb-1 ${
-                        !isAvailable ? 'text-gray-500' : isSecondary ? 'text-teal-400' : 'text-purple-400'
+                        !isAvailable ? 'text-gray-500' : task.color === 'teal' ? 'text-teal-400' : 'text-purple-400'
                       }`}>
-                        {isSecondary ? 'Summative Task' : 'Generative Task'}
+                        {task.color === 'teal' ? 'Summative Task' : 'Generative Task'}
                       </p>
                       <p className={`text-sm ${!isAvailable ? 'text-gray-500' : 'text-gray-300'}`}>
                         {task.description}

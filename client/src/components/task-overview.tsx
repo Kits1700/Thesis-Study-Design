@@ -45,13 +45,9 @@ export default function TaskOverview() {
     },
   ];
 
-  const handleStartTask = (task: any) => {
-    setCurrentTask(task);
-    if (task.taskType === "literature_review") {
-      setCurrentStep("literature_review");
-    } else {
-      setCurrentStep("argument_exploration");
-    }
+  const handleStartTasks = () => {
+    // Navigate to task selection to enforce sequential flow
+    setCurrentStep("task_selection");
   };
 
   return (
@@ -142,8 +138,7 @@ export default function TaskOverview() {
             return (
               <Card 
                 key={task.id}
-                className={`surface border border-border hover:border-${task.color}/50 transition-colors cursor-pointer`}
-                onClick={() => handleStartTask(task)}
+                className="surface border border-border bg-muted/30"
               >
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">

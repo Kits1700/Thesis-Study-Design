@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useStudyStore } from "@/lib/study-store";
@@ -5,6 +6,23 @@ import { Circle, CheckCircle } from "lucide-react";
 
 export default function TaskSelection() {
   const { setCurrentStep, setCurrentTask, completedTasks } = useStudyStore();
+
+  // Auto-start Task 1 if no tasks are completed
+  useEffect(() => {
+    if (completedTasks.length === 0) {
+      const firstTask = {
+        id: 1,
+        title: "Literature Review",
+        type: "Full AI Assistance",
+        description: "Immediate access to AI responses",
+        color: "secondary",
+        taskType: "literature_review",
+        frictionType: "full_ai",
+      };
+      setCurrentTask(firstTask as any);
+      setCurrentStep("literature_review");
+    }
+  }, [completedTasks.length, setCurrentTask, setCurrentStep]);
 
   const tasks = [
     {

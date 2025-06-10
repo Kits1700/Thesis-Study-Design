@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useStudyStore } from "@/lib/study-store";
 import { apiRequest } from "@/lib/queryClient";
 import { CheckCircle, Download, Loader2 } from "lucide-react";
+import DataExport from "./data-export";
 
 export default function CompletionScreen() {
   const { participantId, completedTasks, setCurrentStep } = useStudyStore();

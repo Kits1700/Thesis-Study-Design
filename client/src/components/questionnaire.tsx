@@ -8,7 +8,7 @@ import { useStudyStore } from "@/lib/study-store";
 import { apiRequest } from "@/lib/queryClient";
 
 export default function Questionnaire() {
-  const { currentTask, participantId, setCurrentStep, setCurrentTask, markTaskComplete, updateProgress } = useStudyStore();
+  const { currentTask, participantId, setCurrentStep, setCurrentTask, markTaskComplete, saveQuestionnaireResponse, updateProgress } = useStudyStore();
   const [responses, setResponses] = useState<Record<string, string>>({});
 
   const questions = [

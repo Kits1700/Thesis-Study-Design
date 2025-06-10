@@ -56,21 +56,6 @@ export default function ImportantNotes() {
             <CardContent className="p-6">
               <div className="flex items-start space-x-4">
                 <div className="w-8 h-8 bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                  <Target className="w-4 h-4 text-gray-400" />
-                </div>
-                <div>
-                  <p className="text-gray-300">
-                    Each task builds different skills in working with AI
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-800 border border-gray-700">
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-gray-700 border border-gray-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
                   <Users className="w-4 h-4 text-gray-400" />
                 </div>
                 <div>

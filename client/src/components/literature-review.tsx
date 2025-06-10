@@ -114,7 +114,7 @@ export default function LiteratureReview() {
           </h1>
           <p className="text-gray-300">
             {isSelectiveFriction 
-              ? "Complete your preparatory work first. Find 5-7 paper abstracts on your topic and rank them by relevance before accessing AI assistance."
+              ? "Complete your preparatory work first. Find 5 paper abstracts on your topic and rank them by relevance before accessing AI assistance."
               : "Your goal is to create a short literature review on a topic of your choice by directly receiving help from the AI to generate a structured summary"
             }
           </p>

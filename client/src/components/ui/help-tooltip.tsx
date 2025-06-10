@@ -61,7 +61,7 @@ export default function HelpTooltip({ className }: HelpTooltipProps) {
                 "Feel free to regenerate with different topics"
               ]
             : [
-                "Find and rank 5-7 paper abstracts first",
+                "Find and rank 5 paper abstracts first",
                 "AI assistance unlocks after completing preparatory work",
                 "Compare this approach with the previous task"
               ]

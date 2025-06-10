@@ -34,10 +34,17 @@ Requirements:
       ],
       max_tokens: 2000,
       temperature: 0.7,
+      stream: true,
     });
 
-    console.log("OpenAI response received successfully");
-    return response.choices[0].message.content || "Error generating literature review.";
+    let fullContent = "";
+    for await (const chunk of response) {
+      const content = chunk.choices[0]?.delta?.content || "";
+      fullContent += content;
+    }
+    
+    console.log("OpenAI streaming response received successfully");
+    return fullContent || "Error generating literature review.";
   } catch (error: any) {
     console.error("Error generating literature review:", error);
     console.error("Error details:", {

@@ -34,18 +34,53 @@ export const useStudyStore = create<StudyStore>()(
       completedTasks: [],
       progress: 0,
 
-      initializeParticipant: (id: string) => {
+      initializeParticipant: async (id: string) => {
         set({ 
           participantId: id,
           completedTasks: [],
           currentTask: null,
           progress: 0
         });
+        
+        // Create participant in database
+        try {
+          await fetch('/api/participant', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              participantId: id,
+              currentStep: 'overview',
+              studyData: {}
+            }),
+          });
+        } catch (error) {
+          console.error('Failed to create participant in database:', error);
+        }
       },
 
-      setCurrentStep: (step: string) => {
+      setCurrentStep: async (step: string) => {
+        const { participantId } = get();
         set({ currentStep: step });
         get().updateProgress();
+        
+        // Update participant in database
+        if (participantId) {
+          try {
+            await fetch(`/api/participant/${participantId}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                currentStep: step
+              }),
+            });
+          } catch (error) {
+            console.error('Failed to update participant step:', error);
+          }
+        }
       },
 
       setCurrentTask: (task: Task) => {

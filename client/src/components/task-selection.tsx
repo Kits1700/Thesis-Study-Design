@@ -18,6 +18,7 @@ export default function TaskSelection() {
       color: "teal",
       taskType: "literature_review",
       frictionType: "full_ai",
+      category: "summative"
     },
     {
       id: 2,
@@ -27,24 +28,27 @@ export default function TaskSelection() {
       color: "teal",
       taskType: "literature_review",
       frictionType: "selective_friction",
+      category: "summative"
     },
     {
       id: 3,
       title: "Argument Exploration",
       type: "Full AI Assistance", 
       description: "Immediate access to AI responses",
-      color: "teal",
+      color: "purple",
       taskType: "argument_exploration",
       frictionType: "full_ai",
+      category: "generative"
     },
     {
       id: 4,
       title: "Argument Exploration",
       type: "AI Assistance with Brief Reflection Step",
       description: "Complete preparatory work before accessing AI",
-      color: "teal",
+      color: "purple",
       taskType: "argument_exploration", 
       frictionType: "selective_friction",
+      category: "generative"
     },
   ];
 
@@ -78,13 +82,13 @@ export default function TaskSelection() {
             <div className="flex items-center justify-center space-x-2">
               <Circle className="w-3 h-3 fill-teal-400 text-teal-400" />
               <span className="text-lg text-gray-300">
-                <strong>Full AI Assistance:</strong> Immediate access to AI responses
+                <strong>Summative Task:</strong> Literature Review tasks with immediate or reflection-based AI assistance
               </span>
             </div>
             <div className="flex items-center justify-center space-x-2">
-              <Circle className="w-3 h-3 fill-teal-400 text-teal-400" />
+              <Circle className="w-3 h-3 fill-purple-400 text-purple-400" />
               <span className="text-lg text-gray-300">
-                <strong>AI Assistance with Brief Reflection Step:</strong> Complete preparatory work before accessing AI
+                <strong>Generative Task:</strong> Argument Exploration tasks with immediate or reflection-based AI assistance
               </span>
             </div>
           </div>

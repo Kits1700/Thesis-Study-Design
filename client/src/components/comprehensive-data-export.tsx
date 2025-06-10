@@ -38,7 +38,10 @@ export default function ComprehensiveDataExport() {
           initialThoughts: task.initialThoughts,
           counterarguments: task.counterarguments,
           generatedContent: task.generatedContent,
-          completedAt: task.completedAt
+          completedAt: task.completedAt,
+          aiGeneratedReview: task.generatedContent?.literatureReview || task.generatedContent?.argumentExploration || null,
+          userInputs: task.generatedContent?.userPrompts || null,
+          paperAbstracts: task.generatedContent?.paperAbstracts || null
         }
       }))
     };
@@ -116,12 +119,38 @@ export default function ComprehensiveDataExport() {
       
       if (task.generatedContent) {
         report += `- Generated Content:\n`;
-        if (typeof task.generatedContent === 'object') {
-          Object.entries(task.generatedContent).forEach(([key, value]) => {
-            report += `  * ${key}:\n    ${JSON.stringify(value, null, 4).replace(/\n/g, '\n    ')}\n`;
+        
+        // Show AI-generated literature review or argument exploration
+        if (task.generatedContent.literatureReview) {
+          report += `  * Literature Review (AI Generated):\n`;
+          report += `    ${task.generatedContent.literatureReview}\n\n`;
+        }
+        
+        if (task.generatedContent.argumentExploration) {
+          report += `  * Argument Exploration (AI Generated):\n`;
+          report += `    ${task.generatedContent.argumentExploration}\n\n`;
+        }
+        
+        // Show user inputs and prompts
+        if (task.generatedContent.userPrompts) {
+          report += `  * User Input Details:\n`;
+          if (task.generatedContent.userPrompts.topic) {
+            report += `    - Topic: ${task.generatedContent.userPrompts.topic}\n`;
+          }
+          if (task.generatedContent.userPrompts.initialThoughts) {
+            report += `    - Initial Thoughts: ${task.generatedContent.userPrompts.initialThoughts}\n`;
+          }
+          if (task.generatedContent.userPrompts.counterarguments) {
+            report += `    - Counterarguments: ${task.generatedContent.userPrompts.counterarguments}\n`;
+          }
+        }
+        
+        // Show paper abstracts for literature review tasks
+        if (task.generatedContent.paperAbstracts && task.generatedContent.paperAbstracts.length > 0) {
+          report += `  * Paper Abstracts (User Input):\n`;
+          task.generatedContent.paperAbstracts.forEach((paper, index) => {
+            report += `    ${index + 1}. ${paper.abstract}\n`;
           });
-        } else {
-          report += `  ${task.generatedContent}\n`;
         }
       }
       report += `\n`;

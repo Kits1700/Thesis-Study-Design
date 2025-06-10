@@ -1,0 +1,103 @@
+{
+  "PARTICIPANT_ID": "343732",
+  "STUDY_METADATA": {
+    "startTime": "2025-06-10T19:17:34.958Z",
+    "currentStep": "completion",
+    "browser": "Safari/537.36",
+    "screenResolution": "1280x800",
+    "timezone": "Europe/London"
+  },
+  "QUESTIONNAIRE_RESPONSES": {
+    "Task_Questionnaires": [
+      {
+        "taskId": 1,
+        "submittedAt": "2025-06-10T19:19:02.721Z",
+        "responses": {
+          "engagement_1": "3",
+          "engagement_2": "3",
+          "engagement_3": "3",
+          "engagement_4": "3",
+          "engagement_5": "3"
+        }
+      },
+      {
+        "taskId": 2,
+        "submittedAt": "2025-06-10T19:21:26.571Z",
+        "responses": {
+          "engagement_5": "2",
+          "engagement_4": "2",
+          "engagement_3": "2",
+          "engagement_2": "2",
+          "engagement_1": "2"
+        }
+      },
+      {
+        "taskId": 3,
+        "submittedAt": "2025-06-10T19:22:12.179Z",
+        "responses": {
+          "engagement_1": "3",
+          "engagement_2": "3",
+          "engagement_3": "3",
+          "engagement_4": "3",
+          "engagement_5": "3"
+        }
+      },
+      {
+        "taskId": 4,
+        "submittedAt": "2025-06-10T19:26:25.823Z",
+        "responses": {
+          "engagement_1": "2",
+          "engagement_2": "4",
+          "engagement_4": "3",
+          "engagement_5": "2",
+          "engagement_3": "3"
+        }
+      }
+    ],
+    "Final_Study_Questionnaire": {
+      "taskId": 999,
+      "responses": {
+        "overall_experience_5": "2",
+        "overall_experience_4": "3",
+        "overall_experience_3": "3",
+        "overall_experience_2": "3",
+        "overall_experience_1": "3"
+      },
+      "submittedAt": "2025-06-10T19:26:35.885Z"
+    }
+  },
+  "TASK_DATA": [
+    {
+      "Task_1_Data": {
+        "taskType": "literature_review",
+        "frictionType": "full_ai",
+        "topic": "literature_review task completed",
+        "completedAt": "2025-06-10T19:19:02.721Z"
+      }
+    },
+    {
+      "Task_2_Data": {
+        "taskType": "literature_review",
+        "frictionType": "selective_friction",
+        "topic": "literature_review task completed",
+        "completedAt": "2025-06-10T19:21:26.571Z"
+      }
+    },
+    {
+      "Task_3_Data": {
+        "taskType": "argument_exploration",
+        "frictionType": "full_ai",
+        "topic": "argument_exploration task completed",
+        "completedAt": "2025-06-10T19:22:12.179Z"
+      }
+    },
+    {
+      "Task_4_Data": {
+        "taskType": "argument_exploration",
+        "frictionType": "selective_friction",
+        "topic": "argument_exploration task completed",
+        "completedAt": "2025-06-10T19:26:25.823Z"
+      }
+    }
+  ]
+}

@@ -177,11 +177,15 @@ export default function LiteratureReview() {
         taskId: currentTask.id,
         taskType: currentTask.taskType,
         frictionType: currentTask.frictionType,
-        topic: topic,
-        initialThoughts: initialThoughts,
+        topic: topic || "No topic specified",
+        initialThoughts: initialThoughts || "No initial thoughts provided",
         generatedContent: {
           literatureReview: generatedContent,
-          paperAbstracts: paperAbstracts,
+          paperAbstracts: paperAbstracts.filter(p => p.abstract.trim()),
+          userPrompts: {
+            topic: topic,
+            preparatoryWork: isSelectiveFriction ? paperAbstracts : null
+          }
         },
       });
     }

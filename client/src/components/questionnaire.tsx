@@ -79,13 +79,8 @@ export default function Questionnaire() {
       if (currentTask) {
         saveQuestionnaireResponse(currentTask.id, responses);
         
-        // Mark task as complete with comprehensive data
-        markTaskComplete({
-          taskId: currentTask.id,
-          taskType: currentTask.taskType,
-          frictionType: currentTask.frictionType,
-          topic: `${currentTask.taskType} task completed`,
-        });
+        // Note: Do not call markTaskComplete here as it would override
+        // the comprehensive task data already saved by the task components
         
         updateProgress();
         

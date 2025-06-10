@@ -127,11 +127,17 @@ export default function ArgumentExploration() {
         taskId: currentTask.id,
         taskType: currentTask.taskType,
         frictionType: currentTask.frictionType,
-        topic: topic,
-        initialThoughts: initialThoughts,
-        counterarguments: counterarguments,
+        topic: topic || "No topic specified",
+        initialThoughts: initialThoughts || "No initial thoughts provided",
+        counterarguments: counterarguments || "No counterarguments provided",
         generatedContent: {
           argumentExploration: generatedContent,
+          userPrompts: {
+            topic: topic,
+            initialThoughts: initialThoughts,
+            counterarguments: counterarguments,
+            preparatoryWork: isSelectiveFriction ? { initialThoughts, counterarguments } : null
+          }
         },
       });
     }

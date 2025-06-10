@@ -32,7 +32,7 @@ export default function CompletionScreen() {
       text: "Which type of task did you find more engaging?",
       type: "radio",
       options: [
-        { value: "summative", label: "Summative Tasks (Tasks 1&2) - Immediate AI assistance" },
+        { value: "summative", label: "Summative Tasks (Tasks 1&2) - Immediate LLM assistance" },
         { value: "generative", label: "Generative Tasks (Tasks 3&4) - Preparatory work first" },
         { value: "equal", label: "Both were equally engaging" }
       ]
@@ -54,14 +54,14 @@ export default function CompletionScreen() {
       text: "Which approach do you think helped you learn more effectively?",
       type: "radio",
       options: [
-        { value: "immediate", label: "Immediate AI assistance (Tasks 1&2)" },
+        { value: "immediate", label: "Immediate LLM assistance (Tasks 1&2)" },
         { value: "friction", label: "Preparatory work first (Tasks 3&4)" },
         { value: "both", label: "Both approaches were equally effective" }
       ]
     },
     {
       id: "open_feedback",
-      text: "Please share any additional thoughts about your experience with different AI assistance approaches:",
+      text: "Please share any additional thoughts about your experience with different LLM assistance approaches:",
       type: "textarea"
     }
   ];
@@ -126,7 +126,7 @@ export default function CompletionScreen() {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-4 text-white">Final Study Questionnaire</h1>
             <p className="text-gray-300">
-              You've completed all four tasks! Please share your thoughts about the different AI assistance approaches.
+              You've completed all four tasks! Please share your thoughts about the different LLM assistance approaches.
             </p>
           </div>
 
@@ -215,15 +215,15 @@ export default function CompletionScreen() {
           <h1 className="text-4xl font-bold mb-6 text-white">Thank You!</h1>
           <h2 className="text-2xl font-semibold mb-4 text-gray-300">Study Completed Successfully</h2>
           <p className="text-gray-300 text-lg leading-relaxed mb-8">
-            Your participation in this research study is greatly appreciated. Your responses have been recorded and will contribute valuable insights to our understanding of how different AI assistance approaches affect thinking and engagement in academic tasks.
+            Your participation in this research study is greatly appreciated. Your responses have been recorded and will contribute valuable insights to our understanding of how different LLM assistance approaches affect thinking and engagement in academic tasks.
           </p>
           
           <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 mb-8">
             <h3 className="text-xl font-semibold text-white mb-4">What happens next?</h3>
             <div className="text-left space-y-3 text-gray-300">
-              <p>• Your data will be analyzed alongside other participants to understand patterns in AI-human collaboration</p>
+              <p>• Your data will be analyzed alongside other participants to understand patterns in human-LLM collaboration</p>
               <p>• All responses remain anonymous and confidential</p>
-              <p>• Results will contribute to improving AI assistance design for academic work</p>
+              <p>• Results will contribute to improving LLM assistance design for academic work</p>
             </div>
           </div>
         </div>

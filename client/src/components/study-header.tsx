@@ -14,7 +14,7 @@ export default function StudyHeader() {
       case "completion":
         return "Study Complete";
       default:
-        return "AI-Human Interaction Research Study";
+        return "Human-LLM Interaction Study";
     }
   };
 

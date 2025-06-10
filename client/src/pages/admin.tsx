@@ -85,11 +85,23 @@ export default function AdminPage() {
     );
   }
 
-  // Group data by participant
+  // Group data by participant with organized structure
   const participantData = participants.map((participant: Participant) => {
     const participantTasks = tasks.filter((task: Task) => task.participantId === participant.participantId);
     const participantQuestionnaires = questionnaires.filter((q: Questionnaire) => q.participantId === participant.participantId);
-    return { participant, tasks: participantTasks, questionnaires: participantQuestionnaires };
+    
+    // Organize questionnaires by type
+    const taskQuestionnaires = participantQuestionnaires.filter(q => q.taskId !== 999);
+    const finalQuestionnaire = participantQuestionnaires.find(q => q.taskId === 999);
+    
+    return { 
+      participant, 
+      tasks: participantTasks, 
+      questionnaires: {
+        taskQuestionnaires,
+        finalQuestionnaire
+      }
+    };
   });
 
   return (
@@ -161,11 +173,7 @@ export default function AdminPage() {
           <CardContent>
             <ScrollArea className="h-[800px]">
               <div className="space-y-6">
-                {participantData.map(({ participant, tasks: participantTasks, questionnaires: participantQuestionnaires }: {
-                  participant: Participant;
-                  tasks: Task[];
-                  questionnaires: Questionnaire[];
-                }) => (
+                {participantData.map(({ participant, tasks: participantTasks, questionnaires }) => (
                   <div key={participant.id} className="border rounded-lg p-6 space-y-4">
                     <div className="flex items-center justify-between">
                       <div>

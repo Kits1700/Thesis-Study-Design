@@ -8,7 +8,34 @@ export default function DataExport() {
 
   const downloadData = () => {
     const studyData = exportStudyData();
-    const dataStr = JSON.stringify(studyData, null, 2);
+    
+    // Organize data by participant with clear sections
+    const organizedData = {
+      participantId: studyData.participantId,
+      studyMetadata: {
+        startTime: studyData.startTime,
+        currentStep: studyData.currentStep,
+        browser: studyData.studyMetadata.browser,
+        screenResolution: studyData.studyMetadata.screenResolution,
+        timezone: studyData.studyMetadata.timezone
+      },
+      questionnaireResponses: {
+        taskQuestionnaires: studyData.questionnaireResponses.filter(q => q.taskId !== 999),
+        finalQuestionnaire: studyData.questionnaireResponses.find(q => q.taskId === 999) || null
+      },
+      taskData: studyData.completedTasks.map(task => ({
+        taskId: task.taskId,
+        taskType: task.taskType,
+        frictionType: task.frictionType,
+        topic: task.topic,
+        initialThoughts: task.initialThoughts,
+        counterarguments: task.counterarguments,
+        generatedContent: task.generatedContent,
+        completedAt: task.completedAt
+      }))
+    };
+    
+    const dataStr = JSON.stringify(organizedData, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
     
     const exportFileDefaultName = `study_data_${participantId}_${new Date().toISOString().split('T')[0]}.json`;
@@ -83,6 +110,87 @@ export default function DataExport() {
     linkElement.click();
   };
 
+  const downloadReadableText = () => {
+    const studyData = exportStudyData();
+    
+    // Create human-readable text format
+    let textContent = `STUDY DATA EXPORT\n`;
+    textContent += `==========================================\n\n`;
+    
+    textContent += `PARTICIPANT ID: ${studyData.participantId}\n\n`;
+    
+    textContent += `STUDY METADATA:\n`;
+    textContent += `- Start Time: ${studyData.startTime}\n`;
+    textContent += `- Current Step: ${studyData.currentStep}\n`;
+    textContent += `- Browser: ${studyData.studyMetadata.browser}\n`;
+    textContent += `- Screen Resolution: ${studyData.studyMetadata.screenResolution}\n`;
+    textContent += `- Timezone: ${studyData.studyMetadata.timezone}\n\n`;
+    
+    textContent += `QUESTIONNAIRE RESPONSES:\n`;
+    textContent += `==========================================\n`;
+    
+    // Task questionnaires
+    const taskQuestionnaires = studyData.questionnaireResponses.filter(q => q.taskId !== 999);
+    taskQuestionnaires.forEach(questionnaire => {
+      textContent += `\nTask ${questionnaire.taskId} Questionnaire:\n`;
+      textContent += `- Submitted: ${questionnaire.submittedAt}\n`;
+      textContent += `- Responses:\n`;
+      Object.entries(questionnaire.responses).forEach(([key, value]) => {
+        textContent += `  * ${key}: ${value}\n`;
+      });
+    });
+    
+    // Final questionnaire
+    const finalQuestionnaire = studyData.questionnaireResponses.find(q => q.taskId === 999);
+    if (finalQuestionnaire) {
+      textContent += `\nFinal Study Questionnaire:\n`;
+      textContent += `- Submitted: ${finalQuestionnaire.submittedAt}\n`;
+      textContent += `- Responses:\n`;
+      Object.entries(finalQuestionnaire.responses).forEach(([key, value]) => {
+        textContent += `  * ${key}: ${value}\n`;
+      });
+    }
+    
+    textContent += `\n\nTASK DATA:\n`;
+    textContent += `==========================================\n`;
+    
+    studyData.completedTasks.forEach(task => {
+      textContent += `\nTask ${task.taskId} Data:\n`;
+      textContent += `- Task Type: ${task.taskType}\n`;
+      textContent += `- Friction Type: ${task.frictionType}\n`;
+      textContent += `- Topic: ${task.topic}\n`;
+      textContent += `- Completed: ${task.completedAt}\n`;
+      
+      if (task.initialThoughts) {
+        textContent += `- Initial Thoughts: ${task.initialThoughts}\n`;
+      }
+      
+      if (task.counterarguments) {
+        textContent += `- Counterarguments: ${task.counterarguments}\n`;
+      }
+      
+      if (task.generatedContent) {
+        textContent += `- Generated Content:\n`;
+        if (typeof task.generatedContent === 'object') {
+          Object.entries(task.generatedContent).forEach(([key, value]) => {
+            textContent += `  * ${key}: ${JSON.stringify(value, null, 2)}\n`;
+          });
+        } else {
+          textContent += `  ${task.generatedContent}\n`;
+        }
+      }
+      textContent += `\n`;
+    });
+    
+    const textUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(textContent);
+    const exportFileDefaultName = `study_data_${participantId}_${new Date().toISOString().split('T')[0]}.txt`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', textUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
   return (
     <Card className="mt-6">
       <CardHeader>
@@ -118,6 +226,9 @@ export default function DataExport() {
             </Button>
             <Button onClick={downloadCSV} variant="outline">
               Download CSV
+            </Button>
+            <Button onClick={downloadReadableText} variant="outline">
+              Download Readable Format
             </Button>
           </div>
         </div>

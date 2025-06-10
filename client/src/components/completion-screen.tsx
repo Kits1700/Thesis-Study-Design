@@ -16,7 +16,7 @@ export default function CompletionScreen() {
 
   const finalQuestions = [
     {
-      id: "overall_experience",
+      id: "overall_experience_1",
       text: "How would you rate your overall experience with this study?",
       type: "radio",
       options: [
@@ -28,41 +28,52 @@ export default function CompletionScreen() {
       ]
     },
     {
-      id: "task_comparison",
-      text: "Which type of task did you find more engaging?",
+      id: "overall_experience_2",
+      text: "How would you rate your overall experience with this study?",
       type: "radio",
       options: [
-        { value: "summative", label: "Summative Tasks (Tasks 1&2) - Immediate LLM assistance" },
-        { value: "generative", label: "Generative Tasks (Tasks 3&4) - Preparatory work first" },
-        { value: "equal", label: "Both were equally engaging" }
+        { value: "1", label: "1 - Very Poor" },
+        { value: "2", label: "2 - Poor" },
+        { value: "3", label: "3 - Fair" },
+        { value: "4", label: "4 - Good" },
+        { value: "5", label: "5 - Excellent" }
       ]
     },
     {
-      id: "friction_preference",
-      text: "Did the 'preparatory work first' approach in Tasks 3&4 enhance your thinking process?",
+      id: "overall_experience_3",
+      text: "How would you rate your overall experience with this study?",
       type: "radio",
       options: [
-        { value: "strongly_agree", label: "Strongly Agree" },
-        { value: "agree", label: "Agree" },
-        { value: "neutral", label: "Neutral" },
-        { value: "disagree", label: "Disagree" },
-        { value: "strongly_disagree", label: "Strongly Disagree" }
+        { value: "1", label: "1 - Very Poor" },
+        { value: "2", label: "2 - Poor" },
+        { value: "3", label: "3 - Fair" },
+        { value: "4", label: "4 - Good" },
+        { value: "5", label: "5 - Excellent" }
       ]
     },
     {
-      id: "learning_impact",
-      text: "Which approach do you think helped you learn more effectively?",
+      id: "overall_experience_4",
+      text: "How would you rate your overall experience with this study?",
       type: "radio",
       options: [
-        { value: "immediate", label: "Immediate LLM assistance (Tasks 1&2)" },
-        { value: "friction", label: "Preparatory work first (Tasks 3&4)" },
-        { value: "both", label: "Both approaches were equally effective" }
+        { value: "1", label: "1 - Very Poor" },
+        { value: "2", label: "2 - Poor" },
+        { value: "3", label: "3 - Fair" },
+        { value: "4", label: "4 - Good" },
+        { value: "5", label: "5 - Excellent" }
       ]
     },
     {
-      id: "open_feedback",
-      text: "Please share any additional thoughts about your experience with different LLM assistance approaches:",
-      type: "textarea"
+      id: "overall_experience_5",
+      text: "How would you rate your overall experience with this study?",
+      type: "radio",
+      options: [
+        { value: "1", label: "1 - Very Poor" },
+        { value: "2", label: "2 - Poor" },
+        { value: "3", label: "3 - Fair" },
+        { value: "4", label: "4 - Good" },
+        { value: "5", label: "5 - Excellent" }
+      ]
     }
   ];
 

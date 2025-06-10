@@ -122,7 +122,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Streaming literature review generation
   app.post("/api/generate/literature-review/stream", async (req, res) => {
     try {
-      const { topic, participantId, taskId } = req.body;
+      const { topic, participantId, taskId, paperAbstracts } = req.body;
       if (!topic) {
         return res.status(400).json({ message: "Topic is required" });
       }
@@ -132,16 +132,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Connection', 'keep-alive');
       res.setHeader('Access-Control-Allow-Origin', '*');
 
-      const systemPrompt = "You are an expert academic researcher. Generate comprehensive, well-structured literature reviews that synthesize current research, identify gaps, and provide scholarly insights. Format your response as HTML with proper headings and structure.";
-      const userPrompt = `Generate a comprehensive academic literature review on: "${topic}". 
-
-Requirements:
+      const systemPrompt = "You are an expert academic researcher. Generate comprehensive, well-structured literature reviews that synthesize current research, identify gaps, and provide scholarly insights. When provided with specific paper abstracts, focus your analysis on those papers while adding broader theoretical context. Format your response as HTML with proper headings and structure.";
+      
+      let userPrompt = `Generate a comprehensive academic literature review on: "${topic}".`;
+      
+      // If paper abstracts are provided (selective friction mode), incorporate them
+      if (paperAbstracts && paperAbstracts.length > 0) {
+        const validAbstracts = paperAbstracts.filter((p: any) => p.abstract && p.abstract.trim().length > 10);
+        if (validAbstracts.length > 0) {
+          userPrompt += `\n\nIMPORTANT: Base your literature review on these specific paper abstracts provided by the user. Synthesize and analyze these papers as the core foundation of your review:\n\n`;
+          
+          validAbstracts.forEach((paper: any, index: number) => {
+            userPrompt += `Paper ${index + 1}:\n${paper.abstract}\n\n`;
+          });
+          
+          userPrompt += `Requirements:
+- Build your literature review primarily around these ${validAbstracts.length} papers
+- Synthesize findings and themes across these specific abstracts
+- Identify connections, contradictions, and patterns among these studies
+- Reference these papers directly in your analysis
+- Add theoretical context and broader field knowledge to enhance the review
+- Use proper academic tone and structure
+- Format as HTML with h3, h4, p, ul, li tags
+- Aim for approximately 800-1000 words
+- Provide scholarly analysis and synthesis focusing on these specific studies`;
+        } else {
+          userPrompt += `\n\nRequirements:
 - Include introduction, theoretical foundations, current research landscape, methodological approaches, key findings, research gaps, and conclusion
 - Use proper academic tone and structure
 - Include realistic citations and references (you may create plausible academic citations)
 - Format as HTML with h3, h4, p, ul, li tags
 - Aim for approximately 800-1000 words
 - Provide scholarly analysis and synthesis of the field`;
+        }
+      } else {
+        userPrompt += `\n\nRequirements:
+- Include introduction, theoretical foundations, current research landscape, methodological approaches, key findings, research gaps, and conclusion
+- Use proper academic tone and structure
+- Include realistic citations and references (you may create plausible academic citations)
+- Format as HTML with h3, h4, p, ul, li tags
+- Aim for approximately 800-1000 words
+- Provide scholarly analysis and synthesis of the field`;
+      }
 
       // Store prompts in task if provided
       if (participantId && taskId) {

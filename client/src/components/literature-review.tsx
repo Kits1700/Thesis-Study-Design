@@ -59,6 +59,7 @@ export default function LiteratureReview() {
           ...data,
           participantId,
           taskId: currentTask?.id,
+          paperAbstracts: currentTask?.frictionType === "selective_friction" ? paperAbstracts : null,
         }),
       });
 

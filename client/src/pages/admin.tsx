@@ -261,14 +261,16 @@ export default function AdminPage() {
                       </div>
                     )}
 
-                    {/* Questionnaires */}
-                    {participantQuestionnaires.length > 0 && (
+                    {/* Questionnaire Responses */}
+                    {(questionnaires.taskQuestionnaires.length > 0 || questionnaires.finalQuestionnaire) && (
                       <div className="space-y-3">
                         <h4 className="font-semibold flex items-center gap-2">
                           <ClipboardCheck className="w-4 h-4" />
-                          Survey Responses ({participantQuestionnaires.length})
+                          Questionnaire Responses ({questionnaires.taskQuestionnaires.length + (questionnaires.finalQuestionnaire ? 1 : 0)})
                         </h4>
-                        {participantQuestionnaires.map((questionnaire: Questionnaire) => (
+                        
+                        {/* Task Questionnaires */}
+                        {questionnaires.taskQuestionnaires.map((questionnaire: Questionnaire) => (
                           <Collapsible key={questionnaire.id}>
                             <CollapsibleTrigger 
                               className="flex items-center justify-between w-full p-3 bg-muted rounded-lg hover:bg-muted/80"

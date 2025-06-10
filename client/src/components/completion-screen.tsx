@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useStudyStore } from "@/lib/study-store";
 import { apiRequest } from "@/lib/queryClient";
 import { CheckCircle, Download, Loader2 } from "lucide-react";
-import DataExport from "./data-export";
+import ComprehensiveDataExport from "./comprehensive-data-export";
 
 export default function CompletionScreen() {
   const { participantId, completedTasks, setCurrentStep, saveQuestionnaireResponse } = useStudyStore();
@@ -264,7 +264,7 @@ export default function CompletionScreen() {
           </div>
         </div>
 
-        <DataExport />
+        <ComprehensiveDataExport />
         
         <div className="space-y-4 mt-8">
           <p className="text-gray-400 text-sm">

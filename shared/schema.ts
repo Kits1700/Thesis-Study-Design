@@ -21,6 +21,7 @@ export const tasks = pgTable("tasks", {
   initialThoughts: text("initial_thoughts"),
   counterarguments: text("counterarguments"),
   generatedContent: jsonb("generated_content").default({}),
+  prompts: jsonb("prompts").default({}),
   startTime: timestamp("start_time").defaultNow().notNull(),
   completedAt: timestamp("completed_at"),
 });

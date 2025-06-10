@@ -122,7 +122,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Streaming literature review generation
   app.post("/api/generate/literature-review/stream", async (req, res) => {
     try {
-      const { topic } = req.body;
+      const { topic, participantId, taskId } = req.body;
       if (!topic) {
         return res.status(400).json({ message: "Topic is required" });
       }
@@ -132,16 +132,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.setHeader('Connection', 'keep-alive');
       res.setHeader('Access-Control-Allow-Origin', '*');
 
-      const stream = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "system",
-            content: "You are an expert academic researcher. Generate comprehensive, well-structured literature reviews that synthesize current research, identify gaps, and provide scholarly insights. Format your response as HTML with proper headings and structure."
-          },
-          {
-            role: "user",
-            content: `Generate a comprehensive academic literature review on: "${topic}". 
+      const systemPrompt = "You are an expert academic researcher. Generate comprehensive, well-structured literature reviews that synthesize current research, identify gaps, and provide scholarly insights. Format your response as HTML with proper headings and structure.";
+      const userPrompt = `Generate a comprehensive academic literature review on: "${topic}". 
 
 Requirements:
 - Include introduction, theoretical foundations, current research landscape, methodological approaches, key findings, research gaps, and conclusion
@@ -149,7 +141,37 @@ Requirements:
 - Include realistic citations and references (you may create plausible academic citations)
 - Format as HTML with h3, h4, p, ul, li tags
 - Aim for approximately 800-1000 words
-- Provide scholarly analysis and synthesis of the field`
+- Provide scholarly analysis and synthesis of the field`;
+
+      // Store prompts in task if provided
+      if (participantId && taskId) {
+        try {
+          const existingTask = await storage.getTasksByParticipant(participantId);
+          const task = existingTask.find(t => t.taskId === taskId);
+          if (task) {
+            await storage.updateTask(task.id, {
+              prompts: {
+                systemPrompt,
+                userPrompt,
+                timestamp: new Date().toISOString()
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Failed to store prompts:', error);
+        }
+      }
+
+      const stream = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: systemPrompt
+          },
+          {
+            role: "user",
+            content: userPrompt
           }
         ],
         max_tokens: 2000,
@@ -177,7 +199,7 @@ Requirements:
   // Streaming argument exploration generation
   app.post("/api/generate/argument-exploration/stream", async (req, res) => {
     try {
-      const { topic, initialThoughts, counterarguments } = req.body;
+      const { topic, initialThoughts, counterarguments, participantId, taskId } = req.body;
       if (!topic) {
         return res.status(400).json({ message: "Topic is required" });
       }
@@ -195,16 +217,8 @@ Requirements:
         userContext += `\n\nAddress and explore these counterarguments provided by the user: "${counterarguments}"`;
       }
 
-      const stream = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "system",
-            content: "You are an expert critical thinking facilitator and academic researcher. Generate balanced, nuanced argument explorations that examine multiple perspectives, consider various stakeholders, and provide thoughtful analysis. Format your response as HTML with proper headings and structure."
-          },
-          {
-            role: "user",
-            content: `Explore multiple perspectives and arguments on the topic: "${topic}".${userContext}
+      const systemPrompt = "You are an expert critical thinking facilitator and academic researcher. Generate balanced, nuanced argument explorations that examine multiple perspectives, consider various stakeholders, and provide thoughtful analysis. Format your response as HTML with proper headings and structure.";
+      const userPrompt = `Explore multiple perspectives and arguments on the topic: "${topic}".${userContext}
 
 Requirements:
 - Examine at least 3 different perspectives or viewpoints
@@ -214,7 +228,38 @@ Requirements:
 - Include synthesis and recommendations for decision-making
 - Format as HTML with h3, h4, h5, p, ul, li, ol tags
 - Aim for approximately 700-900 words
-- Encourage critical thinking and nuanced understanding`
+- Encourage critical thinking and nuanced understanding`;
+
+      // Store prompts in task if provided
+      if (participantId && taskId) {
+        try {
+          const existingTask = await storage.getTasksByParticipant(participantId);
+          const task = existingTask.find(t => t.taskId === taskId);
+          if (task) {
+            await storage.updateTask(task.id, {
+              prompts: {
+                systemPrompt,
+                userPrompt,
+                userInputs: { topic, initialThoughts, counterarguments },
+                timestamp: new Date().toISOString()
+              }
+            });
+          }
+        } catch (error) {
+          console.error('Failed to store prompts:', error);
+        }
+      }
+
+      const stream = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: systemPrompt
+          },
+          {
+            role: "user",
+            content: userPrompt
           }
         ],
         max_tokens: 2000,

@@ -1,10 +1,14 @@
 import OpenAI from "openai";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const apiKey = process.env.OPENAI_API_KEY;
+const apiKey = process.env.OPENAI_API_KEY || "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";
+
+console.log("OpenAI API key configured:", apiKey ? `${apiKey.substring(0, 10)}...` : 'none');
 
 if (!apiKey) {
   console.warn("OpenAI API key not found. AI features will be disabled.");
+} else {
+  console.log("OpenAI API key loaded successfully. AI features enabled.");
 }
 
 const openai = apiKey ? new OpenAI({ 

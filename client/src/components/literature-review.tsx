@@ -109,7 +109,7 @@ export default function LiteratureReview() {
           <h1 className="text-3xl font-bold mb-2 text-white">
             Task {currentTask?.id}: Literature Review{" "}
             <span className="text-teal-400">
-              (Summative Task)
+              ({currentTask?.frictionType === "full_ai" ? "Full AI Assistance" : "AI Assistance with Brief Reflection Step"})
             </span>
           </h1>
           <p className="text-gray-300">

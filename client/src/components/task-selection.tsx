@@ -22,7 +22,7 @@ export default function TaskSelection() {
     {
       id: 2,
       title: "Literature Review", 
-      type: "Selective Friction AI Assistance",
+      type: "AI Assistance with Brief Reflection Step",
       description: "Complete preparatory work before accessing AI",
       color: "teal",
       taskType: "literature_review",
@@ -33,16 +33,16 @@ export default function TaskSelection() {
       title: "Argument Exploration",
       type: "Full AI Assistance", 
       description: "Immediate access to AI responses",
-      color: "purple",
+      color: "teal",
       taskType: "argument_exploration",
       frictionType: "full_ai",
     },
     {
       id: 4,
       title: "Argument Exploration",
-      type: "Selective Friction AI Assistance",
+      type: "AI Assistance with Brief Reflection Step",
       description: "Complete preparatory work before accessing AI",
-      color: "purple",
+      color: "teal",
       taskType: "argument_exploration", 
       frictionType: "selective_friction",
     },
@@ -78,13 +78,13 @@ export default function TaskSelection() {
             <div className="flex items-center justify-center space-x-2">
               <Circle className="w-3 h-3 fill-teal-400 text-teal-400" />
               <span className="text-lg text-gray-300">
-                <strong>Summative Task:</strong> Immediate access to AI responses
+                <strong>Full AI Assistance:</strong> Immediate access to AI responses
               </span>
             </div>
             <div className="flex items-center justify-center space-x-2">
-              <Circle className="w-3 h-3 fill-purple-400 text-purple-400" />
+              <Circle className="w-3 h-3 fill-teal-400 text-teal-400" />
               <span className="text-lg text-gray-300">
-                <strong>Generative Task:</strong> Complete preparatory work before accessing AI
+                <strong>AI Assistance with Brief Reflection Step:</strong> Complete preparatory work before accessing AI
               </span>
             </div>
           </div>

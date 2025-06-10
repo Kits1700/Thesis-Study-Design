@@ -48,10 +48,10 @@ export default function HelpTooltip({ className }: HelpTooltipProps) {
       case "task_selection":
         return {
           title: "Task Selection 🎯",
-          content: "Complete tasks sequentially. Teal tasks provide immediate AI help, purple tasks require preparatory work first.",
+          content: "Complete tasks sequentially. Experience both full AI assistance and AI assistance with brief reflection steps.",
           tips: [
             "Tasks unlock one by one as you complete them",
-            "Pay attention to the different assistance styles",
+            "Compare immediate AI help vs preparatory work first",
             "Each task takes about 10-15 minutes"
           ]
         };

@@ -1,15 +1,22 @@
 import OpenAI from "openai";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const apiKey = process.env.OPENAI_API_KEY || "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";
-console.log("API Key loaded:", apiKey ? `${apiKey.slice(0, 10)}...` : "No key found");
+const apiKey = process.env.OPENAI_API_KEY;
 
-const openai = new OpenAI({ 
+if (!apiKey) {
+  console.warn("OpenAI API key not found. AI features will be disabled.");
+}
+
+const openai = apiKey ? new OpenAI({ 
   apiKey: apiKey
-});
+}) : null;
 
 export async function generateLiteratureReview(topic: string): Promise<string> {
   try {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured");
+    }
+    
     console.log("Generating literature review for topic:", topic);
     
     const response = await openai.chat.completions.create({
@@ -62,6 +69,10 @@ export async function generateArgumentExploration(
   counterarguments?: string
 ): Promise<string> {
   try {
+    if (!openai) {
+      throw new Error("OpenAI API key not configured");
+    }
+    
     let userContext = "";
     
     if (initialThoughts) {

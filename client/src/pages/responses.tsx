@@ -37,7 +37,7 @@ export default function ResponsesPage() {
 
     // Sort each participant's questionnaires by task ID
     Object.keys(grouped).forEach(participantId => {
-      grouped[participantId].sort((a, b) => a.taskId - b.taskId);
+      grouped[participantId].sort((a: Questionnaire, b: Questionnaire) => a.taskId - b.taskId);
     });
 
     return grouped;
@@ -116,7 +116,7 @@ export default function ResponsesPage() {
                     <Badge variant="outline">
                       {participantQuestionnaires.length} responses
                     </Badge>
-                    {participantQuestionnaires.some(q => q.taskId === 999) && (
+                    {participantQuestionnaires.some((q: Questionnaire) => q.taskId === 999) && (
                       <Badge variant="default">Study Completed</Badge>
                     )}
                   </div>

@@ -44,15 +44,15 @@ interface Questionnaire {
 export default function AdminPage() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   
-  const { data: participants = [], isLoading: participantsLoading } = useQuery({
+  const { data: participants = [], isLoading: participantsLoading } = useQuery<Participant[]>({
     queryKey: ['/api/admin/participants'],
   });
 
-  const { data: tasks = [], isLoading: tasksLoading } = useQuery({
+  const { data: tasks = [], isLoading: tasksLoading } = useQuery<Task[]>({
     queryKey: ['/api/admin/tasks'],
   });
 
-  const { data: questionnaires = [], isLoading: questionnairesLoading } = useQuery({
+  const { data: questionnaires = [], isLoading: questionnairesLoading } = useQuery<Questionnaire[]>({
     queryKey: ['/api/admin/questionnaires'],
   });
 
@@ -161,7 +161,11 @@ export default function AdminPage() {
           <CardContent>
             <ScrollArea className="h-[800px]">
               <div className="space-y-6">
-                {participantData.map(({ participant, tasks: participantTasks, questionnaires: participantQuestionnaires }) => (
+                {participantData.map(({ participant, tasks: participantTasks, questionnaires: participantQuestionnaires }: {
+                  participant: Participant;
+                  tasks: Task[];
+                  questionnaires: Questionnaire[];
+                }) => (
                   <div key={participant.id} className="border rounded-lg p-6 space-y-4">
                     <div className="flex items-center justify-between">
                       <div>

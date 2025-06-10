@@ -17,11 +17,56 @@ export default function ArgumentExploration() {
 
   const generateArgumentsMutation = useMutation({
     mutationFn: async (data: { topic: string; initialThoughts?: string; counterarguments?: string }) => {
-      const response = await apiRequest("POST", "/api/generate/argument-exploration", data);
-      return response.json();
+      const response = await fetch("/api/generate/argument-exploration/stream", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate argument exploration");
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("No response body");
+      }
+
+      setGeneratedContent(""); // Clear previous content
+      let fullContent = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = new TextDecoder().decode(value);
+        const lines = chunk.split('\n');
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.content) {
+                fullContent = data.content;
+                setGeneratedContent(fullContent);
+              }
+              if (data.done) {
+                return { content: fullContent };
+              }
+              if (data.error) {
+                throw new Error(data.error);
+              }
+            } catch (e) {
+              // Skip invalid JSON
+            }
+          }
+        }
+      }
+
+      return { content: fullContent };
     },
     onSuccess: (data) => {
-      setGeneratedContent(data.content);
+      // Content is already set via streaming
     },
   });
 

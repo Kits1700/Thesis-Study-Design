@@ -123,7 +123,7 @@ export default function ResponsesPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
-                    {participantQuestionnaires.map(questionnaire => (
+                    {participantQuestionnaires.map((questionnaire: Questionnaire) => (
                       <div key={questionnaire.id} className="border-l-4 border-blue-500 pl-4">
                         <div className="flex items-center justify-between mb-3">
                           <h4 className="font-semibold">

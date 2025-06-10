@@ -1,12 +1,17 @@
 import OpenAI from "openai";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+const apiKey = process.env.OPENAI_API_KEY || "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";
+console.log("API Key loaded:", apiKey ? `${apiKey.slice(0, 10)}...` : "No key found");
+
 const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "sk-test-key"
+  apiKey: apiKey
 });
 
 export async function generateLiteratureReview(topic: string): Promise<string> {
   try {
+    console.log("Generating literature review for topic:", topic);
+    
     const response = await openai.chat.completions.create({
       model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
       messages: [
@@ -31,9 +36,15 @@ Requirements:
       temperature: 0.7,
     });
 
+    console.log("OpenAI response received successfully");
     return response.choices[0].message.content || "Error generating literature review.";
   } catch (error: any) {
     console.error("Error generating literature review:", error);
+    console.error("Error details:", {
+      message: error.message,
+      status: error.status,
+      code: error.code
+    });
     throw new Error(`Failed to generate literature review: ${error.message}`);
   }
 }

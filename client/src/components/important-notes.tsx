@@ -19,6 +19,9 @@ export default function ImportantNotes() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-8">Important Notes</h1>
+          <p className="text-gray-300 text-lg max-w-3xl mx-auto">
+            Before you begin, please keep these key points in mind to get the most out of your experience
+          </p>
         </div>
 
         <div className="space-y-6 mb-12">

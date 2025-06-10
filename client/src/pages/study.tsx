@@ -9,6 +9,7 @@ import LiteratureReview from "@/components/literature-review";
 import ArgumentExploration from "@/components/argument-exploration";
 import Questionnaire from "@/components/questionnaire";
 import CompletionScreen from "@/components/completion-screen";
+import HelpTooltip from "@/components/ui/help-tooltip";
 
 export default function StudyPage() {
   const { 
@@ -79,6 +80,7 @@ export default function StudyPage() {
       <main>
         {renderCurrentStep()}
       </main>
+      <HelpTooltip />
     </div>
   );
 }

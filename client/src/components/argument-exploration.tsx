@@ -8,19 +8,53 @@ import { apiRequest } from "@/lib/queryClient";
 import { Loader2, RefreshCw, CheckCircle } from "lucide-react";
 
 export default function ArgumentExploration() {
-  const { currentTask, setCurrentStep } = useStudyStore();
+  const { currentTask, setCurrentStep, participantId } = useStudyStore();
   const [topic, setTopic] = useState("");
   const [initialThoughts, setInitialThoughts] = useState("");
   const [counterarguments, setCounterarguments] = useState("");
   const [generatedContent, setGeneratedContent] = useState("");
   const [isPreparatoryComplete, setIsPreparatoryComplete] = useState(false);
+  const [taskCreated, setTaskCreated] = useState(false);
 
-  const generateArgumentsMutation = useMutation({
-    mutationFn: async (data: { topic: string; initialThoughts?: string; counterarguments?: string }) => {
-      const response = await fetch("/api/generate/argument-exploration/stream", {
+  const createTaskMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await fetch("/api/task", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create task");
+      }
+      return response.json();
+    },
+  });
+
+  const generateArgumentsMutation = useMutation({
+    mutationFn: async (data: { topic: string; initialThoughts?: string; counterarguments?: string }) => {
+      // Create task record first if not already created
+      if (!taskCreated && currentTask && participantId) {
+        await createTaskMutation.mutateAsync({
+          participantId,
+          taskId: currentTask.id,
+          taskType: currentTask.taskType,
+          frictionType: currentTask.frictionType,
+          topic: data.topic,
+          initialThoughts: data.initialThoughts,
+          counterarguments: data.counterarguments,
+          generatedContent: {},
+        });
+        setTaskCreated(true);
+      }
+
+      const response = await fetch("/api/generate/argument-exploration/stream", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          participantId,
+          taskId: currentTask?.id,
+        }),
       });
 
       if (!response.ok) {

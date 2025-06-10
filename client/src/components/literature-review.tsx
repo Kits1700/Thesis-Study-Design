@@ -8,7 +8,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Loader2, RefreshCw, CheckCircle, GripVertical } from "lucide-react";
 
 export default function LiteratureReview() {
-  const { currentTask, setCurrentStep } = useStudyStore();
+  const { currentTask, setCurrentStep, participantId } = useStudyStore();
   const [topic, setTopic] = useState("");
   const [initialThoughts, setInitialThoughts] = useState("");
   const [paperAbstracts, setPaperAbstracts] = useState([
@@ -20,13 +20,46 @@ export default function LiteratureReview() {
   ]);
   const [generatedContent, setGeneratedContent] = useState("");
   const [isPreparatoryComplete, setIsPreparatoryComplete] = useState(false);
+  const [taskCreated, setTaskCreated] = useState(false);
 
-  const generateReviewMutation = useMutation({
-    mutationFn: async (data: { topic: string }) => {
-      const response = await fetch("/api/generate/literature-review/stream", {
+  const createTaskMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await fetch("/api/task", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create task");
+      }
+      return response.json();
+    },
+  });
+
+  const generateReviewMutation = useMutation({
+    mutationFn: async (data: { topic: string }) => {
+      // Create task record first if not already created
+      if (!taskCreated && currentTask && participantId) {
+        await createTaskMutation.mutateAsync({
+          participantId,
+          taskId: currentTask.id,
+          taskType: currentTask.taskType,
+          frictionType: currentTask.frictionType,
+          topic: data.topic,
+          initialThoughts,
+          generatedContent: {},
+        });
+        setTaskCreated(true);
+      }
+
+      const response = await fetch("/api/generate/literature-review/stream", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          participantId,
+          taskId: currentTask?.id,
+        }),
       });
 
       if (!response.ok) {

@@ -75,16 +75,27 @@ export default function Questionnaire() {
       return response.json();
     },
     onSuccess: () => {
-      const taskId = currentTask?.id || 0;
-      markTaskComplete(taskId);
-      updateProgress();
-      
-      // Check if all tasks are completed
-      if (taskId >= 4) {
-        setCurrentStep("completion");
-      } else {
-        // Return to task selection to show sequential progress
-        setCurrentStep("task_selection");
+      // Save questionnaire response to local storage
+      if (currentTask) {
+        saveQuestionnaireResponse(currentTask.id, responses);
+        
+        // Mark task as complete with comprehensive data
+        markTaskComplete({
+          taskId: currentTask.id,
+          taskType: currentTask.taskType,
+          frictionType: currentTask.frictionType,
+          topic: `${currentTask.taskType} task completed`,
+        });
+        
+        updateProgress();
+        
+        // Check if all tasks are completed
+        if (currentTask.id >= 4) {
+          setCurrentStep("completion");
+        } else {
+          // Return to task selection to show sequential progress
+          setCurrentStep("task_selection");
+        }
       }
     },
   });

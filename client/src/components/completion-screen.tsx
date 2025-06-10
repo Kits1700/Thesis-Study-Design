@@ -262,7 +262,9 @@ export default function CompletionScreen() {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <DataExport />
+        
+        <div className="space-y-4 mt-8">
           <p className="text-gray-400 text-sm">
             You may now close this window. Thank you again for your participation!
           </p>

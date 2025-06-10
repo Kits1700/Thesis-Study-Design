@@ -8,7 +8,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Loader2, RefreshCw, CheckCircle, GripVertical } from "lucide-react";
 
 export default function LiteratureReview() {
-  const { currentTask, setCurrentStep, participantId } = useStudyStore();
+  const { currentTask, setCurrentStep, participantId, markTaskComplete } = useStudyStore();
   const [topic, setTopic] = useState("");
   const [initialThoughts, setInitialThoughts] = useState("");
   const [paperAbstracts, setPaperAbstracts] = useState([
@@ -171,6 +171,20 @@ export default function LiteratureReview() {
   };
 
   const handleNext = () => {
+    // Save comprehensive task data to local storage
+    if (currentTask) {
+      markTaskComplete({
+        taskId: currentTask.id,
+        taskType: currentTask.taskType,
+        frictionType: currentTask.frictionType,
+        topic: topic,
+        initialThoughts: initialThoughts,
+        generatedContent: {
+          literatureReview: generatedContent,
+          paperAbstracts: paperAbstracts,
+        },
+      });
+    }
     setCurrentStep("questionnaire");
   };
 

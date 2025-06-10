@@ -111,9 +111,7 @@ export default function CompletionScreen() {
 
     finalQuestionnaireMutation.mutate({
       participantId,
-      taskId: "final",
       responses,
-      timestamp: new Date().toISOString(),
     });
   };
 
@@ -211,57 +209,51 @@ export default function CompletionScreen() {
     <section className="py-12 px-6 bg-gray-900 min-h-screen">
       <div className="max-w-3xl mx-auto text-center">
         <div className="mb-8">
-          <div className="w-20 h-20 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-12 h-12 text-white" />
+          <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-8">
+            <CheckCircle className="w-14 h-14 text-white" />
           </div>
-          <h1 className="text-3xl font-bold mb-4 text-white">Study Completed Successfully</h1>
-          <p className="text-gray-300 text-lg">
-            Thank you for your participation in this research study. Your responses have been recorded and will contribute to our understanding of AI assistance in academic tasks.
+          <h1 className="text-4xl font-bold mb-6 text-white">Thank You!</h1>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-300">Study Completed Successfully</h2>
+          <p className="text-gray-300 text-lg leading-relaxed mb-8">
+            Your participation in this research study is greatly appreciated. Your responses have been recorded and will contribute valuable insights to our understanding of how different AI assistance approaches affect thinking and engagement in academic tasks.
           </p>
+          
+          <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 mb-8">
+            <h3 className="text-xl font-semibold text-white mb-4">What happens next?</h3>
+            <div className="text-left space-y-3 text-gray-300">
+              <p>• Your data will be analyzed alongside other participants to understand patterns in AI-human collaboration</p>
+              <p>• All responses remain anonymous and confidential</p>
+              <p>• Results will contribute to improving AI assistance design for academic work</p>
+            </div>
+          </div>
         </div>
 
-        <Card className="surface border border-border mb-8">
-          <CardHeader>
-            <CardTitle>Study Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-6 text-sm">
-              <div>
-                <p className="text-secondary mb-1">Tasks Completed</p>
-                <p className="font-semibold">{completedTasks.length} of 4</p>
-              </div>
-              <div>
-                <p className="text-secondary mb-1">Participant ID</p>
-                <p className="font-semibold font-mono">{participantId}</p>
-              </div>
-              <div>
-                <p className="text-secondary mb-1">Condition A</p>
-                <p className="font-semibold">Full AI Assistance</p>
-              </div>
-              <div>
-                <p className="text-secondary mb-1">Condition B</p>
-                <p className="font-semibold">Selective Friction</p>
-              </div>
+        <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 mb-8">
+          <h3 className="text-xl font-semibold text-white mb-4">Study Summary</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
+            <div className="flex justify-between">
+              <span>Tasks Completed:</span>
+              <span className="font-semibold text-white">4 of 4</span>
             </div>
-          </CardContent>
-        </Card>
+            <div className="flex justify-between">
+              <span>Participant ID:</span>
+              <span className="font-mono text-purple-400">{participantId}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Literature Review:</span>
+              <span className="text-teal-400">Summative Tasks</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Argument Exploration:</span>
+              <span className="text-purple-400">Generative Tasks</span>
+            </div>
+          </div>
+        </div>
 
         <div className="space-y-4">
-          <Button 
-            onClick={handleDownloadData}
-            disabled={downloadDataMutation.isPending}
-            className="w-full bg-primary hover:bg-primary/90"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            {downloadDataMutation.isPending ? "Downloading..." : "Download Study Data"}
-          </Button>
-          <Button 
-            onClick={handleReturnToMenu}
-            variant="outline" 
-            className="w-full btn-surface"
-          >
-            Return to Main Menu
-          </Button>
+          <p className="text-gray-400 text-sm">
+            You may now close this window. Thank you again for your participation!
+          </p>
         </div>
       </div>
     </section>

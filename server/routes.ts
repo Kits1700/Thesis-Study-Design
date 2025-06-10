@@ -128,7 +128,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Submit final questionnaire
   app.post("/api/questionnaire/final", async (req, res) => {
     try {
-      const questionnaireData = insertQuestionnaireSchema.parse(req.body);
+      // Transform final questionnaire data to match schema
+      const { participantId, responses } = req.body;
+      const questionnaireData = {
+        participantId,
+        taskId: 999, // Use special ID for final questionnaire
+        responses: responses,
+      };
+      
       const questionnaire = await storage.createQuestionnaire(questionnaireData);
       res.json(questionnaire);
     } catch (error: any) {

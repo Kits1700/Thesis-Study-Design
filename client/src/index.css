@@ -12,6 +12,7 @@
     font-variation-settings: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    zoom: 0.85;
   }
 }
 

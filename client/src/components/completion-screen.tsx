@@ -11,7 +11,7 @@ import { CheckCircle, Download, Loader2 } from "lucide-react";
 import DataExport from "./data-export";
 
 export default function CompletionScreen() {
-  const { participantId, completedTasks, setCurrentStep } = useStudyStore();
+  const { participantId, completedTasks, setCurrentStep, saveQuestionnaireResponse } = useStudyStore();
   const [showFinalQuestionnaire, setShowFinalQuestionnaire] = useState(true);
   const [responses, setResponses] = useState<Record<string, string>>({});
 
@@ -84,6 +84,8 @@ export default function CompletionScreen() {
       return response.json();
     },
     onSuccess: () => {
+      // Save final questionnaire responses to local storage
+      saveQuestionnaireResponse(999, responses); // Use 999 to indicate final questionnaire
       setShowFinalQuestionnaire(false);
     },
   });

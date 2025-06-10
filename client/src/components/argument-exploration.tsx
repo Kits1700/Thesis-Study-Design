@@ -8,7 +8,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Loader2, RefreshCw, CheckCircle } from "lucide-react";
 
 export default function ArgumentExploration() {
-  const { currentTask, setCurrentStep, participantId } = useStudyStore();
+  const { currentTask, setCurrentStep, participantId, markTaskComplete } = useStudyStore();
   const [topic, setTopic] = useState("");
   const [initialThoughts, setInitialThoughts] = useState("");
   const [counterarguments, setCounterarguments] = useState("");
@@ -121,6 +121,20 @@ export default function ArgumentExploration() {
   };
 
   const handleNext = () => {
+    // Save comprehensive task data to local storage
+    if (currentTask) {
+      markTaskComplete({
+        taskId: currentTask.id,
+        taskType: currentTask.taskType,
+        frictionType: currentTask.frictionType,
+        topic: topic,
+        initialThoughts: initialThoughts,
+        counterarguments: counterarguments,
+        generatedContent: {
+          argumentExploration: generatedContent,
+        },
+      });
+    }
     setCurrentStep("questionnaire");
   };
 

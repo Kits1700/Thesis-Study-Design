@@ -14,10 +14,10 @@ export default function TaskOverview() {
             Encouraging Thought Before Completion
           </h1>
           <h2 className="text-xl md:text-2xl text-gray-300 mb-3">
-            The Role of Friction in AI - Assisted Tasks
+            The Role of Friction in LLM - Assisted Tasks
           </h2>
           <p className="text-gray-400 italic text-lg">
-            Exploring how reflective pauses influence user engagement and critical thinking in AI-powered workflows
+            Exploring how reflective pauses influence user engagement and critical thinking in Human LLM interactions
           </p>
         </div>
 
@@ -25,7 +25,7 @@ export default function TaskOverview() {
         <div className="bg-gray-800 border border-gray-700 rounded-lg p-8 mb-8">
           <h3 className="text-xl font-semibold mb-4">What you'll do</h3>
           <p className="text-gray-300 mb-8">
-            You'll complete two types of tasks with different levels of AI assistance to help us understand 
+            You'll complete two types of tasks with different levels of LLM assistance to help us understand 
             how friction affects thinking.
           </p>
 
@@ -59,13 +59,13 @@ export default function TaskOverview() {
                 <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center text-black font-bold text-xs">
                   1
                 </div>
-                <span className="text-gray-300">Full AI assistance with immediate access</span>
+                <span className="text-gray-300">Full LLM assistance with immediate access</span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
                   2
                 </div>
-                <span className="text-gray-300">AI assistance with brief reflection step</span>
+                <span className="text-gray-300">LLM assistance with brief reflection step</span>
               </div>
             </div>
           </div>

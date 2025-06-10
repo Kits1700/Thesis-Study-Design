@@ -57,9 +57,9 @@ export default function HelpTooltip({ className }: HelpTooltipProps) {
         };
 
       case "literature_review":
-        if (currentTask?.id === 1 || currentTask?.id === 2) {
+        if (currentTask?.frictionType === "full_ai") {
           return {
-            title: "Literature Review - Summative Task 📚",
+            title: "Literature Review - Full AI Assistance 📚",
             content: "You have immediate access to AI assistance. Use it freely to help generate a comprehensive literature review.",
             tips: [
               "Enter your topic and click 'Generate Review'",
@@ -67,33 +67,40 @@ export default function HelpTooltip({ className }: HelpTooltipProps) {
               "Feel free to regenerate with different topics"
             ]
           };
+        } else {
+          return {
+            title: "Literature Review - With Reflection Step 📚",
+            content: "Complete your preparatory work first, then access AI assistance to enhance your review.",
+            tips: [
+              "Find and rank 5-7 paper abstracts first",
+              "AI assistance unlocks after completing preparatory work",
+              "Compare this approach with the previous task"
+            ]
+          };
         }
-        break;
 
       case "argument_exploration":
-        if (currentTask?.id === 3) {
+        if (currentTask?.frictionType === "full_ai") {
           return {
-            title: "Argument Exploration - Generative Task 💭",
+            title: "Argument Exploration - Full AI Assistance 💭",
+            content: "You have immediate access to AI assistance for exploring complex arguments on your chosen topic.",
+            tips: [
+              "Enter your topic and use AI to develop arguments",
+              "The AI will help structure comprehensive perspectives",
+              "Feel free to explore different angles"
+            ]
+          };
+        } else {
+          return {
+            title: "Argument Exploration - With Reflection Step 🎯",
             content: "Complete your own brainstorming first, then unlock AI assistance to enhance your ideas.",
             tips: [
               "Start by writing your initial thoughts",
-              "Add counterarguments from your perspective",
-              "AI assistance unlocks after you complete both sections"
+              "Add counterarguments from your perspective", 
+              "AI assistance unlocks after completing preparatory work"
             ]
           };
         }
-        if (currentTask?.id === 4) {
-          return {
-            title: "Final Argument Task - Generative 🎯",
-            content: "Same preparatory approach as Task 3. Build your foundation before accessing AI enhancement.",
-            tips: [
-              "Compare this experience with earlier tasks",
-              "Notice how preparation affects your thinking",
-              "Reflect on which approach feels more engaging"
-            ]
-          };
-        }
-        break;
 
       case "questionnaire":
         return {

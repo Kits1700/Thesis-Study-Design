@@ -11,15 +11,7 @@ interface HelpTooltipProps {
 
 export default function HelpTooltip({ className }: HelpTooltipProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isPulsing, setIsPulsing] = useState(false);
   const { currentStep, currentTask } = useStudyStore();
-
-  // Add a subtle pulse animation when context changes
-  useEffect(() => {
-    setIsPulsing(true);
-    const timer = setTimeout(() => setIsPulsing(false), 2000);
-    return () => clearTimeout(timer);
-  }, [currentStep, currentTask]);
 
   const getContextualHelp = () => {
     switch (currentStep) {
@@ -151,14 +143,9 @@ export default function HelpTooltip({ className }: HelpTooltipProps) {
         <PopoverTrigger asChild>
           <Button
             size="lg"
-            className={`h-14 w-14 rounded-full bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-purple-400 relative ${
-              isPulsing ? 'animate-pulse' : ''
-            }`}
+            className="h-14 w-14 rounded-full bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-purple-400"
           >
             <MessageCircle className="h-6 w-6" />
-            {isPulsing && (
-              <Sparkles className="h-4 w-4 absolute -top-1 -right-1 text-yellow-400 animate-bounce" />
-            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent 

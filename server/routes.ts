@@ -278,6 +278,46 @@ Requirements:
     }
   });
 
+  // Admin endpoints to view all data
+  app.get("/api/admin/participants", async (req, res) => {
+    try {
+      const allParticipants = await storage.getAllParticipants();
+      res.json(allParticipants);
+    } catch (error: any) {
+      console.error("Error fetching all participants:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch participants",
+        error: error.message 
+      });
+    }
+  });
+
+  app.get("/api/admin/tasks", async (req, res) => {
+    try {
+      const allTasks = await storage.getAllTasks();
+      res.json(allTasks);
+    } catch (error: any) {
+      console.error("Error fetching all tasks:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch tasks",
+        error: error.message 
+      });
+    }
+  });
+
+  app.get("/api/admin/questionnaires", async (req, res) => {
+    try {
+      const allQuestionnaires = await storage.getAllQuestionnaires();
+      res.json(allQuestionnaires);
+    } catch (error: any) {
+      console.error("Error fetching all questionnaires:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch questionnaires",
+        error: error.message 
+      });
+    }
+  });
+
   // Export study data
   app.get("/api/export/:participantId", async (req, res) => {
     try {

@@ -7,15 +7,18 @@ export interface IStorage {
   createParticipant(participant: InsertParticipant): Promise<Participant>;
   getParticipant(participantId: string): Promise<Participant | undefined>;
   updateParticipant(participantId: string, updates: Partial<Participant>): Promise<Participant | undefined>;
+  getAllParticipants(): Promise<Participant[]>;
   
   // Tasks
   createTask(task: InsertTask): Promise<Task>;
   getTasksByParticipant(participantId: string): Promise<Task[]>;
   updateTask(taskId: number, updates: Partial<Task>): Promise<Task | undefined>;
+  getAllTasks(): Promise<Task[]>;
   
   // Questionnaires
   createQuestionnaire(questionnaire: InsertQuestionnaire): Promise<Questionnaire>;
   getQuestionnairesByParticipant(participantId: string): Promise<Questionnaire[]>;
+  getAllQuestionnaires(): Promise<Questionnaire[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -82,6 +85,18 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(questionnaires)
       .where(eq(questionnaires.participantId, participantId));
+  }
+
+  async getAllParticipants(): Promise<Participant[]> {
+    return await db.select().from(participants);
+  }
+
+  async getAllTasks(): Promise<Task[]> {
+    return await db.select().from(tasks);
+  }
+
+  async getAllQuestionnaires(): Promise<Questionnaire[]> {
+    return await db.select().from(questionnaires);
   }
 }
 

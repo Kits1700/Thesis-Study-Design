@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useStudyStore } from "@/lib/study-store";
 import { apiRequest } from "@/lib/queryClient";
-import { Loader2, RefreshCw, CheckCircle, GripVertical } from "lucide-react";
+import { Loader2, RefreshCw, CheckCircle, GripVertical, Download } from "lucide-react";
 
 export default function LiteratureReview() {
   const { currentTask, setCurrentStep, participantId, markTaskComplete } = useStudyStore();
@@ -168,7 +168,10 @@ export default function LiteratureReview() {
       setIsPreparatoryComplete(true);
     }
     
-    generateReviewMutation.mutate({ topic: topic || "Cancer Vaccines" });
+    generateReviewMutation.mutate({ 
+      topic: topic || "Cancer Vaccines",
+      paperAbstracts: isSelectiveFriction ? paperAbstracts : null
+    });
   };
 
   const handleNext = () => {
@@ -190,11 +193,28 @@ export default function LiteratureReview() {
         },
       });
     }
+    // Scroll to top when moving to questionnaire
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setCurrentStep("questionnaire");
   };
 
   const handleBack = () => {
     setCurrentStep("task_selection");
+  };
+
+  const downloadLiteratureReview = () => {
+    if (!generatedContent) return;
+    
+    const textContent = `Literature Review: ${topic || "Generated Review"}\n\n${generatedContent.replace(/<[^>]*>/g, '')}`;
+    const blob = new Blob([textContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `literature_review_${topic ? topic.replace(/[^a-zA-Z0-9]/g, '_') : 'generated'}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const isSelectiveFriction = currentTask?.frictionType === "selective_friction";
@@ -360,26 +380,36 @@ export default function LiteratureReview() {
           
           <div className="flex space-x-4">
             {generatedContent && (
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setGeneratedContent("");
-                  if (isSelectiveFriction) {
-                    setIsPreparatoryComplete(false);
-                  }
-                }}
-                className="border-gray-600 text-gray-300 hover:bg-gray-700"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Generate New Review
-              </Button>
+              <>
+                <Button 
+                  variant="outline" 
+                  onClick={downloadLiteratureReview}
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Review
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setGeneratedContent("");
+                    if (isSelectiveFriction) {
+                      setIsPreparatoryComplete(false);
+                    }
+                  }}
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Generate New Review
+                </Button>
+              </>
             )}
             <Button 
               onClick={handleNext} 
-              disabled={!generatedContent}
-              className="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white"
+              disabled={!generatedContent || generateReviewMutation.isPending}
+              className="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white disabled:opacity-50"
             >
-              Next
+              {generateReviewMutation.isPending ? "Generating..." : "Next"}
             </Button>
           </div>
         </div>

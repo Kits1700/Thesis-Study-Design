@@ -235,11 +235,6 @@ export default function LiteratureReview() {
               : "Your goal is to create a short literature review on a topic of your choice by directly receiving help from the AI to generate a structured summary"
             }
           </p>
-          <div className="mt-4 p-3 bg-blue-900/20 border border-blue-700 rounded-lg">
-            <p className="text-blue-300 text-sm">
-              ℹ️ This summary is based on user-provided abstracts. Interpretations may vary; please refer to the full articles for context.
-            </p>
-          </div>
         </div>
 
         {isSelectiveFriction && !isPreparatoryComplete && (

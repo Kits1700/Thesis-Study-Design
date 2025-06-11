@@ -185,7 +185,7 @@ export default function ArgumentExploration() {
           </p>
           <div className="mt-4 p-3 bg-yellow-900/20 border border-yellow-700 rounded-lg">
             <p className="text-yellow-300 text-sm">
-              ⚠️ <strong>Notice:</strong> LLM content may unintentionally reflect societal biases. Always verify claims with reputable sources.
+              ⚠️ LLM content may unintentionally reflect societal biases. Always verify claims with reputable sources.
             </p>
           </div>
         </div>

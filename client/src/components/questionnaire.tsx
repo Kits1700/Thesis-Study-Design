@@ -11,6 +11,11 @@ export default function Questionnaire() {
   const { currentTask, participantId, setCurrentStep, setCurrentTask, markTaskComplete, saveQuestionnaireResponse, updateProgress } = useStudyStore();
   const [responses, setResponses] = useState<Record<string, string>>({});
 
+  // Scroll to top when questionnaire loads
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const questions = [
     {
       id: "engagement_1",

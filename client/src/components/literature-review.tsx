@@ -37,7 +37,7 @@ export default function LiteratureReview() {
   });
 
   const generateReviewMutation = useMutation({
-    mutationFn: async (data: { topic: string }) => {
+    mutationFn: async (data: { topic: string; paperAbstracts?: any[] }) => {
       // Create task record first if not already created
       if (!taskCreated && currentTask && participantId) {
         await createTaskMutation.mutateAsync({
@@ -170,7 +170,7 @@ export default function LiteratureReview() {
     
     generateReviewMutation.mutate({ 
       topic: topic || "Cancer Vaccines",
-      paperAbstracts: isSelectiveFriction ? paperAbstracts : null
+      paperAbstracts: isSelectiveFriction ? paperAbstracts : undefined
     });
   };
 

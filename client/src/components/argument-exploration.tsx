@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useStudyStore } from "@/lib/study-store";
 import { apiRequest } from "@/lib/queryClient";
-import { Loader2, RefreshCw, CheckCircle } from "lucide-react";
+import { Loader2, RefreshCw, CheckCircle, Download } from "lucide-react";
 
 export default function ArgumentExploration() {
   const { currentTask, setCurrentStep, participantId, markTaskComplete } = useStudyStore();
@@ -141,7 +141,24 @@ export default function ArgumentExploration() {
         },
       });
     }
+    // Scroll to top when moving to questionnaire
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setCurrentStep("questionnaire");
+  };
+
+  const downloadArgumentExploration = () => {
+    if (!generatedContent) return;
+    
+    const textContent = `Argument Exploration: ${topic || "Generated Analysis"}\n\n${generatedContent.replace(/<[^>]*>/g, '')}`;
+    const blob = new Blob([textContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `argument_exploration_${topic ? topic.replace(/[^a-zA-Z0-9]/g, '_') : 'generated'}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const handleBack = () => {
@@ -321,26 +338,36 @@ export default function ArgumentExploration() {
           
           <div className="flex space-x-4">
             {generatedContent && (
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setGeneratedContent("");
-                  if (isSelectiveFriction) {
-                    setIsPreparatoryComplete(false);
-                  }
-                }}
-                className="border-gray-600 text-gray-300 hover:bg-gray-700"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Generate New Arguments
-              </Button>
+              <>
+                <Button 
+                  variant="outline" 
+                  onClick={downloadArgumentExploration}
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Analysis
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setGeneratedContent("");
+                    if (isSelectiveFriction) {
+                      setIsPreparatoryComplete(false);
+                    }
+                  }}
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Generate New Arguments
+                </Button>
+              </>
             )}
             <Button 
               onClick={handleNext} 
-              disabled={!generatedContent}
-              className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white"
+              disabled={!generatedContent || generateArgumentsMutation.isPending}
+              className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white disabled:opacity-50"
             >
-              Next
+              {generateArgumentsMutation.isPending ? "Generating..." : "Next"}
             </Button>
           </div>
         </div>

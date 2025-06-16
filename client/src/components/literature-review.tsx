@@ -12,11 +12,11 @@ export default function LiteratureReview() {
   const [topic, setTopic] = useState("");
   const [initialThoughts, setInitialThoughts] = useState("");
   const [paperAbstracts, setPaperAbstracts] = useState([
-    { id: 1, abstract: "", ranking: 0 },
-    { id: 2, abstract: "", ranking: 0 },
-    { id: 3, abstract: "", ranking: 0 },
-    { id: 4, abstract: "", ranking: 0 },
-    { id: 5, abstract: "", ranking: 0 }
+    { id: 1, abstract: "", citation: "", ranking: 0 },
+    { id: 2, abstract: "", citation: "", ranking: 0 },
+    { id: 3, abstract: "", citation: "", ranking: 0 },
+    { id: 4, abstract: "", citation: "", ranking: 0 },
+    { id: 5, abstract: "", citation: "", ranking: 0 }
   ]);
   const [generatedContent, setGeneratedContent] = useState("");
   const [isPreparatoryComplete, setIsPreparatoryComplete] = useState(false);
@@ -114,6 +114,14 @@ export default function LiteratureReview() {
     setPaperAbstracts(prev => 
       prev.map(paper => 
         paper.id === id ? { ...paper, abstract } : paper
+      )
+    );
+  };
+
+  const updatePaperCitation = (id: number, citation: string) => {
+    setPaperAbstracts(prev => 
+      prev.map(paper => 
+        paper.id === id ? { ...paper, citation } : paper
       )
     );
   };
@@ -259,9 +267,9 @@ export default function LiteratureReview() {
 
             <Card className="bg-gray-800 border border-gray-700 mb-8">
               <CardHeader>
-                <CardTitle className="text-white">Paper Abstracts</CardTitle>
+                <CardTitle className="text-white">Paper Abstracts & Citations</CardTitle>
                 <p className="text-gray-300 text-sm">
-                  Find and input 5 paper abstracts related to your topic. Drag and drop to rank them by relevance (1 = most relevant).
+                  Find and input 5 paper abstracts and their full citations related to your topic. Drag and drop to rank them by relevance (1 = most relevant).
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -281,17 +289,31 @@ export default function LiteratureReview() {
                           {index + 1}
                         </div>
                       </div>
-                      <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-300 mb-2">
-                          Paper {paper.id} Abstract
-                        </label>
-                        <Textarea
-                          value={paper.abstract}
-                          onChange={(e) => updatePaperAbstract(paper.id, e.target.value)}
-                          placeholder={`Enter abstract for paper ${paper.id}...`}
-                          className="bg-gray-600 border-gray-500 text-white placeholder-gray-400"
-                          rows={3}
-                        />
+                      <div className="flex-1 space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-2">
+                            Paper {paper.id} Citation
+                          </label>
+                          <Textarea
+                            value={paper.citation}
+                            onChange={(e) => updatePaperCitation(paper.id, e.target.value)}
+                            placeholder={`Enter full citation for paper ${paper.id} (e.g., Author, A. (2023). Title. Journal, 10(2), 123-145.)`}
+                            className="bg-gray-600 border-gray-500 text-white placeholder-gray-400"
+                            rows={2}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-2">
+                            Paper {paper.id} Abstract
+                          </label>
+                          <Textarea
+                            value={paper.abstract}
+                            onChange={(e) => updatePaperAbstract(paper.id, e.target.value)}
+                            placeholder={`Enter abstract for paper ${paper.id}...`}
+                            className="bg-gray-600 border-gray-500 text-white placeholder-gray-400"
+                            rows={3}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -302,7 +324,7 @@ export default function LiteratureReview() {
             <div className="text-center mb-8">
               <Button 
                 onClick={checkPreparatoryWork}
-                disabled={generateReviewMutation.isPending || !topic.trim() || paperAbstracts.filter(p => p.abstract.trim().length > 10).length < 5}
+                disabled={generateReviewMutation.isPending || !topic.trim() || paperAbstracts.filter(p => p.abstract.trim().length > 10 && p.citation.trim().length > 10).length < 5}
                 className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3"
               >
                 {generateReviewMutation.isPending ? (

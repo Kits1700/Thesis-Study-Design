@@ -29,10 +29,14 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
     if (paperAbstracts && paperAbstracts.length > 0) {
       const validAbstracts = paperAbstracts.filter(p => p.abstract && p.abstract.trim().length > 10);
       if (validAbstracts.length > 0) {
-        userPrompt += `\n\nIMPORTANT: Base your literature review on these specific paper abstracts provided by the user. Synthesize and analyze these papers as the core foundation of your review:\n\n`;
+        userPrompt += `\n\nIMPORTANT: Base your literature review on these specific papers provided by the user. Use both the citations and abstracts to create an authentic, well-referenced review:\n\n`;
         
         validAbstracts.forEach((paper, index) => {
-          userPrompt += `Paper ${index + 1}:\n${paper.abstract}\n\n`;
+          userPrompt += `Paper ${index + 1}:\n`;
+          if (paper.citation && paper.citation.trim()) {
+            userPrompt += `Citation: ${paper.citation}\n`;
+          }
+          userPrompt += `Abstract: ${paper.abstract}\n\n`;
         });
         
         userPrompt += `Write a comprehensive academic literature review using these ${validAbstracts.length} papers as your primary sources. Structure this as a formal research literature review with the following requirements:
@@ -60,8 +64,11 @@ RESEARCH QUALITY STANDARDS:
 TECHNICAL REQUIREMENTS:
 - Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
 - Target length: 1500-2000 words for comprehensive coverage
-- Reference the provided papers directly within your analysis
-- Create a publication-ready literature review suitable for academic journals`;
+- Use the provided citations exactly as given when referencing these papers
+- Include proper in-text citations throughout the review (e.g., Author, Year)
+- Reference the provided papers directly within your analysis using their actual citations
+- Create a publication-ready literature review suitable for academic journals
+- When citing the provided papers, use the exact citation format provided by the user`;
       } else {
         userPrompt += `\n\nRequirements:
 - Include introduction, theoretical foundations, current research landscape, methodological approaches, key findings, research gaps, and conclusion

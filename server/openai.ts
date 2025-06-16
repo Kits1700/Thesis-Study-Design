@@ -39,18 +39,39 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
           userPrompt += `Abstract: ${paper.abstract}\n\n`;
         });
         
-        userPrompt += `Write a comprehensive academic literature review using these ${validAbstracts.length} papers as your primary sources. Structure this as a formal research literature review with the following requirements:
+        userPrompt += `Write a comprehensive academic literature review using these ${validAbstracts.length} papers as your primary sources. Follow the standard literature review format with these sections:
 
-ACADEMIC STRUCTURE:
-- Introduction: Define the research domain and scope
-- Theoretical Framework: Establish key concepts and theoretical foundations
-- Current Research Landscape: Synthesize findings from the provided papers and related work
-- Methodological Analysis: Compare and evaluate research approaches
-- Critical Analysis: Identify strengths, limitations, and contradictions
-- Research Gaps: Highlight unexplored areas and limitations
-- Future Directions: Propose research opportunities and recommendations
-- Conclusion: Summarize key insights and implications
-- References: Complete bibliography of all cited works
+REQUIRED STRUCTURE:
+1. Introduction
+   - Explain the topic or research problem
+   - Define the scope and boundaries of the review (what's included/excluded)
+   - State the objectives or research questions guiding the review
+   - Explain why the topic is important
+
+2. Thematic Organization of the Literature
+   - Organize literature by themes or topics
+   - For each theme: summary and synthesis of key studies
+   - Compare, contrast, and critique research findings
+   - Identify gaps or controversies within each theme
+
+3. Methodological Comparison
+   - Compare methods used in different studies
+   - Discuss strengths and limitations of various approaches
+   - Highlight trends in research design or data collection
+
+4. Critical Analysis and Synthesis
+   - Identify patterns, gaps, and contradictions
+   - Discuss implications of findings
+   - Show how research builds upon existing work
+
+5. Conclusion
+   - Summarize the main insights from the literature
+   - Reiterate the gaps in knowledge
+   - Explain areas for future research
+
+6. References
+   - Include all sources cited in the review
+   - Use consistent academic citation format
 
 RESEARCH QUALITY STANDARDS:
 - Use formal academic language and scholarly tone throughout
@@ -65,19 +86,20 @@ RESEARCH QUALITY STANDARDS:
 
 TECHNICAL REQUIREMENTS:
 - Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
+- Use numbered section headings: <h3>1. Introduction</h3>, <h3>2. Thematic Organization of the Literature</h3>, etc.
 - Target length: 1500-2000 words for comprehensive coverage
 - Use the provided citations exactly as given when referencing these papers
 - Include proper in-text citations throughout the review (e.g., Author, Year)
 - Reference the provided papers directly within your analysis using their actual citations
 - Add related work citations based on the research themes identified in the provided abstracts
-- MANDATORY: End with a comprehensive "References" section (use <h3>References</h3> heading)
+- MANDATORY: Include section "6. References" with <h3>6. References</h3> heading
 - The References section MUST include all cited works: both provided citations and related literature
 - List each reference on a separate line using proper academic format
 - Create a publication-ready literature review suitable for academic journals
 - When citing the provided papers, use the exact citation format provided by the user
 - For related work, create realistic academic citations following standard format
 
-IMPORTANT: Your literature review MUST include all 9 sections including the References section at the end.`;
+IMPORTANT: Your literature review MUST include all 6 sections with numbered headings.`;
       } else {
         userPrompt += `Write a comprehensive academic literature review on the specified topic. Structure this as a formal research literature review with the following requirements:
 
@@ -108,18 +130,39 @@ TECHNICAL REQUIREMENTS:
 - Create a publication-ready literature review suitable for academic journals`;
       }
     } else {
-      userPrompt += `Write a comprehensive academic literature review on the specified topic. Structure this as a formal research literature review with the following requirements:
+      userPrompt += `Write a comprehensive academic literature review on the specified topic. Follow the standard literature review format with these sections:
 
-ACADEMIC STRUCTURE:
-- Introduction: Define the research domain and scope
-- Theoretical Framework: Establish key concepts and theoretical foundations
-- Current Research Landscape: Synthesize findings from relevant literature
-- Methodological Analysis: Compare and evaluate research approaches
-- Critical Analysis: Identify strengths, limitations, and contradictions
-- Research Gaps: Highlight unexplored areas and limitations
-- Future Directions: Propose research opportunities and recommendations
-- Conclusion: Summarize key insights and implications
-- References: Complete bibliography of all cited works
+REQUIRED STRUCTURE:
+1. Introduction
+   - Explain the topic or research problem
+   - Define the scope and boundaries of the review (what's included/excluded)
+   - State the objectives or research questions guiding the review
+   - Explain why the topic is important
+
+2. Thematic Organization of the Literature
+   - Organize literature by themes or topics
+   - For each theme: summary and synthesis of key studies
+   - Compare, contrast, and critique research findings
+   - Identify gaps or controversies within each theme
+
+3. Methodological Comparison
+   - Compare methods used in different studies
+   - Discuss strengths and limitations of various approaches
+   - Highlight trends in research design or data collection
+
+4. Critical Analysis and Synthesis
+   - Identify patterns, gaps, and contradictions
+   - Discuss implications of findings
+   - Show how research builds upon existing work
+
+5. Conclusion
+   - Summarize the main insights from the literature
+   - Reiterate the gaps in knowledge
+   - Explain areas for future research
+
+6. References
+   - Include all sources cited in the review
+   - Use consistent academic citation format
 
 RESEARCH QUALITY STANDARDS:
 - Use formal academic language and scholarly tone throughout
@@ -133,14 +176,15 @@ RESEARCH QUALITY STANDARDS:
 
 TECHNICAL REQUIREMENTS:
 - Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
+- Use numbered section headings: <h3>1. Introduction</h3>, <h3>2. Thematic Organization of the Literature</h3>, etc.
 - Target length: 1500-2000 words for comprehensive coverage
 - Include realistic citations and references (you may create plausible academic citations)
-- MANDATORY: End with a comprehensive "References" section (use <h3>References</h3> heading)
+- MANDATORY: Include section "6. References" with <h3>6. References</h3> heading
 - The References section MUST include all cited works from throughout the review
 - List each reference on a separate line using proper academic format
 - Create a publication-ready literature review suitable for academic journals
 
-IMPORTANT: Your literature review MUST include all 9 sections including the References section at the end.`;
+IMPORTANT: Your literature review MUST include all 6 sections with numbered headings.`;
     }
     
     const response = await openai.chat.completions.create({

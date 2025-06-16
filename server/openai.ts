@@ -49,39 +49,43 @@ When referencing these papers in your literature review:
 
 `;
         
-        userPrompt += `Write a comprehensive academic literature review using these ${validAbstracts.length} papers as your primary sources. Follow the standard literature review format with these sections:
+        userPrompt += `You MUST write a comprehensive academic literature review using these ${validAbstracts.length} papers as your primary sources. 
 
-REQUIRED STRUCTURE:
-1. Introduction
-   - Explain the topic or research problem
-   - Define the scope and boundaries of the review (what's included/excluded)
-   - State the objectives or research questions guiding the review
-   - Explain why the topic is important
+MANDATORY STRUCTURE - Include ALL 6 sections with exact numbered headings:
 
-2. Thematic Organization of the Literature
-   - Organize literature by themes or topics
-   - For each theme: summary and synthesis of key studies
-   - Compare, contrast, and critique research findings
-   - Identify gaps or controversies within each theme
+<h3>1. Introduction</h3>
+- Explain the topic or research problem
+- Define the scope and boundaries of the review (what's included/excluded)
+- State the objectives or research questions guiding the review
+- Explain why the topic is important
 
-3. Methodological Comparison
-   - Compare methods used in different studies
-   - Discuss strengths and limitations of various approaches
-   - Highlight trends in research design or data collection
+<h3>2. Thematic Organization of the Literature</h3>
+- Organize literature by themes or topics
+- For each theme: summary and synthesis of key studies
+- Compare, contrast, and critique research findings
+- Identify gaps or controversies within each theme
 
-4. Critical Analysis and Synthesis
-   - Identify patterns, gaps, and contradictions
-   - Discuss implications of findings
-   - Show how research builds upon existing work
+<h3>3. Methodological Comparison</h3>
+- Compare methods used in different studies
+- Discuss strengths and limitations of various approaches
+- Highlight trends in research design or data collection
 
-5. Conclusion
-   - Summarize the main insights from the literature
-   - Reiterate the gaps in knowledge
-   - Explain areas for future research
+<h3>4. Critical Analysis and Synthesis</h3>
+- Identify patterns, gaps, and contradictions
+- Discuss implications of findings
+- Show how research builds upon existing work
 
-6. References
-   - Include all sources cited in the review
-   - Use consistent academic citation format
+<h3>5. Conclusion</h3>
+- Summarize the main insights from the literature
+- Reiterate the gaps in knowledge
+- Explain areas for future research
+
+<h3>6. References</h3>
+- List the exact citations provided by the user
+- Include any additional sources cited
+- Use consistent academic citation format
+
+DO NOT deviate from this 6-section structure. Each section must have the exact heading format shown above.
 
 RESEARCH QUALITY STANDARDS:
 - Use formal academic language and scholarly tone throughout
@@ -201,7 +205,7 @@ IMPORTANT: Your literature review MUST include all 6 sections with numbered head
       messages: [
         {
           role: "system",
-          content: "You are a senior academic researcher and published scholar with expertise in writing formal literature reviews for peer-reviewed journals. Your task is to produce publication-quality literature reviews that demonstrate rigorous academic standards, critical analysis, and scholarly depth. Use formal academic writing conventions, maintain analytical objectivity, and structure reviews according to established academic formats. Synthesize research findings with critical evaluation and provide insights that advance scholarly understanding of the field."
+          content: "You are a senior academic researcher and published scholar with expertise in writing formal literature reviews for peer-reviewed journals. You MUST strictly follow the 6-section structure provided in the user prompt. Always include numbered headings exactly as specified: 1. Introduction, 2. Thematic Organization of the Literature, 3. Methodological Comparison, 4. Critical Analysis and Synthesis, 5. Conclusion, 6. References. Never omit any section. Use proper academic citations throughout and ensure the References section appears at the end with all cited works."
         },
         {
           role: "user",

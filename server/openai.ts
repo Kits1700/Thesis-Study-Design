@@ -70,22 +70,62 @@ TECHNICAL REQUIREMENTS:
 - Create a publication-ready literature review suitable for academic journals
 - When citing the provided papers, use the exact citation format provided by the user`;
       } else {
-        userPrompt += `\n\nRequirements:
-- Include introduction, theoretical foundations, current research landscape, methodological approaches, key findings, research gaps, and conclusion
-- Use proper academic tone and structure
+        userPrompt += `Write a comprehensive academic literature review on the specified topic. Structure this as a formal research literature review with the following requirements:
+
+ACADEMIC STRUCTURE:
+- Introduction: Define the research domain and scope
+- Theoretical Framework: Establish key concepts and theoretical foundations
+- Current Research Landscape: Synthesize findings from relevant literature
+- Methodological Analysis: Compare and evaluate research approaches
+- Critical Analysis: Identify strengths, limitations, and contradictions
+- Research Gaps: Highlight unexplored areas and limitations
+- Future Directions: Propose research opportunities and recommendations
+- Conclusion: Summarize key insights and implications
+
+RESEARCH QUALITY STANDARDS:
+- Use formal academic language and scholarly tone throughout
+- Synthesize rather than simply summarize research findings
+- Draw connections between studies and identify patterns or contradictions
+- Incorporate broader field knowledge and cite seminal works where relevant
+- Provide critical evaluation of methodologies and findings
+- Demonstrate deep analytical thinking and scholarly insight
+- Support arguments with evidence from the literature
+- Maintain objective, analytical perspective
+
+TECHNICAL REQUIREMENTS:
+- Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
+- Target length: 1500-2000 words for comprehensive coverage
 - Include realistic citations and references (you may create plausible academic citations)
-- Format as HTML with h3, h4, p, ul, li tags
-- Aim for approximately 800-1000 words
-- Provide scholarly analysis and synthesis of the field`;
+- Create a publication-ready literature review suitable for academic journals`;
       }
     } else {
-      userPrompt += `\n\nRequirements:
-- Include introduction, theoretical foundations, current research landscape, methodological approaches, key findings, research gaps, and conclusion
-- Use proper academic tone and structure
+      userPrompt += `Write a comprehensive academic literature review on the specified topic. Structure this as a formal research literature review with the following requirements:
+
+ACADEMIC STRUCTURE:
+- Introduction: Define the research domain and scope
+- Theoretical Framework: Establish key concepts and theoretical foundations
+- Current Research Landscape: Synthesize findings from relevant literature
+- Methodological Analysis: Compare and evaluate research approaches
+- Critical Analysis: Identify strengths, limitations, and contradictions
+- Research Gaps: Highlight unexplored areas and limitations
+- Future Directions: Propose research opportunities and recommendations
+- Conclusion: Summarize key insights and implications
+
+RESEARCH QUALITY STANDARDS:
+- Use formal academic language and scholarly tone throughout
+- Synthesize rather than simply summarize research findings
+- Draw connections between studies and identify patterns or contradictions
+- Incorporate broader field knowledge and cite seminal works where relevant
+- Provide critical evaluation of methodologies and findings
+- Demonstrate deep analytical thinking and scholarly insight
+- Support arguments with evidence from the literature
+- Maintain objective, analytical perspective
+
+TECHNICAL REQUIREMENTS:
+- Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
+- Target length: 1500-2000 words for comprehensive coverage
 - Include realistic citations and references (you may create plausible academic citations)
-- Format as HTML with h3, h4, p, ul, li tags
-- Aim for approximately 800-1000 words
-- Provide scholarly analysis and synthesis of the field`;
+- Create a publication-ready literature review suitable for academic journals`;
     }
     
     const response = await openai.chat.completions.create({

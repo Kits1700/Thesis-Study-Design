@@ -39,6 +39,16 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
           userPrompt += `Abstract: ${paper.abstract}\n\n`;
         });
         
+        userPrompt += `CITATION INSTRUCTIONS:
+When referencing these papers in your literature review:
+- DO NOT use "Paper 1", "Paper 2", etc.
+- Use proper in-text citations based on the provided citations
+- Extract author names and years from the provided citations for in-text references
+- Example: If citation is "Smith, J. (2023). Title. Journal, 10(1), 1-10." then cite as (Smith, 2023)
+- In the References section, list the exact citations provided by the user
+
+`;
+        
         userPrompt += `Write a comprehensive academic literature review using these ${validAbstracts.length} papers as your primary sources. Follow the standard literature review format with these sections:
 
 REQUIRED STRUCTURE:
@@ -88,18 +98,17 @@ TECHNICAL REQUIREMENTS:
 - Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
 - Use numbered section headings: <h3>1. Introduction</h3>, <h3>2. Thematic Organization of the Literature</h3>, etc.
 - Target length: 1500-2000 words for comprehensive coverage
-- Use the provided citations exactly as given when referencing these papers
-- Include proper in-text citations throughout the review (e.g., Author, Year)
-- Reference the provided papers directly within your analysis using their actual citations
+- Extract author names and publication years from provided citations for proper in-text referencing
+- Use standard academic in-text citation format (Author, Year) throughout the review
+- NEVER use "Paper 1", "Paper 2" etc. - always use proper author citations
 - Add related work citations based on the research themes identified in the provided abstracts
-- MANDATORY: Include section "6. References" with <h3>6. References</h3> heading
-- The References section MUST include all cited works: both provided citations and related literature
-- List each reference on a separate line using proper academic format
+- MANDATORY: Include section "6. References" with <h3>6. References</h3> heading at the end
+- In the References section, list the EXACT citations provided by the user first
+- Follow with any additional related work citations in alphabetical order
 - Create a publication-ready literature review suitable for academic journals
-- When citing the provided papers, use the exact citation format provided by the user
-- For related work, create realistic academic citations following standard format
+- Each reference should be on a separate line with proper academic formatting
 
-IMPORTANT: Your literature review MUST include all 6 sections with numbered headings.`;
+CRITICAL: Your literature review MUST end with a complete "6. References" section containing all cited works. Do not omit this section.`;
       } else {
         userPrompt += `Write a comprehensive academic literature review on the specified topic. Structure this as a formal research literature review with the following requirements:
 

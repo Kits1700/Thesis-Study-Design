@@ -35,20 +35,33 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
           userPrompt += `Paper ${index + 1}:\n${paper.abstract}\n\n`;
         });
         
-        userPrompt += `Requirements:
-- Build your literature review primarily around these ${validAbstracts.length} papers as the foundation
-- Synthesize findings and themes across these specific abstracts
-- Identify connections, contradictions, and patterns among these studies
-- Reference these papers directly in your analysis
-- EXPAND THE REVIEW by incorporating knowledge of similar and related papers in the field
-- Add theoretical context, seminal works, and broader field knowledge to create a comprehensive review
-- Include discussion of methodological approaches used across the field
-- Identify research gaps and future directions based on the provided papers and field knowledge
-- Create a robust literature review that goes beyond just the provided abstracts
-- Use proper academic tone and structure with scholarly depth
-- Format as HTML with h3, h4, p, ul, li tags
-- Aim for approximately 1200-1500 words for a comprehensive review
-- Provide thorough scholarly analysis that demonstrates deep understanding of the research area`;
+        userPrompt += `Write a comprehensive academic literature review using these ${validAbstracts.length} papers as your primary sources. Structure this as a formal research literature review with the following requirements:
+
+ACADEMIC STRUCTURE:
+- Introduction: Define the research domain and scope
+- Theoretical Framework: Establish key concepts and theoretical foundations
+- Current Research Landscape: Synthesize findings from the provided papers
+- Methodological Analysis: Compare and evaluate research approaches
+- Critical Analysis: Identify strengths, limitations, and contradictions
+- Research Gaps: Highlight unexplored areas and limitations
+- Future Directions: Propose research opportunities and recommendations
+- Conclusion: Summarize key insights and implications
+
+RESEARCH QUALITY STANDARDS:
+- Use formal academic language and scholarly tone throughout
+- Synthesize rather than simply summarize the provided abstracts
+- Draw connections between studies and identify patterns or contradictions
+- Incorporate broader field knowledge and cite seminal works where relevant
+- Provide critical evaluation of methodologies and findings
+- Demonstrate deep analytical thinking and scholarly insight
+- Support arguments with evidence from the literature
+- Maintain objective, analytical perspective
+
+TECHNICAL REQUIREMENTS:
+- Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
+- Target length: 1500-2000 words for comprehensive coverage
+- Reference the provided papers directly within your analysis
+- Create a publication-ready literature review suitable for academic journals`;
       } else {
         userPrompt += `\n\nRequirements:
 - Include introduction, theoretical foundations, current research landscape, methodological approaches, key findings, research gaps, and conclusion
@@ -73,7 +86,7 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
       messages: [
         {
           role: "system",
-          content: "You are an expert academic researcher with deep knowledge across multiple fields. Generate comprehensive, well-structured literature reviews that synthesize current research, identify gaps, and provide scholarly insights. When provided with specific paper abstracts, use them as the foundation but expand significantly by incorporating your knowledge of related work, seminal papers, theoretical frameworks, and methodological approaches in the field. Create robust reviews that demonstrate comprehensive understanding of the research area."
+          content: "You are a senior academic researcher and published scholar with expertise in writing formal literature reviews for peer-reviewed journals. Your task is to produce publication-quality literature reviews that demonstrate rigorous academic standards, critical analysis, and scholarly depth. Use formal academic writing conventions, maintain analytical objectivity, and structure reviews according to established academic formats. Synthesize research findings with critical evaluation and provide insights that advance scholarly understanding of the field."
         },
         {
           role: "user",

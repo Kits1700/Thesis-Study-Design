@@ -36,15 +36,19 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
         });
         
         userPrompt += `Requirements:
-- Build your literature review primarily around these ${validAbstracts.length} papers
+- Build your literature review primarily around these ${validAbstracts.length} papers as the foundation
 - Synthesize findings and themes across these specific abstracts
 - Identify connections, contradictions, and patterns among these studies
 - Reference these papers directly in your analysis
-- Add theoretical context and broader field knowledge to enhance the review
-- Use proper academic tone and structure
+- EXPAND THE REVIEW by incorporating knowledge of similar and related papers in the field
+- Add theoretical context, seminal works, and broader field knowledge to create a comprehensive review
+- Include discussion of methodological approaches used across the field
+- Identify research gaps and future directions based on the provided papers and field knowledge
+- Create a robust literature review that goes beyond just the provided abstracts
+- Use proper academic tone and structure with scholarly depth
 - Format as HTML with h3, h4, p, ul, li tags
-- Aim for approximately 800-1000 words
-- Provide scholarly analysis and synthesis focusing on these specific studies`;
+- Aim for approximately 1200-1500 words for a comprehensive review
+- Provide thorough scholarly analysis that demonstrates deep understanding of the research area`;
       } else {
         userPrompt += `\n\nRequirements:
 - Include introduction, theoretical foundations, current research landscape, methodological approaches, key findings, research gaps, and conclusion
@@ -69,7 +73,7 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
       messages: [
         {
           role: "system",
-          content: "You are an expert academic researcher. Generate comprehensive, well-structured literature reviews that synthesize current research, identify gaps, and provide scholarly insights. When provided with specific paper abstracts, focus your analysis on those papers while adding broader theoretical context. Format your response as HTML with proper headings and structure."
+          content: "You are an expert academic researcher with deep knowledge across multiple fields. Generate comprehensive, well-structured literature reviews that synthesize current research, identify gaps, and provide scholarly insights. When provided with specific paper abstracts, use them as the foundation but expand significantly by incorporating your knowledge of related work, seminal papers, theoretical frameworks, and methodological approaches in the field. Create robust reviews that demonstrate comprehensive understanding of the research area."
         },
         {
           role: "user",

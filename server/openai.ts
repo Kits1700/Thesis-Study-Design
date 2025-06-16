@@ -44,22 +44,24 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
 ACADEMIC STRUCTURE:
 - Introduction: Define the research domain and scope
 - Theoretical Framework: Establish key concepts and theoretical foundations
-- Current Research Landscape: Synthesize findings from the provided papers
+- Current Research Landscape: Synthesize findings from the provided papers and related work
 - Methodological Analysis: Compare and evaluate research approaches
 - Critical Analysis: Identify strengths, limitations, and contradictions
 - Research Gaps: Highlight unexplored areas and limitations
 - Future Directions: Propose research opportunities and recommendations
 - Conclusion: Summarize key insights and implications
+- References: Complete bibliography of all cited works
 
 RESEARCH QUALITY STANDARDS:
 - Use formal academic language and scholarly tone throughout
 - Synthesize rather than simply summarize the provided abstracts
 - Draw connections between studies and identify patterns or contradictions
-- Incorporate broader field knowledge and cite seminal works where relevant
-- Provide critical evaluation of methodologies and findings
-- Demonstrate deep analytical thinking and scholarly insight
-- Support arguments with evidence from the literature
-- Maintain objective, analytical perspective
+- EXPAND BEYOND PROVIDED PAPERS: Incorporate related work, seminal studies, and theoretical foundations that connect to the themes in the provided abstracts
+- Identify and cite influential papers in the same research area based on the topics covered in the abstracts
+- Provide critical evaluation of methodologies and findings across both provided and related literature
+- Demonstrate deep analytical thinking and scholarly insight by connecting the provided papers to broader research traditions
+- Support arguments with evidence from both the provided literature and related work in the field
+- Maintain objective, analytical perspective while showing comprehensive field knowledge
 
 TECHNICAL REQUIREMENTS:
 - Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
@@ -67,8 +69,11 @@ TECHNICAL REQUIREMENTS:
 - Use the provided citations exactly as given when referencing these papers
 - Include proper in-text citations throughout the review (e.g., Author, Year)
 - Reference the provided papers directly within your analysis using their actual citations
+- Add related work citations based on the research themes identified in the provided abstracts
+- Include a comprehensive References section with both provided citations and related work
 - Create a publication-ready literature review suitable for academic journals
-- When citing the provided papers, use the exact citation format provided by the user`;
+- When citing the provided papers, use the exact citation format provided by the user
+- For related work, create realistic academic citations following standard format`;
       } else {
         userPrompt += `Write a comprehensive academic literature review on the specified topic. Structure this as a formal research literature review with the following requirements:
 
@@ -110,6 +115,7 @@ ACADEMIC STRUCTURE:
 - Research Gaps: Highlight unexplored areas and limitations
 - Future Directions: Propose research opportunities and recommendations
 - Conclusion: Summarize key insights and implications
+- References: Complete bibliography of all cited works
 
 RESEARCH QUALITY STANDARDS:
 - Use formal academic language and scholarly tone throughout
@@ -125,6 +131,7 @@ TECHNICAL REQUIREMENTS:
 - Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
 - Target length: 1500-2000 words for comprehensive coverage
 - Include realistic citations and references (you may create plausible academic citations)
+- Include a comprehensive References section with all cited works
 - Create a publication-ready literature review suitable for academic journals`;
     }
     

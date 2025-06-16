@@ -70,10 +70,14 @@ TECHNICAL REQUIREMENTS:
 - Include proper in-text citations throughout the review (e.g., Author, Year)
 - Reference the provided papers directly within your analysis using their actual citations
 - Add related work citations based on the research themes identified in the provided abstracts
-- Include a comprehensive References section with both provided citations and related work
+- MANDATORY: End with a comprehensive "References" section (use <h3>References</h3> heading)
+- The References section MUST include all cited works: both provided citations and related literature
+- List each reference on a separate line using proper academic format
 - Create a publication-ready literature review suitable for academic journals
 - When citing the provided papers, use the exact citation format provided by the user
-- For related work, create realistic academic citations following standard format`;
+- For related work, create realistic academic citations following standard format
+
+IMPORTANT: Your literature review MUST include all 9 sections including the References section at the end.`;
       } else {
         userPrompt += `Write a comprehensive academic literature review on the specified topic. Structure this as a formal research literature review with the following requirements:
 
@@ -131,8 +135,12 @@ TECHNICAL REQUIREMENTS:
 - Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
 - Target length: 1500-2000 words for comprehensive coverage
 - Include realistic citations and references (you may create plausible academic citations)
-- Include a comprehensive References section with all cited works
-- Create a publication-ready literature review suitable for academic journals`;
+- MANDATORY: End with a comprehensive "References" section (use <h3>References</h3> heading)
+- The References section MUST include all cited works from throughout the review
+- List each reference on a separate line using proper academic format
+- Create a publication-ready literature review suitable for academic journals
+
+IMPORTANT: Your literature review MUST include all 9 sections including the References section at the end.`;
     }
     
     const response = await openai.chat.completions.create({

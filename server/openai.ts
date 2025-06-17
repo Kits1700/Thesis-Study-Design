@@ -51,23 +51,37 @@ CRITICAL CITATION REQUIREMENTS:
 - Reference section must use full APA style. List provided citations first (in given order), then any additional ones alphabetically.
 `;
 
-    paperAbstracts!.forEach((paper) => {
+    let citationMap = "";
+    paperAbstracts!.forEach((paper, index) => {
       if (paper.citation && paper.abstract) {
         prompt += `\nReference: ${paper.citation}\nAbstract: ${paper.abstract}\n`;
+        
+        // Extract author and year for explicit mapping
+        const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
+        if (match) {
+          const author = match[1].trim();
+          const year = match[2];
+          citationMap += `- When citing this paper, write: (${author}, ${year}) or ${author} (${year})\n`;
+        }
       }
     });
 
-    prompt += `\n\nCITATION EXTRACTION EXAMPLES:
-If you see: "Johnson, M. (2023). Title of paper. Journal Name, 15(2), 123-145."
-Then cite as: (Johnson, 2023) or Johnson (2023)
+    prompt += `\n\nCITATION MAPPING - USE THESE EXACT FORMATS:
+${citationMap}
 
-If you see: "Smith, A., & Brown, B. (2022). Paper title. Conference Proceedings, 45-52."  
-Then cite as: (Smith & Brown, 2022) or Smith and Brown (2022)
+ABSOLUTELY FORBIDDEN WORDS/PHRASES:
+- "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5"
+- "In Paper X", "The first paper", "The second study"
+- "One study", "Another research", "This paper"
 
-If you see: "Wilson, C., Davis, E., & Lee, F. (2021). Research study. Academic Journal, 8(3), 78-92."
-Then cite as: (Wilson et al., 2021) or Wilson et al. (2021)
+REQUIRED CITATION FORMAT EXAMPLES:
+✓ "Johnson (2023) demonstrated that..."
+✓ "Research findings indicate (Smith & Brown, 2022) that..."
+✓ "Wilson et al. (2021) explored the relationship..."
+✗ "Paper 1 shows..." (NEVER WRITE THIS)
+✗ "In Paper 3, the authors..." (NEVER WRITE THIS)
 
-MANDATORY: Throughout your literature review, you MUST cite these papers using the actual author names and years from the APA references above. Do not write generic phrases - always use specific author-year citations.`;
+CRITICAL: Every time you discuss findings from the provided sources, you MUST use the specific author names and years shown in the citation mapping above.`;
   } else {
     prompt += `
 Write a full academic literature review with six clearly formatted HTML sections:

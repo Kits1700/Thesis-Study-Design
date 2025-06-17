@@ -32,23 +32,39 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
         userPrompt += `\n\nIMPORTANT: Base your literature review on these specific papers provided by the user. Use both the citations and abstracts to create an authentic, well-referenced review:\n\n`;
         
         validAbstracts.forEach((paper, index) => {
-          userPrompt += `Paper ${index + 1}:\n`;
+          userPrompt += `Source ${index + 1}:\n`;
           if (paper.citation && paper.citation.trim()) {
-            userPrompt += `Citation: ${paper.citation}\n`;
+            userPrompt += `Full Citation: ${paper.citation}\n`;
           }
           userPrompt += `Abstract: ${paper.abstract}\n\n`;
         });
         
-        userPrompt += `CRITICAL CITATION REQUIREMENTS:
-- NEVER use "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5", etc. anywhere in your review
-- ALWAYS extract author surnames and publication years from the provided citations
-- Use proper academic in-text format: (Author, Year) or Author (Year)
-- Example: If citation is "Smith, J. & Jones, A. (2023). Title. Journal, 10(1), 1-10." then cite as (Smith & Jones, 2023)
-- For multiple authors, use proper citation format: (FirstAuthor et al., Year)
-- When discussing related work beyond provided papers, create realistic author citations, never use "Paper X" format
-- In the References section, list the exact citations provided by the user first
+        userPrompt += `CRITICAL CITATION REQUIREMENTS - READ CAREFULLY:
 
-FORBIDDEN: Do not write "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5" or any similar numbering system anywhere in your literature review.
+ABSOLUTELY FORBIDDEN PHRASES:
+- Do NOT write "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5" or any "Paper X" format
+- Do NOT write "Source 1", "Source 2", "Source 3" etc.
+- Do NOT use any numbered reference system like "Study 1", "Study 2"
+
+REQUIRED CITATION FORMAT:
+- Extract the ACTUAL author surnames from each "Full Citation" provided above
+- Use standard academic format: (Author, Year) or Author (Year)
+- Example: If Full Citation is "Smith, J. & Jones, A. (2023). Title. Journal, 10(1), 1-10." 
+  then write: "Smith and Jones (2023) demonstrate..." or "(Smith & Jones, 2023)"
+- For 3+ authors: (FirstAuthor et al., Year)
+- When adding related work, create realistic author names, never use numbered systems
+
+CITATION EXTRACTION PROCESS:
+1. Read each "Full Citation" above
+2. Extract the author surname(s) and year
+3. Use these ACTUAL NAMES throughout your literature review
+4. Never reference by number - always by author name
+
+EXAMPLE OF CORRECT WRITING:
+✓ "Johnson et al. (2022) found that..."
+✓ "Recent studies (Martinez, 2023; Lee & Kim, 2024) suggest..."
+✗ "Paper 1 shows..." 
+✗ "In Paper 2, the authors..."
 
 `;
         
@@ -105,17 +121,19 @@ TECHNICAL REQUIREMENTS:
 - Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
 - Use numbered section headings: <h3>1. Introduction</h3>, <h3>2. Thematic Organization of the Literature</h3>, etc.
 - Target length: 1500-2000 words for comprehensive coverage
-- Extract author names and publication years from provided citations for proper in-text referencing
-- Use standard academic in-text citation format (Author, Year) throughout the review
-- NEVER use "Paper 1", "Paper 2" etc. - always use proper author citations
-- Add related work citations based on the research themes identified in the provided abstracts
 - MANDATORY: Include section "6. References" with <h3>6. References</h3> heading at the end
 - In the References section, list the EXACT citations provided by the user first
 - Follow with any additional related work citations in alphabetical order
-- Create a publication-ready literature review suitable for academic journals
 - Each reference should be on a separate line with proper academic formatting
 
-CRITICAL: Your literature review MUST end with a complete "6. References" section containing all cited works. Do not omit this section.`;
+CITATION FORMAT ENFORCEMENT:
+- Extract actual author surnames from the "Full Citation" lines above
+- Write citations as (Author, Year) format throughout your review
+- NEVER EVER write "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5" anywhere
+- If you write any "Paper X" format, you are violating academic standards
+- Always use real author names extracted from the provided citations
+
+FINAL REMINDER: This is an academic literature review - use proper author citations, not numbered references.`;
       } else {
         userPrompt += `You MUST write a comprehensive academic literature review on this topic.
 

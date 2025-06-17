@@ -39,13 +39,16 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
           userPrompt += `Abstract: ${paper.abstract}\n\n`;
         });
         
-        userPrompt += `CITATION INSTRUCTIONS:
-When referencing these papers in your literature review:
-- DO NOT use "Paper 1", "Paper 2", etc.
-- Use proper in-text citations based on the provided citations
-- Extract author names and years from the provided citations for in-text references
-- Example: If citation is "Smith, J. (2023). Title. Journal, 10(1), 1-10." then cite as (Smith, 2023)
-- In the References section, list the exact citations provided by the user
+        userPrompt += `CRITICAL CITATION REQUIREMENTS:
+- NEVER use "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5", etc. anywhere in your review
+- ALWAYS extract author surnames and publication years from the provided citations
+- Use proper academic in-text format: (Author, Year) or Author (Year)
+- Example: If citation is "Smith, J. & Jones, A. (2023). Title. Journal, 10(1), 1-10." then cite as (Smith & Jones, 2023)
+- For multiple authors, use proper citation format: (FirstAuthor et al., Year)
+- When discussing related work beyond provided papers, create realistic author citations, never use "Paper X" format
+- In the References section, list the exact citations provided by the user first
+
+FORBIDDEN: Do not write "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5" or any similar numbering system anywhere in your literature review.
 
 `;
         
@@ -206,7 +209,7 @@ CRITICAL: Your literature review MUST end with a complete "6. References" sectio
       messages: [
         {
           role: "system",
-          content: "You are a senior academic researcher and published scholar with expertise in writing formal literature reviews for peer-reviewed journals. You MUST strictly follow the 6-section structure provided in the user prompt. Always include numbered headings exactly as specified: 1. Introduction, 2. Thematic Organization of the Literature, 3. Methodological Comparison, 4. Critical Analysis and Synthesis, 5. Conclusion, 6. References. Never omit any section. Use proper academic citations throughout and ensure the References section appears at the end with all cited works."
+          content: "You are a senior academic researcher and published scholar with expertise in writing formal literature reviews for peer-reviewed journals. You MUST strictly follow the 6-section structure provided in the user prompt. Always include numbered headings exactly as specified: 1. Introduction, 2. Thematic Organization of the Literature, 3. Methodological Comparison, 4. Critical Analysis and Synthesis, 5. Conclusion, 6. References. Never omit any section. CRITICAL: Never use 'Paper 1', 'Paper 2', 'Paper 3', 'Paper 4', 'Paper 5' or any similar numbering - always use proper author citations like (Smith, 2023) or (Johnson et al., 2022). Extract author names from provided citations and use standard academic referencing throughout."
         },
         {
           role: "user",

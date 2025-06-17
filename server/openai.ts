@@ -29,111 +29,71 @@ export async function generateLiteratureReview(topic: string, paperAbstracts?: a
     if (paperAbstracts && paperAbstracts.length > 0) {
       const validAbstracts = paperAbstracts.filter(p => p.abstract && p.abstract.trim().length > 10);
       if (validAbstracts.length > 0) {
-        userPrompt += `\n\nIMPORTANT: Base your literature review on these specific papers provided by the user. Use both the citations and abstracts to create an authentic, well-referenced review:\n\n`;
-        
-        validAbstracts.forEach((paper, index) => {
-          userPrompt += `Source ${index + 1}:\n`;
+        userPrompt += `\n\nIMPORTANT: Base your literature review on these specific papers provided by the user and expand with related research. You MUST use proper in-text citations extracted from the full citations provided.\n\n`;
+
+        validAbstracts.forEach((paper) => {
           if (paper.citation && paper.citation.trim()) {
-            userPrompt += `Full Citation: ${paper.citation}\n`;
+            userPrompt += `Citation: ${paper.citation}\n`;
           }
           userPrompt += `Abstract: ${paper.abstract}\n\n`;
         });
-        
-        userPrompt += `CRITICAL CITATION REQUIREMENTS - READ CAREFULLY:
 
-ABSOLUTELY FORBIDDEN PHRASES:
-- Do NOT write "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5" or any "Paper X" format
-- Do NOT write "Source 1", "Source 2", "Source 3" etc.
-- Do NOT use any numbered reference system like "Study 1", "Study 2"
+        userPrompt += `\n\nCITATION INSTRUCTIONS:
+- Always reference papers using proper **author-date** in-text citations (e.g., Smith, 2023).
+- Extract author names and years from the full citations provided.
+- Do NOT use labels like "Paper 1" or "Paper A"—**only cite using author and year**.
+- List the provided citations first in the "6. References" section, in the order given, followed by any additional sources alphabetically.
 
-REQUIRED CITATION FORMAT:
-- Extract the ACTUAL author surnames from each "Full Citation" provided above
-- Use standard academic format: (Author, Year) or Author (Year)
-- Example: If Full Citation is "Smith, J. & Jones, A. (2023). Title. Journal, 10(1), 1-10." 
-  then write: "Smith and Jones (2023) demonstrate..." or "(Smith & Jones, 2023)"
-- For 3+ authors: (FirstAuthor et al., Year)
-- When adding related work, create realistic author names, never use numbered systems
+You MUST write a comprehensive academic literature review using the provided papers as the primary sources. You must also include relevant related work to enrich the analysis.
 
-CITATION EXTRACTION PROCESS:
-1. Read each "Full Citation" above
-2. Extract the author surname(s) and year
-3. Use these ACTUAL NAMES throughout your literature review
-4. Never reference by number - always by author name
-
-EXAMPLE OF CORRECT WRITING:
-✓ "Johnson et al. (2022) found that..."
-✓ "Recent studies (Martinez, 2023; Lee & Kim, 2024) suggest..."
-✗ "Paper 1 shows..." 
-✗ "In Paper 2, the authors..."
-
-`;
-        
-        userPrompt += `You MUST write a comprehensive academic literature review using these ${validAbstracts.length} papers as your primary sources. 
-
-MANDATORY STRUCTURE - Include ALL 6 sections with exact numbered headings:
+STRUCTURE REQUIREMENTS:
+Include ALL 6 sections with EXACT numbered HTML headings:
 
 <h3>1. Introduction</h3>
-- Explain the topic or research problem
-- Define the scope and boundaries of the review (what's included/excluded)
-- State the objectives or research questions guiding the review
-- Explain why the topic is important
+- Define the topic or research question
+- Explain the importance and scope
+- Identify the goals of the literature review
 
 <h3>2. Thematic Organization of the Literature</h3>
-- Organize literature by themes or topics
-- For each theme: summary and synthesis of key studies
-- Compare, contrast, and critique research findings
-- Identify gaps or controversies within each theme
+- Organize content into clear themes or topical areas
+- Synthesize findings under each theme
+- Compare, contrast, and critique studies
+- Highlight debates, patterns, or inconsistencies
 
 <h3>3. Methodological Comparison</h3>
-- Compare methods used in different studies
-- Discuss strengths and limitations of various approaches
-- Highlight trends in research design or data collection
+- Compare research methodologies used across studies
+- Identify strengths, weaknesses, and patterns
+- Evaluate differences in data sources, tools, and design
 
 <h3>4. Critical Analysis and Synthesis</h3>
-- Identify patterns, gaps, and contradictions
-- Discuss implications of findings
-- Show how research builds upon existing work
+- Identify trends, relationships, and gaps
+- Discuss broader implications
+- Show how studies build on one another
 
 <h3>5. Conclusion</h3>
-- Summarize the main insights from the literature
-- Reiterate the gaps in knowledge
-- Explain areas for future research
+- Summarize the overall findings and insights
+- Reiterate key knowledge gaps
+- Suggest directions for future research
 
 <h3>6. References</h3>
-- List the exact citations provided by the user
-- Include any additional sources cited
-- Use consistent academic citation format
-
-DO NOT deviate from this 6-section structure. Each section must have the exact heading format shown above.
+- Include all citations from the abstracts first, in order
+- Add any additional literature used, sorted alphabetically
+- Use full formal academic citations, one per line
 
 RESEARCH QUALITY STANDARDS:
-- Use formal academic language and scholarly tone throughout
-- Synthesize rather than simply summarize the provided abstracts
-- Draw connections between studies and identify patterns or contradictions
-- EXPAND BEYOND PROVIDED PAPERS: Incorporate related work, seminal studies, and theoretical foundations that connect to the themes in the provided abstracts
-- Identify and cite influential papers in the same research area based on the topics covered in the abstracts
-- Provide critical evaluation of methodologies and findings across both provided and related literature
-- Demonstrate deep analytical thinking and scholarly insight by connecting the provided papers to broader research traditions
-- Support arguments with evidence from both the provided literature and related work in the field
-- Maintain objective, analytical perspective while showing comprehensive field knowledge
+- Use formal academic language throughout
+- Synthesize (not just summarize) ideas
+- Cite all claims with (Author, Year)
+- Expand on the abstracts by adding seminal or related literature
+- Ensure analytical depth, critical comparison, and scholarly tone
 
-TECHNICAL REQUIREMENTS:
-- Format as HTML with proper heading hierarchy (h3, h4, p, ul, li tags)
-- Use numbered section headings: <h3>1. Introduction</h3>, <h3>2. Thematic Organization of the Literature</h3>, etc.
-- Target length: 1500-2000 words for comprehensive coverage
-- MANDATORY: Include section "6. References" with <h3>6. References</h3> heading at the end
-- In the References section, list the EXACT citations provided by the user first
-- Follow with any additional related work citations in alphabetical order
-- Each reference should be on a separate line with proper academic formatting
+TECHNICAL FORMATTING:
+- Use proper HTML heading tags (<h3>, <h4>, <p>, <ul>, etc.)
+- Word count: 1500–2000 words
+- References section is **mandatory** and must include all cited works
 
-CITATION FORMAT ENFORCEMENT:
-- Extract actual author surnames from the "Full Citation" lines above
-- Write citations as (Author, Year) format throughout your review
-- NEVER EVER write "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5" anywhere
-- If you write any "Paper X" format, you are violating academic standards
-- Always use real author names extracted from the provided citations
-
-FINAL REMINDER: This is an academic literature review - use proper author citations, not numbered references.`;
+CRITICAL: Do not use placeholder phrases like "Paper 1" or "this study." Always use proper author-date citations for clarity and academic rigor.
+`;
       } else {
         userPrompt += `You MUST write a comprehensive academic literature review on this topic.
 

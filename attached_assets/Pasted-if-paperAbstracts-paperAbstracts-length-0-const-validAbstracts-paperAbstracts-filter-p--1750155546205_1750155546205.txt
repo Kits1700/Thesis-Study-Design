@@ -1,0 +1,70 @@
+if (paperAbstracts && paperAbstracts.length > 0) {
+  const validAbstracts = paperAbstracts.filter(p => p.abstract && p.abstract.trim().length > 10);
+  if (validAbstracts.length > 0) {
+    userPrompt += `\n\nIMPORTANT: Base your literature review on these specific papers provided by the user and expand with related research. You MUST use proper in-text citations extracted from the full citations provided.\n\n`;
+
+    validAbstracts.forEach((paper) => {
+      if (paper.citation && paper.citation.trim()) {
+        userPrompt += `Citation: ${paper.citation}\n`;
+      }
+      userPrompt += `Abstract: ${paper.abstract}\n\n`;
+    });
+
+    userPrompt += `\n\nCITATION INSTRUCTIONS:
+- Always reference papers using proper **author-date** in-text citations (e.g., Smith, 2023).
+- Extract author names and years from the full citations provided.
+- Do NOT use labels like "Paper 1" or "Paper A"—**only cite using author and year**.
+- List the provided citations first in the "6. References" section, in the order given, followed by any additional sources alphabetically.
+
+You MUST write a comprehensive academic literature review using the provided papers as the primary sources. You must also include relevant related work to enrich the analysis.
+
+STRUCTURE REQUIREMENTS:
+Include ALL 6 sections with EXACT numbered HTML headings:
+
+<h3>1. Introduction</h3>
+- Define the topic or research question
+- Explain the importance and scope
+- Identify the goals of the literature review
+
+<h3>2. Thematic Organization of the Literature</h3>
+- Organize content into clear themes or topical areas
+- Synthesize findings under each theme
+- Compare, contrast, and critique studies
+- Highlight debates, patterns, or inconsistencies
+
+<h3>3. Methodological Comparison</h3>
+- Compare research methodologies used across studies
+- Identify strengths, weaknesses, and patterns
+- Evaluate differences in data sources, tools, and design
+
+<h3>4. Critical Analysis and Synthesis</h3>
+- Identify trends, relationships, and gaps
+- Discuss broader implications
+- Show how studies build on one another
+
+<h3>5. Conclusion</h3>
+- Summarize the overall findings and insights
+- Reiterate key knowledge gaps
+- Suggest directions for future research
+
+<h3>6. References</h3>
+- Include all citations from the abstracts first, in order
+- Add any additional literature used, sorted alphabetically
+- Use full formal academic citations, one per line
+
+RESEARCH QUALITY STANDARDS:
+- Use formal academic language throughout
+- Synthesize (not just summarize) ideas
+- Cite all claims with (Author, Year)
+- Expand on the abstracts by adding seminal or related literature
+- Ensure analytical depth, critical comparison, and scholarly tone
+
+TECHNICAL FORMATTING:
+- Use proper HTML heading tags (<h3>, <h4>, <p>, <ul>, etc.)
+- Word count: 1500–2000 words
+- References section is **mandatory** and must include all cited works
+
+CRITICAL: Do not use placeholder phrases like “Paper 1” or “this study.” Always use proper author-date citations for clarity and academic rigor.
+`;
+  }
+}

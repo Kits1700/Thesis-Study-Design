@@ -74,7 +74,7 @@ Word count: 1500–2000 words.
 
   if (hasAbstracts) {
     // Extract author names for explicit examples
-    const extractedAuthors = [];
+    const extractedAuthors: Array<{ author: string; year: string }> = [];
     paperAbstracts!.forEach((paper) => {
       if (paper.citation) {
         const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);

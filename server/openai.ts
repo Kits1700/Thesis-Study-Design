@@ -19,85 +19,88 @@ export async function generateLiteratureReview(
 ): Promise<string> {
   if (!openai) throw new Error("OpenAI API key not configured");
 
-  let prompt = `Generate a comprehensive academic literature review on the topic: "${topic}".\n`;
-
   const hasAbstracts = paperAbstracts?.some(
     (p) => p.abstract != null && p.abstract.trim().length > 10,
   );
 
-  if (hasAbstracts) {
-    prompt += `
-You are provided with key scholarly sources (citations and abstracts). These sources must form the foundation of the literature review.
+  let prompt = `Generate a comprehensive academic literature review on the topic: "${topic}".\n`;
 
-CRITICAL CITATION REQUIREMENTS:
-- You MUST extract actual author surnames and years from each APA reference below
-- Use these specific authors and years in parenthetical citations throughout your review: (Author, Year)
-- When discussing findings, write: "Author (Year) found that..." or "Research shows (Author, Year) that..."
-- For multiple authors use: (FirstAuthor et al., Year)
-- COMPLETELY FORBIDDEN: "Paper 1", "Paper 2", "this study", "the research", "one study"
-- REQUIRED: Every major point must include specific author-year citations from the references provided
-- Integrate these works thematically across all 6 sections with proper citations
-- The exact APA references provided must appear first in your References section
-- Format in HTML and use exactly the following section headers:
+  prompt += `
+Format all output in structured HTML with exactly the following sections:
 
 <h3>1. Introduction</h3>
 <h3>2. Thematic Organization of the Literature</h3>
 <h3>3. Methodological Comparison</h3>
-<h3>4. Critical Analysis and Synthesis</h3>
-<h3>5. Conclusion</h3>
-<h3>6. References</h3>
+<h3>4. Comparative Table</h3>
+<h3>5. Critical Analysis and Synthesis</h3>
+<h3>6. Conclusion</h3>
+<h3>7. References</h3>
 
-- Word count target: 1500–2000.
-- Reference section must use full APA style. List provided citations first (in given order), then any additional ones alphabetically.
+ALL SECTIONS MUST:
+- Use formal academic tone and APA-style in-text citations: (Author, Year) or Author (Year)
+- Cite explicitly using the author surnames and years from the reference list below
+- NEVER use generic labels like "Paper 1", "this study", "another paper", "the research", etc.
+
+REQUIRED: Include a <table> under section 4 comparing studies (columns: Author(s), Year, Topic, Methodology, Key Findings)
+- Use <table>, <thead>, <tbody>, <tr>, and <td> HTML tags
+- Use citations inside table cells too, if needed
+
+Word count: 1500–2000 words.
 `;
 
-    let citationMap = "";
+  // Generate citation mapping and source injection
+  let citationMapInstructions = "";
+  let abstractBlock = "";
+  const citationSet: string[] = [];
+
+  if (hasAbstracts) {
     paperAbstracts!.forEach((paper, index) => {
-      if (paper.citation && paper.abstract) {
-        prompt += `\nReference: ${paper.citation}\nAbstract: ${paper.abstract}\n`;
-        
-        // Extract author and year for explicit mapping
-        const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
+      const citation = paper.citation?.trim();
+      const abstract = paper.abstract?.trim();
+
+      if (citation && abstract) {
+        abstractBlock += `\nReference: ${citation}\nAbstract: ${abstract}\n`;
+        citationSet.push(citation);
+
+        const match = citation.match(/^([^,]+),.*?\((\d{4})\)/);
         if (match) {
           const author = match[1].trim();
           const year = match[2];
-          citationMap += `- When citing this paper, write: (${author}, ${year}) or ${author} (${year})\n`;
+          citationMapInstructions += `- For "${citation}", cite as (${author}, ${year}) or ${author} (${year})\n`;
         }
       }
     });
+  }
 
-    prompt += `\n\nCITATION MAPPING - USE THESE EXACT FORMATS:
-${citationMap}
+  if (hasAbstracts) {
+    prompt += `
+Use the following reference material to inform your review. You MUST cite them using the exact author and year as mapped below.
+
+${abstractBlock}
+
+CITATION MAPPING RULES:
+${citationMapInstructions}
 
 ABSOLUTELY FORBIDDEN WORDS/PHRASES:
-- "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5"
-- "In Paper X", "The first paper", "The second study"
-- "One study", "Another research", "This paper"
+- "Paper 1", "Paper 2", etc.
+- "This paper", "this study", "one study", "another paper"
+- "In Paper 3", "The research shows", unless followed by (Author, Year)
 
-REQUIRED CITATION FORMAT EXAMPLES:
-✓ "Johnson (2023) demonstrated that..."
-✓ "Research findings indicate (Smith & Brown, 2022) that..."
-✓ "Wilson et al. (2021) explored the relationship..."
-✗ "Paper 1 shows..." (NEVER WRITE THIS)
-✗ "In Paper 3, the authors..." (NEVER WRITE THIS)
-
-CRITICAL: Every time you discuss findings from the provided sources, you MUST use the specific author names and years shown in the citation mapping above.`;
+REQUIRED STYLE EXAMPLES:
+✓ "Zhang and Lee (2023) found that..."
+✓ "Findings suggest (Chen & Patel, 2022)..."
+✗ "Paper 1 shows..." — NEVER USE THIS!
+`;
   } else {
+    // No abstracts — fallback to a generic version but still enforce citation and table
     prompt += `
-Write a full academic literature review with six clearly formatted HTML sections:
+There are no specific references provided. Conduct a scholarly literature review with high-quality, published sources.
 
-<h3>1. Introduction</h3>
-<h3>2. Thematic Organization of the Literature</h3>
-<h3>3. Methodological Comparison</h3>
-<h3>4. Critical Analysis and Synthesis</h3>
-<h3>5. Conclusion</h3>
-<h3>6. References</h3>
-
-- Use APA in-text citations (e.g., Smith, 2020).
-- The References section must follow APA style.
-- Length: 1500–2000 words.
-- HTML tags must be used throughout.
-- Write in a formal, analytical tone.
+CITATION AND FORMAT RULES:
+- Use formal APA-style in-text citations: (Author, Year)
+- No vague phrases like "One study", "Another paper", or "This research" unless cited explicitly
+- Include a <table> in section 4 comparing relevant studies
+- All six content sections + References must be in HTML format
 `;
   }
 
@@ -106,16 +109,16 @@ Write a full academic literature review with six clearly formatted HTML sections
     messages: [
       {
         role: "system",
-        content: `You are an academic writing assistant specializing in literature reviews. 
-CRITICAL CITATION ENFORCEMENT:
-- Extract exact author surnames and publication years from each APA reference provided
-- Use these specific names in every citation: (AuthorSurname, Year) format
-- Example: From "Smith, J. A. (2023)" always write (Smith, 2023) when citing
-- Write "Johnson et al. (2022) demonstrated" or "findings suggest (Wilson & Lee, 2021)"
-- NEVER write vague phrases like "research shows" or "studies indicate" without specific author citations
-- Every paragraph discussing the provided sources MUST include specific author-year citations
-- Structure into exactly 6 HTML sections with proper headings
-- References section must list provided APA citations first, then additional sources alphabetically`,
+        content: `You are an academic writing assistant. ABSOLUTELY FORBIDDEN PHRASES:
+"Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5", "Paper X", "In Paper", "this paper", "this study", "another paper", "the first study", "the second research"
+
+MANDATORY REQUIREMENTS:
+- Extract author surnames from APA citations and use (Author, Year) format ONLY
+- When you see "Smith, J. (2023)" write "(Smith, 2023)" when citing
+- Follow the citation mapping provided in user prompt exactly
+- Include a comparison <table> with columns for Author/Year, Method, and Key Findings in section 4
+- Use HTML formatting throughout
+- If you write any forbidden phrase, you have completely failed`,
       },
       {
         role: "user",

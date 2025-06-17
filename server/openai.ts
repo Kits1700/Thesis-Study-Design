@@ -109,16 +109,23 @@ CITATION AND FORMAT RULES:
     messages: [
       {
         role: "system",
-        content: `You are an academic writing assistant. ABSOLUTELY FORBIDDEN PHRASES:
-"Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5", "Paper X", "In Paper", "this paper", "this study", "another paper", "the first study", "the second research"
+        content: `You are an academic writing assistant. 
 
-MANDATORY REQUIREMENTS:
-- Extract author surnames from APA citations and use (Author, Year) format ONLY
-- When you see "Smith, J. (2023)" write "(Smith, 2023)" when citing
-- Follow the citation mapping provided in user prompt exactly
-- Include a comparison <table> with columns for Author/Year, Method, and Key Findings in section 4
-- Use HTML formatting throughout
-- If you write any forbidden phrase, you have completely failed`,
+CRITICAL RULE: You must NEVER use these phrases anywhere in your response:
+"Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5", "this paper", "this study", "another paper", "the first study", "the second research", "one study"
+
+CITATION REQUIREMENTS:
+- Extract author surnames from provided APA citations
+- Use (Author, Year) format: (Smith, 2023) or Smith (2023)
+- Follow citation mapping in user prompt exactly
+- Never use generic phrases without specific author citations
+
+TABLE REQUIREMENT:
+- Include comparison table in section 4 with HTML table tags
+- Columns: Author(s), Year, Method, Key Findings
+- Use actual author names from citations
+
+If you write any forbidden phrase like "Paper 1" or "this study", your response will be rejected.`,
       },
       {
         role: "user",

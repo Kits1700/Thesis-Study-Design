@@ -118,6 +118,14 @@ CITATION AND FORMAT RULES:
 `;
   }
 
+  // Log the prompt for debugging
+  console.log("=== TASK 2 PROMPT DEBUG ===");
+  console.log("Topic:", topic);
+  console.log("Has abstracts:", hasAbstracts);
+  console.log("Prompt length:", prompt.length);
+  console.log("First 500 chars:", prompt.substring(0, 500));
+  console.log("===============================");
+
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [

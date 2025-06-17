@@ -13,6 +13,10 @@ if (!openai) {
  * - Selectively uses provided paper abstracts if available
  * - Produces APA-formatted HTML content in 6 academic sections
  */
+
+// Assume 'openai' is configured elsewhere, e.g.:
+// const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 export async function generateLiteratureReview(
   topic: string,
   paperAbstracts?: { citation?: string; abstract?: string }[],
@@ -20,14 +24,12 @@ export async function generateLiteratureReview(
   if (!openai) throw new Error("OpenAI API key not configured");
 
   const hasAbstracts = paperAbstracts?.some(
-    (p) => p.abstract != null && p.abstract.trim().length > 10,
+    (p) => p.abstract && p.abstract.trim().length > 10,
   );
 
-  let prompt = `Generate a comprehensive academic literature review on the topic: "${topic}".\n`;
+  let prompt = `Generate a comprehensive academic literature review on the topic: "${topic}".
 
-  prompt += `
-Format all output in structured HTML with exactly the following sections:
-
+Your output must be structured HTML using these exact sections:
 <h3>1. Introduction</h3>
 <h3>2. Thematic Organization of the Literature</h3>
 <h3>3. Methodological Comparison</h3>
@@ -35,119 +37,83 @@ Format all output in structured HTML with exactly the following sections:
 <h3>5. Critical Analysis and Synthesis</h3>
 <h3>6. Conclusion</h3>
 <h3>7. References</h3>
+<h3>8. Suggestions for Further Reading</h3>
 
-ALL SECTIONS MUST:
-- Use formal academic tone and APA-style in-text citations: (Author, Year) or Author (Year)
-- Cite explicitly using the author surnames and years from the reference list below
-- NEVER use generic labels like "Paper 1", "this study", "another paper", "the research", etc.
+**EXTREMELY IMPORTANT INSTRUCTIONS ON CITATIONS:**
+You will be given a set of source papers. For each paper, you will be given a unique placeholder tag.
+**When you cite a paper, you MUST use its exact placeholder tag.**
+DO NOT write (Author, Year) yourself. DO NOT write (Paper 1), (Source 2), etc.
+You MUST insert the placeholder tag exactly as provided. For example, if a paper's tag is [CITE_SMITH_2020], your text must look like: "The research showed a significant effect [CITE_SMITH_2020]."
 
-REQUIRED: Include a <table> under section 4 comparing studies (columns: Author(s), Year, Topic, Methodology, Key Findings)
-- Use <table>, <thead>, <tbody>, <tr>, and <td> HTML tags
-- Use citations inside table cells too, if needed
-
-Word count: 1500–2000 words.
+The table in section 4 must be a valid HTML <table> with columns: Author(s), Year, Topic, Methodology, Key Findings.
+The "References" section must list the full citations for the papers I provide.
+In the "Suggestions for Further Reading" section, suggest 3-5 additional relevant scholarly papers that were NOT provided in the source materials.
 `;
 
-  // Generate citation mapping and source injection
-  let citationMapInstructions = "";
-  let abstractBlock = "";
-  const citationSet: string[] = [];
+  // This map will hold our placeholders and their final replacement text.
+  const citationMap = new Map<string, string>();
 
   if (hasAbstracts) {
-    paperAbstracts!.forEach((paper, index) => {
+    let sourcesBlock = `
+---
+**SOURCE MATERIALS TO USE FOR THE REVIEW:**
+Synthesize the information from the following papers. Cite them using only their given placeholder tags.
+
+`;
+
+    paperAbstracts!.forEach((paper) => {
       const citation = paper.citation?.trim();
       const abstract = paper.abstract?.trim();
-
       if (citation && abstract) {
-        abstractBlock += `\nReference: ${citation}\nAbstract: ${abstract}\n`;
-        citationSet.push(citation);
-
         const match = citation.match(/^([^,]+),.*?\((\d{4})\)/);
         if (match) {
           const author = match[1].trim();
           const year = match[2];
-          citationMapInstructions += `- For "${citation}", cite as (${author}, ${year}) or ${author} (${year})\n`;
-        }
-      }
-    });
-  }
 
-  if (hasAbstracts) {
-    // Extract author names for explicit examples
-    const extractedAuthors: Array<{ author: string; year: string }> = [];
-    paperAbstracts!.forEach((paper) => {
-      if (paper.citation) {
-        const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
-        if (match) {
-          extractedAuthors.push({ author: match[1].trim(), year: match[2] });
-        }
-      }
-    });
+          // Create a unique, clean placeholder tag.
+          const sanitizedAuthor = author
+            .replace(/[^a-zA-Z0-9]/g, "")
+            .toUpperCase();
+          const placeholder = `[CITE_${sanitizedAuthor}_${year}]`;
 
-    prompt += `
-SOURCES FOR YOUR LITERATURE REVIEW:
-${abstractBlock}
+          // The final text we will replace the placeholder with.
+          const finalCitationText = `(${author}, ${year})`;
 
-🔥 CRITICAL CITATION RULES - READ CAREFULLY:
-When writing about these sources, you MUST use these EXACT author names and years:
-${extractedAuthors.map((a, i) => `Source ${i+1}: Always write "${a.author} (${a.year})" or "(${a.author}, ${a.year})"`).join('\n')}
+          // Store the mapping for our post-processing step.
+          citationMap.set(placeholder, finalCitationText);
 
-🚫 ABSOLUTELY FORBIDDEN - DO NOT WRITE:
-- "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5"
-- "In Paper X", "The first paper", "The second study"  
-- "This paper", "This study", "Another study"
-
-✅ EXAMPLES OF REQUIRED WRITING STYLE:
-${extractedAuthors.slice(0,3).map(a => `- "${a.author} (${a.year}) found that..."`).join('\n')}
-${extractedAuthors.slice(0,2).map(a => `- "Research shows (${a.author}, ${a.year}) that..."`).join('\n')}
-
-🔥 FINAL WARNING: If you write "Paper 1" or "Paper 2" anywhere, you have completely failed this task.
-
-${citationMapInstructions}
+          // Add the clearly defined block to the prompt.
+          sourcesBlock += `
+[BEGIN PAPER]
+FULL_CITATION: ${citation}
+ABSTRACT: ${abstract}
+**USE THIS EXACT TAG FOR CITATION:** ${placeholder}
+[END PAPER]
+---
 `;
+        }
+      }
+    });
+
+    prompt += sourcesBlock;
+    prompt += `**FINAL REMINDER:** Your primary task is to write a great review. Your secondary, but equally critical, task is to use the exact placeholder tags like [CITE_AUTHOR_YEAR] for all citations. Failure to use the tags will make the output unusable. Do not invent your own citations.`;
   } else {
-    // No abstracts — fallback to a generic version but still enforce citation and table
     prompt += `
-There are no specific references provided. Conduct a scholarly literature review with high-quality, published sources.
-
-CITATION AND FORMAT RULES:
-- Use formal APA-style in-text citations: (Author, Year)
-- No vague phrases like "One study", "Another paper", or "This research" unless cited explicitly
-- Include a <table> in section 4 comparing relevant studies
-- All six content sections + References must be in HTML format
+No abstracts were provided. Use your knowledge of credible scholarly sources to generate the literature review, including plausible but fictional author names and years for citations and references.
 `;
   }
 
-  // Log the prompt for debugging
-  console.log("=== TASK 2 PROMPT DEBUG ===");
-  console.log("Topic:", topic);
-  console.log("Has abstracts:", hasAbstracts);
+  console.log("=== LIT REVIEW PROMPT DEBUG ===");
   console.log("Prompt length:", prompt.length);
-  console.log("First 500 chars:", prompt.substring(0, 500));
-  console.log("===============================");
+  console.log("Prompt preview:\n", prompt.substring(0, 1500));
+  console.log("================================");
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
       {
         role: "system",
-        content: `You are an academic writing assistant. 
-
-CRITICAL RULE: You must NEVER use these phrases anywhere in your response:
-"Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5", "this paper", "this study", "another paper", "the first study", "the second research", "one study"
-
-CITATION REQUIREMENTS:
-- Extract author surnames from provided APA citations
-- Use (Author, Year) format: (Smith, 2023) or Smith (2023)
-- Follow citation mapping in user prompt exactly
-- Never use generic phrases without specific author citations
-
-TABLE REQUIREMENT:
-- Include comparison table in section 4 with HTML table tags
-- Columns: Author(s), Year, Method, Key Findings
-- Use actual author names from citations
-
-If you write any forbidden phrase like "Paper 1" or "this study", your response will be rejected.`,
+        content: `You are a meticulous academic writing assistant. Your most important duty is to follow user instructions for formatting and citation with 100% accuracy. You will be given placeholder tags for citations. You MUST use these tags. You must not invent your own citation formats like (Paper 1).`,
       },
       {
         role: "user",
@@ -157,12 +123,23 @@ If you write any forbidden phrase like "Paper 1" or "this study", your response 
     stream: true,
   });
 
-  let fullContent = "";
+  let rawContent = "";
   for await (const chunk of response) {
-    fullContent += chunk.choices[0]?.delta?.content || "";
+    rawContent += chunk.choices[0]?.delta?.content || "";
   }
 
-  return fullContent || "Error generating literature review.";
+  if (!rawContent) {
+    return "Error generating literature review.";
+  }
+
+  // --- CRITICAL POST-PROCESSING STEP ---
+  let finalContent = rawContent;
+  citationMap.forEach((citation, placeholder) => {
+    // Use replaceAll to catch every instance of the placeholder.
+    finalContent = finalContent.replaceAll(placeholder, citation);
+  });
+
+  return finalContent;
 }
 
 /**

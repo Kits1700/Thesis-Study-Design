@@ -73,23 +73,37 @@ Word count: 1500–2000 words.
   }
 
   if (hasAbstracts) {
-    prompt += `
-Use the following reference material to inform your review. You MUST cite them using the exact author and year as mapped below.
+    // Extract author names for explicit examples
+    const extractedAuthors = [];
+    paperAbstracts!.forEach((paper) => {
+      if (paper.citation) {
+        const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
+        if (match) {
+          extractedAuthors.push({ author: match[1].trim(), year: match[2] });
+        }
+      }
+    });
 
+    prompt += `
+SOURCES FOR YOUR LITERATURE REVIEW:
 ${abstractBlock}
 
-CITATION MAPPING RULES:
+🔥 CRITICAL CITATION RULES - READ CAREFULLY:
+When writing about these sources, you MUST use these EXACT author names and years:
+${extractedAuthors.map((a, i) => `Source ${i+1}: Always write "${a.author} (${a.year})" or "(${a.author}, ${a.year})"`).join('\n')}
+
+🚫 ABSOLUTELY FORBIDDEN - DO NOT WRITE:
+- "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5"
+- "In Paper X", "The first paper", "The second study"  
+- "This paper", "This study", "Another study"
+
+✅ EXAMPLES OF REQUIRED WRITING STYLE:
+${extractedAuthors.slice(0,3).map(a => `- "${a.author} (${a.year}) found that..."`).join('\n')}
+${extractedAuthors.slice(0,2).map(a => `- "Research shows (${a.author}, ${a.year}) that..."`).join('\n')}
+
+🔥 FINAL WARNING: If you write "Paper 1" or "Paper 2" anywhere, you have completely failed this task.
+
 ${citationMapInstructions}
-
-ABSOLUTELY FORBIDDEN WORDS/PHRASES:
-- "Paper 1", "Paper 2", etc.
-- "This paper", "this study", "one study", "another paper"
-- "In Paper 3", "The research shows", unless followed by (Author, Year)
-
-REQUIRED STYLE EXAMPLES:
-✓ "Zhang and Lee (2023) found that..."
-✓ "Findings suggest (Chen & Patel, 2022)..."
-✗ "Paper 1 shows..." — NEVER USE THIS!
 `;
   } else {
     // No abstracts — fallback to a generic version but still enforce citation and table

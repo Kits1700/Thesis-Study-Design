@@ -29,15 +29,16 @@ export async function generateLiteratureReview(
     prompt += `
 You are provided with key scholarly sources (citations and abstracts). These sources must form the foundation of the literature review.
 
-Instructions:
-- Treat the following references as core academic sources.
-- Use in-text citations in APA style (Author, Year).
-- DO NOT refer to them as "Paper 1", etc.
-- Integrate these works into the discussion thematically and methodologically.
-- Compare, contrast, and synthesize ideas across the papers—not just summarize.
-- Link findings, methods, and perspectives from the included studies.
-- Use formal academic tone throughout.
-- Do not fabricate citations for the listed works.
+CRITICAL CITATION REQUIREMENTS:
+- Extract author surnames and publication years directly from the APA-style references provided below
+- Use proper in-text citations: (Author, Year) or Author (Year)
+- Example: If reference is "Smith, J. A. (2023). Title..." then cite as (Smith, 2023)
+- For multiple authors: (FirstAuthor et al., Year)
+- NEVER use "Paper 1", "Paper 2", "this study", or any numbered references
+- Integrate these works thematically and methodologically across all sections
+- Synthesize and compare findings - do not just summarize individual papers
+- Use formal academic tone and critical analysis throughout
+- The exact APA references provided must appear in your References section
 - Format in HTML and use exactly the following section headers:
 
 <h3>1. Introduction</h3>
@@ -80,11 +81,14 @@ Write a full academic literature review with six clearly formatted HTML sections
     messages: [
       {
         role: "system",
-        content: `You are an academic writing assistant. 
-Your output must follow APA citation style and be structured into 6 HTML sections: 
-Introduction, Thematic Organization, Methodological Comparison, Critical Analysis, Conclusion, References.
-Never refer to "Paper 1", "this paper", or any index-based label.
-Use APA-style in-text citations and reference formatting.`,
+        content: `You are an academic writing assistant specializing in literature reviews. 
+MANDATORY REQUIREMENTS:
+- Extract author surnames and years from provided APA references for in-text citations
+- Use format: (Author, Year) or Author (Year) - never "Paper 1" or numbered labels  
+- Structure into exactly 6 HTML sections: Introduction, Thematic Organization, Methodological Comparison, Critical Analysis, Conclusion, References
+- List provided APA references first in References section, then additional sources alphabetically
+- Synthesize across sources rather than summarizing individual papers
+- Use the exact APA references provided by the user in your References section`,
       },
       {
         role: "user",

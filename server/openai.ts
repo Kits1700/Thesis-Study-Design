@@ -27,8 +27,8 @@ Requirements:
 - Include a comparison table in section 4
 - Write clearly and accessibly with comprehensive explanations`;
 
-  // Extract authors and create explicit mapping
-  const authorMap = new Map<number, string>();
+  // Extract authors for direct citation usage
+  const authorCitations: string[] = [];
   
   if (hasAbstracts && paperAbstracts) {
     prompt += "\n\nIMPORTANT - Use ONLY these specific author citations:";
@@ -40,8 +40,8 @@ Requirements:
           const author = match[1].trim();
           const year = match[2];
           const authorCitation = `${author} (${year})`;
-          authorMap.set(i + 1, authorCitation);
-          prompt += `\n- When referencing source ${i + 1}: Use "${authorCitation}"`;
+          authorCitations.push(authorCitation);
+          prompt += `\n- Always cite as "${authorCitation}" when discussing this research`;
         }
       }
     });
@@ -85,16 +85,9 @@ Requirements:
   let finalContent = content;
   
   if (hasAbstracts && paperAbstracts) {
-    // Get author citations for replacement
-    const authorCitations = paperAbstracts
-      .map(paper => {
-        const match = paper.citation?.match(/^([^,]+),.*?\((\d{4})\)/);
-        return match ? `${match[1].trim()} (${match[2]})` : null;
-      })
-      .filter(Boolean);
-
-    // Replace numbered references with author citations
-    authorMap.forEach((authorCitation, paperNum) => {
+    // Replace numbered references with proper author citations
+    authorCitations.forEach((authorCitation, index) => {
+      const paperNum = index + 1;
       const patterns = [
         new RegExp(`\\bPaper ${paperNum}\\b`, 'g'),
         new RegExp(`\\bpaper ${paperNum}\\b`, 'g'),
@@ -111,29 +104,28 @@ Requirements:
 
     // Replace generic phrases with author citations
     const genericPatterns = [
-      { pattern: /\bthe first paper\b/gi, replacement: authorCitations[0] || 'research' },
-      { pattern: /\bthe second paper\b/gi, replacement: authorCitations[1] || 'research' },
-      { pattern: /\bthis study\b/gi, replacement: authorCitations[0] || 'research' },
-      { pattern: /\bthis research\b/gi, replacement: authorCitations[0] || 'research' },
-      { pattern: /\bthe research\b/gi, replacement: authorCitations[0] || 'research' },
-      { pattern: /\bthe authors\b/gi, replacement: authorCitations[0] || 'researchers' },
-      { pattern: /\banother study\b/gi, replacement: authorCitations[1] || 'research' },
-      { pattern: /\bone study\b/gi, replacement: authorCitations[0] || 'research' },
+      { pattern: /\bthe first paper\b/gi, replacement: authorCitations[0] },
+      { pattern: /\bthe second paper\b/gi, replacement: authorCitations[1] },
+      { pattern: /\bthis study\b/gi, replacement: authorCitations[0] },
+      { pattern: /\bthis research\b/gi, replacement: authorCitations[0] },
+      { pattern: /\bthe research\b/gi, replacement: authorCitations[0] },
+      { pattern: /\bthe authors\b/gi, replacement: authorCitations[0] },
+      { pattern: /\banother study\b/gi, replacement: authorCitations[1] || authorCitations[0] },
+      { pattern: /\bone study\b/gi, replacement: authorCitations[0] },
     ];
 
     genericPatterns.forEach(({ pattern, replacement }) => {
-      if (replacement && replacement !== 'research' && replacement !== 'researchers') {
+      if (replacement) {
         finalContent = finalContent.replace(pattern, replacement);
       }
     });
 
-    // Force proper References section
+    // Force proper References section with actual citations
     const referencesHtml = paperAbstracts
       .filter(paper => paper.citation)
       .map(paper => `<p>${paper.citation}</p>`)
       .join('\n');
     
-    // Replace or add References section
     const referencesPattern = /<h3>6\.\s*References<\/h3>[\s\S]*?(?=<h3>|$)/;
     const referencesSection = `<h3>6. References</h3>\n\n${referencesHtml}`;
     

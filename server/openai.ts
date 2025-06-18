@@ -94,6 +94,22 @@ Abstract: ${paper.abstract}`;
         }
       }
     });
+
+    // Add proper References section with actual citations
+    const referencesSection = "\n\n<h3>6. References</h3>\n\n";
+    const citations = paperAbstracts
+      .filter(paper => paper.citation)
+      .map(paper => `<p>${paper.citation}</p>`)
+      .join('\n');
+    
+    // Replace the References section with actual citations
+    const referencesPattern = /<h3>6\.\s*References<\/h3>[\s\S]*?(?=<h3>|$)/;
+    if (referencesPattern.test(finalContent)) {
+      finalContent = finalContent.replace(referencesPattern, referencesSection + citations);
+    } else {
+      // If no References section found, append it
+      finalContent += referencesSection + citations;
+    }
   }
 
   return finalContent || "Error generating literature review.";

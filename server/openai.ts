@@ -21,16 +21,38 @@ Structure:
 <h3>6. References</h3>
 
 Requirements:
-- 1000-1500 words
+- 1500-2000 words with detailed analysis
 - Use proper APA citations with author names and years
 - Include a comparison table in section 4
-- Write clearly and accessibly`;
+- Write clearly and accessibly with comprehensive explanations
+- Provide thorough theoretical background and context
+- Include detailed methodological discussions
+- Synthesize findings across multiple dimensions`;
 
   if (hasAbstracts && paperAbstracts) {
+    prompt += "\n\nCitation mapping - Use these exact author citations:";
+    
+    paperAbstracts.forEach((paper, i) => {
+      if (paper.citation && paper.abstract) {
+        const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
+        if (match) {
+          const author = match[1].trim();
+          const year = match[2];
+          prompt += `\nPaper ${i + 1}: Always cite as "${author} (${year})" or "(${author}, ${year})"`;
+        }
+      }
+    });
+
     prompt += "\n\nPapers to reference:";
     paperAbstracts.forEach((paper, i) => {
       if (paper.citation && paper.abstract) {
-        prompt += `\n\n${paper.citation}\nAbstract: ${paper.abstract}`;
+        const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
+        const author = match ? match[1].trim() : "Author";
+        const year = match ? match[2] : "Year";
+        
+        prompt += `\n\n[${author} (${year})]
+Full Citation: ${paper.citation}
+Abstract: ${paper.abstract}`;
       }
     });
   }
@@ -40,7 +62,7 @@ Requirements:
     messages: [
       {
         role: "system",
-        content: "You are an academic writing assistant. Write clear, comprehensive literature reviews using proper citations.",
+        content: "You are an academic writing assistant. Write comprehensive literature reviews using proper author-year citations. Always use the specific author names provided in the citation mapping.",
       },
       {
         role: "user",
@@ -55,7 +77,26 @@ Requirements:
     content += chunk.choices[0]?.delta?.content || "";
   }
 
-  return content || "Error generating literature review.";
+  // Post-process to replace any remaining generic references
+  let finalContent = content;
+  if (hasAbstracts && paperAbstracts) {
+    paperAbstracts.forEach((paper, i) => {
+      if (paper.citation) {
+        const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
+        if (match) {
+          const author = match[1].trim();
+          const year = match[2];
+          const authorCitation = `${author} (${year})`;
+          
+          // Replace any Paper X references with author citations
+          const paperPattern = new RegExp(`Paper ${i + 1}`, 'g');
+          finalContent = finalContent.replace(paperPattern, authorCitation);
+        }
+      }
+    });
+  }
+
+  return finalContent || "Error generating literature review.";
 }
 
 export async function generateArgumentExploration(

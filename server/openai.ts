@@ -39,26 +39,14 @@ Your output must be structured HTML using these exact sections:
 <h3>7. References</h3>
 <h3>8. Suggestions for Further Reading</h3>
 
-**EXTREMELY IMPORTANT INSTRUCTIONS ON CITATIONS:**
-You will be given a set of source papers. For each paper, you will be given a unique placeholder tag.
-**When you cite a paper, you MUST use its exact placeholder tag.**
-DO NOT write (Author, Year) yourself. DO NOT write (Paper 1), (Source 2), etc.
-You MUST insert the placeholder tag exactly as provided. For example, if a paper's tag is [CITE_SMITH_2020], your text must look like: "The research showed a significant effect [CITE_SMITH_2020]."
-
-The table in section 4 must be a valid HTML <table> with columns: Author(s), Year, Topic, Methodology, Key Findings.
-The "References" section must list the full citations for the papers I provide.
-In the "Suggestions for Further Reading" section, suggest 3-5 additional relevant scholarly papers that were NOT provided in the source materials.
+Use in-text citations in the format (Author, Year). Do not use formats like (Paper 1) or placeholder tags.
 `;
-
-  // This map will hold our placeholders and their final replacement text.
-  const citationMap = new Map<string, string>();
 
   if (hasAbstracts) {
     let sourcesBlock = `
 ---
 **SOURCE MATERIALS TO USE FOR THE REVIEW:**
-Synthesize the information from the following papers. Cite them using only their given placeholder tags.
-
+Synthesize the information from the following papers. When citing them, use (Author, Year) format directly, e.g., (Smith, 2020).
 `;
 
     paperAbstracts!.forEach((paper) => {
@@ -70,24 +58,11 @@ Synthesize the information from the following papers. Cite them using only their
           const author = match[1].trim();
           const year = match[2];
 
-          // Create a unique, clean placeholder tag.
-          const sanitizedAuthor = author
-            .replace(/[^a-zA-Z0-9]/g, "")
-            .toUpperCase();
-          const placeholder = `[CITE_${sanitizedAuthor}_${year}]`;
-
-          // The final text we will replace the placeholder with.
-          const finalCitationText = `(${author}, ${year})`;
-
-          // Store the mapping for our post-processing step.
-          citationMap.set(placeholder, finalCitationText);
-
-          // Add the clearly defined block to the prompt.
           sourcesBlock += `
 [BEGIN PAPER]
+CITATION: (${author}, ${year})
 FULL_CITATION: ${citation}
 ABSTRACT: ${abstract}
-**USE THIS EXACT TAG FOR CITATION:** ${placeholder}
 [END PAPER]
 ---
 `;
@@ -96,7 +71,7 @@ ABSTRACT: ${abstract}
     });
 
     prompt += sourcesBlock;
-    prompt += `**FINAL REMINDER:** Your primary task is to write a great review. Your secondary, but equally critical, task is to use the exact placeholder tags like [CITE_AUTHOR_YEAR] for all citations. Failure to use the tags will make the output unusable. Do not invent your own citations.`;
+    prompt += `Please ensure all citations are in (Author, Year) format. Do not make up sources or change citation styles.`;
   } else {
     prompt += `
 No abstracts were provided. Use your knowledge of credible scholarly sources to generate the literature review, including plausible but fictional author names and years for citations and references.
@@ -113,7 +88,7 @@ No abstracts were provided. Use your knowledge of credible scholarly sources to 
     messages: [
       {
         role: "system",
-        content: `You are a meticulous academic writing assistant. Your most important duty is to follow user instructions for formatting and citation with 100% accuracy. You will be given placeholder tags for citations. You MUST use these tags. You must not invent your own citation formats like (Paper 1).`,
+        content: `You are a meticulous academic writing assistant. Your most important duty is to follow user instructions for formatting and citation with 100% accuracy. Use (Author, Year) for all citations.`,
       },
       {
         role: "user",
@@ -128,18 +103,7 @@ No abstracts were provided. Use your knowledge of credible scholarly sources to 
     rawContent += chunk.choices[0]?.delta?.content || "";
   }
 
-  if (!rawContent) {
-    return "Error generating literature review.";
-  }
-
-  // --- CRITICAL POST-PROCESSING STEP ---
-  let finalContent = rawContent;
-  citationMap.forEach((citation, placeholder) => {
-    // Use replaceAll to catch every instance of the placeholder.
-    finalContent = finalContent.replaceAll(placeholder, citation);
-  });
-
-  return finalContent;
+  return rawContent || "Error generating literature review.";
 }
 
 /**

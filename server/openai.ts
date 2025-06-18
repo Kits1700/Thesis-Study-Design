@@ -22,18 +22,16 @@ Structure:
 
 Requirements:
 - 2000-3000 words with extensive detailed analysis
-- Use proper APA citations with author names and years
+- Use ONLY author-year citations like "Smith (2023)" or "(Smith, 2023)"
+- NEVER use "Paper 1", "Paper 2", "Study 1", etc.
 - Include a comparison table in section 4
-- Write clearly and accessibly with comprehensive explanations
-- Provide thorough theoretical background and context
-- Include detailed methodological discussions
-- Synthesize findings across multiple dimensions
-- Expand each section with rich content and detailed explanations
-- Include extensive critical analysis and evaluation
-- Provide comprehensive coverage of all aspects of the topic`;
+- Write clearly and accessibly with comprehensive explanations`;
 
+  // Extract authors and create explicit mapping
+  const authorMap = new Map<number, string>();
+  
   if (hasAbstracts && paperAbstracts) {
-    prompt += "\n\nCitation mapping - Use these exact author citations:";
+    prompt += "\n\nIMPORTANT - Use ONLY these specific author citations:";
     
     paperAbstracts.forEach((paper, i) => {
       if (paper.citation && paper.abstract) {
@@ -41,23 +39,26 @@ Requirements:
         if (match) {
           const author = match[1].trim();
           const year = match[2];
-          prompt += `\nPaper ${i + 1}: Always cite as "${author} (${year})" or "(${author}, ${year})"`;
+          const authorCitation = `${author} (${year})`;
+          authorMap.set(i + 1, authorCitation);
+          prompt += `\n- When referencing source ${i + 1}: Use "${authorCitation}"`;
         }
       }
     });
 
-    prompt += "\n\nPapers to reference:";
+    prompt += "\n\nSource materials:";
     paperAbstracts.forEach((paper, i) => {
       if (paper.citation && paper.abstract) {
         const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
-        const author = match ? match[1].trim() : "Author";
-        const year = match ? match[2] : "Year";
-        
-        prompt += `\n\n[${author} (${year})]
-Full Citation: ${paper.citation}
-Abstract: ${paper.abstract}`;
+        if (match) {
+          const author = match[1].trim();
+          const year = match[2];
+          prompt += `\n\nSource ${i + 1} - ${author} (${year}):\nFull Citation: ${paper.citation}\nAbstract: ${paper.abstract}`;
+        }
       }
     });
+
+    prompt += "\n\nRemember: NEVER write 'Paper 1', 'Paper 2', etc. Always use the specific author names above.";
   }
 
   const response = await openai.chat.completions.create({
@@ -65,7 +66,7 @@ Abstract: ${paper.abstract}`;
     messages: [
       {
         role: "system",
-        content: "You are an academic writing assistant. Write comprehensive literature reviews using proper author-year citations. Always use the specific author names provided in the citation mapping.",
+        content: "You are an academic writing assistant. Use ONLY specific author-year citations. Never use numbered references like 'Paper 1' or 'Study 1'. Always cite using author names and years.",
       },
       {
         role: "user",
@@ -80,38 +81,40 @@ Abstract: ${paper.abstract}`;
     content += chunk.choices[0]?.delta?.content || "";
   }
 
-  // Post-process to replace any remaining generic references
+  // Aggressive post-processing to fix any remaining issues
   let finalContent = content;
+  
   if (hasAbstracts && paperAbstracts) {
-    paperAbstracts.forEach((paper, i) => {
-      if (paper.citation) {
-        const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
-        if (match) {
-          const author = match[1].trim();
-          const year = match[2];
-          const authorCitation = `${author} (${year})`;
-          
-          // Replace any Paper X references with author citations
-          const paperPattern = new RegExp(`Paper ${i + 1}`, 'g');
-          finalContent = finalContent.replace(paperPattern, authorCitation);
-        }
-      }
+    // Replace any numbered references with author citations
+    authorMap.forEach((authorCitation, paperNum) => {
+      const patterns = [
+        new RegExp(`\\bPaper ${paperNum}\\b`, 'g'),
+        new RegExp(`\\bpaper ${paperNum}\\b`, 'g'),
+        new RegExp(`\\bStudy ${paperNum}\\b`, 'g'),
+        new RegExp(`\\bstudy ${paperNum}\\b`, 'g'),
+        new RegExp(`\\bSource ${paperNum}\\b`, 'g'),
+        new RegExp(`\\bsource ${paperNum}\\b`, 'g'),
+      ];
+      
+      patterns.forEach(pattern => {
+        finalContent = finalContent.replace(pattern, authorCitation);
+      });
     });
 
-    // Add proper References section with actual citations
-    const referencesSection = "\n\n<h3>6. References</h3>\n\n";
-    const citations = paperAbstracts
+    // Force proper References section
+    const referencesHtml = paperAbstracts
       .filter(paper => paper.citation)
       .map(paper => `<p>${paper.citation}</p>`)
       .join('\n');
     
-    // Replace the References section with actual citations
+    // Replace or add References section
     const referencesPattern = /<h3>6\.\s*References<\/h3>[\s\S]*?(?=<h3>|$)/;
+    const referencesSection = `<h3>6. References</h3>\n\n${referencesHtml}`;
+    
     if (referencesPattern.test(finalContent)) {
-      finalContent = finalContent.replace(referencesPattern, referencesSection + citations);
+      finalContent = finalContent.replace(referencesPattern, referencesSection);
     } else {
-      // If no References section found, append it
-      finalContent += referencesSection + citations;
+      finalContent += `\n\n${referencesSection}`;
     }
   }
 

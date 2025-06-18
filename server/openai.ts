@@ -17,78 +17,204 @@ if (!openai) {
 // Assume 'openai' is configured elsewhere, e.g.:
 // const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export async function generateLiteratureReview(
+/**
+ * Generate Task 1: Basic Literature Review (without specific paper abstracts)
+ */
+export async function generateTask1LiteratureReview(
   topic: string,
-  paperAbstracts?: { citation?: string; abstract?: string }[],
 ): Promise<string> {
   if (!openai) throw new Error("OpenAI API key not configured");
 
-  const hasAbstracts = paperAbstracts?.some(
-    (p) => p.abstract && p.abstract.trim().length > 10,
-  );
+  const prompt = `Generate a comprehensive academic literature review on "${topic}".
 
-  let prompt = `Generate a comprehensive academic literature review on the topic: "${topic}".
-
-Your output must be structured HTML using these exact sections:
+✅ REQUIRED STRUCTURE (Use exact HTML format):
 <h3>1. Introduction</h3>
 <h3>2. Thematic Organization of the Literature</h3>
 <h3>3. Methodological Comparison</h3>
-<h3>4. Comparative Table</h3>
-<h3>5. Critical Analysis and Synthesis</h3>
-<h3>6. Conclusion</h3>
-<h3>7. References</h3>
-<h3>8. Suggestions for Further Reading</h3>
+<h3>4. Critical Analysis and Synthesis</h3>
+<h3>5. Conclusion</h3>
+<h3>6. References</h3>
 
-Use in-text citations in the format (Author, Year). Do not use formats like (Paper 1) or placeholder tags.
-`;
+📚 REQUIREMENTS:
+- Write 800-1000 words with detailed analysis
+- Include rich theoretical background and context
+- Provide thorough explanations of concepts and frameworks
+- Discuss methodological approaches in depth
+- Synthesize findings across multiple dimensions
+- Include critical evaluation of strengths and limitations
+- Make content accessible while maintaining academic rigor
+- Use clear logical flow and smooth transitions between sections
+- Use credible scholarly sources with realistic author names and years
+- Include proper APA citations: "Smith (2023)" or "(Smith, 2023)"
+- Add a References section with full APA citations
+- Include an HTML comparison table in section 4 with columns: Author(s), Year, Method, Key Findings`;
 
-  if (hasAbstracts) {
-    let sourcesBlock = `
----
-**SOURCE MATERIALS TO USE FOR THE REVIEW:**
-Synthesize the information from the following papers. When citing them, use (Author, Year) format directly, e.g., (Smith, 2020).
-`;
-
-    paperAbstracts!.forEach((paper) => {
-      const citation = paper.citation?.trim();
-      const abstract = paper.abstract?.trim();
-      if (citation && abstract) {
-        const match = citation.match(/^([^,]+),.*?\((\d{4})\)/);
-        if (match) {
-          const author = match[1].trim();
-          const year = match[2];
-
-          sourcesBlock += `
-[BEGIN PAPER]
-CITATION: (${author}, ${year})
-FULL_CITATION: ${citation}
-ABSTRACT: ${abstract}
-[END PAPER]
----
-`;
-        }
-      }
-    });
-
-    prompt += sourcesBlock;
-    prompt += `Please ensure all citations are in (Author, Year) format. Do not make up sources or change citation styles.`;
-  } else {
-    prompt += `
-No abstracts were provided. Use your knowledge of credible scholarly sources to generate the literature review, including plausible but fictional author names and years for citations and references.
-`;
-  }
-
-  console.log("=== LIT REVIEW PROMPT DEBUG ===");
+  console.log("=== TASK 1 GENERATION ===");
+  console.log("Topic:", topic);
   console.log("Prompt length:", prompt.length);
-  console.log("Prompt preview:\n", prompt.substring(0, 1500));
-  console.log("================================");
+  console.log("========================");
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
     messages: [
       {
         role: "system",
-        content: `You are a meticulous academic writing assistant. Your most important duty is to follow user instructions for formatting and citation with 100% accuracy. Use (Author, Year) for all citations.`,
+        content: `You are an expert academic writing assistant specializing in comprehensive literature reviews.
+
+Create detailed, well-structured academic content that is both rigorous and accessible. Use proper APA citation format and include a comparison table in section 4.`,
+      },
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    stream: true,
+  });
+
+  let content = "";
+  for await (const chunk of response) {
+    content += chunk.choices[0]?.delta?.content || "";
+  }
+
+  return content || "Error generating literature review.";
+}
+
+/**
+ * Generate Task 2: Literature Review with Specific Paper Abstracts
+ */
+export async function generateTask2LiteratureReview(
+  topic: string,
+  paperAbstracts: { citation?: string; abstract?: string }[],
+): Promise<string> {
+  if (!openai) throw new Error("OpenAI API key not configured");
+
+  // Extract author names for citation mapping
+  const citationMap = new Map<string, string>();
+  const extractedAuthors: string[] = [];
+
+  paperAbstracts.forEach((paper, index) => {
+    if (paper.citation) {
+      const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
+      if (match) {
+        const author = match[1].trim();
+        const year = match[2];
+        extractedAuthors.push(`${author} (${year})`);
+        
+        // Create citation mapping to replace any generic references
+        citationMap.set(`Paper ${index + 1}`, `${author} (${year})`);
+        citationMap.set(`paper ${index + 1}`, `${author} (${year})`);
+        citationMap.set(`Study ${index + 1}`, `${author} (${year})`);
+        citationMap.set(`study ${index + 1}`, `${author} (${year})`);
+        citationMap.set(`Source ${index + 1}`, `${author} (${year})`);
+        citationMap.set(`source ${index + 1}`, `${author} (${year})`);
+      }
+    }
+  });
+
+  let prompt = `Generate a comprehensive, detailed academic literature review on "${topic}".
+
+🔥 ABSOLUTE PROHIBITION - NEVER USE THESE PHRASES:
+- "Paper 1", "Paper 2", "Paper 3", "Paper 4", "Paper 5"
+- "paper 1", "paper 2", "paper 3", "paper 4", "paper 5"  
+- "Study 1", "Study 2", "Study 3", "Study 4", "Study 5"
+- "study 1", "study 2", "study 3", "study 4", "study 5"
+- "Source 1", "Source 2", "Source 3", "Source 4", "Source 5"
+- "source 1", "source 2", "source 3", "source 4", "source 5"
+- "this paper", "this study", "another paper", "the research"
+- "one study", "another study", "the first study", "the second study"
+
+✅ REQUIRED STRUCTURE (Use exact HTML format):
+<h3>1. Introduction</h3>
+<h3>2. Thematic Organization of the Literature</h3>
+<h3>3. Methodological Comparison</h3>
+<h3>4. Critical Analysis and Synthesis</h3>
+<h3>5. Conclusion</h3>
+<h3>6. References</h3>
+
+📚 COMPREHENSIVE REQUIREMENTS:
+- Write 1200-1500 words with detailed analysis
+- Include rich theoretical background and context
+- Provide thorough explanations of concepts and frameworks
+- Discuss methodological approaches in depth
+- Synthesize findings across multiple dimensions
+- Include critical evaluation of strengths and limitations
+- Make content accessible while maintaining academic rigor
+- Use clear logical flow and smooth transitions between sections
+
+🎯 CITATION INSTRUCTIONS:
+You must use these EXACT author citations when referencing the provided papers:
+`;
+
+  paperAbstracts.forEach((paper, index) => {
+    if (paper.citation) {
+      const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
+      if (match) {
+        const author = match[1].trim();
+        const year = match[2];
+        prompt += `\n- For paper ${index + 1}: ALWAYS write "${author} (${year})" or "(${author}, ${year})"`;
+      }
+    }
+  });
+
+  prompt += `
+
+📊 SECTION 4 TABLE REQUIREMENT:
+Include an HTML comparison table with these columns:
+<table border="1" style="width:100%; border-collapse: collapse;">
+<tr><th>Author(s)</th><th>Year</th><th>Method</th><th>Key Findings</th></tr>
+[Add rows for each paper using the exact author names above]
+</table>
+
+📖 SOURCE MATERIALS:
+`;
+
+  paperAbstracts.forEach((paper, index) => {
+    if (paper.citation && paper.abstract) {
+      const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
+      if (match) {
+        const author = match[1].trim();
+        const year = match[2];
+        prompt += `
+
+[${author} (${year})]
+Full Citation: ${paper.citation}
+Abstract: ${paper.abstract}
+REMEMBER: Always cite this as "${author} (${year})" - NEVER as "Paper ${index + 1}"
+`;
+      }
+    }
+  });
+
+  prompt += `
+
+🚨 FINAL WARNING: Your response will be rejected if it contains any "Paper 1", "Paper 2", "Study 1", etc. phrases. Use only the specific author names provided above.`;
+
+  // Log the prompt for debugging
+  console.log("=== TASK 2 PROMPT DEBUG ===");
+  console.log("Topic:", topic);
+  console.log("Papers provided:", paperAbstracts.length);
+  console.log("Extracted authors:", extractedAuthors);
+  console.log("Citation map size:", citationMap.size);
+  console.log("Prompt length:", prompt.length);
+  console.log("===============================");
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+    messages: [
+      {
+        role: "system",
+        content: `You are an expert academic writing assistant specializing in comprehensive literature reviews.
+
+🔥 CRITICAL RULES:
+1. NEVER write "Paper 1", "Paper 2", "Study 1", "Study 2", or any numbered references
+2. ALWAYS use specific author names: "Smith (2023)" or "(Smith, 2023)"
+3. Write comprehensive, detailed content with rich explanations
+4. Include thorough theoretical background and context
+5. Provide in-depth methodological analysis
+6. Create accessible but academically rigorous content
+7. Include HTML comparison table in section 4
+
+Your response will be automatically rejected if it contains any prohibited phrases like "Paper 1" or "Study 1".`,
       },
       {
         role: "user",
@@ -103,7 +229,35 @@ No abstracts were provided. Use your knowledge of credible scholarly sources to 
     rawContent += chunk.choices[0]?.delta?.content || "";
   }
 
-  return rawContent || "Error generating literature review.";
+  if (!rawContent) {
+    return "Error generating literature review.";
+  }
+
+  // Post-processing to replace any remaining generic references
+  let finalContent = rawContent;
+  citationMap.forEach((citation, placeholder) => {
+    finalContent = finalContent.replaceAll(placeholder, citation);
+  });
+
+  return finalContent;
+}
+
+/**
+ * Legacy function that routes to appropriate task-specific function
+ */
+export async function generateLiteratureReview(
+  topic: string,
+  paperAbstracts?: { citation?: string; abstract?: string }[],
+): Promise<string> {
+  const hasValidAbstracts = paperAbstracts?.some(
+    (p) => p.abstract && p.abstract.trim().length > 10,
+  );
+
+  if (hasValidAbstracts && paperAbstracts) {
+    return await generateTask2LiteratureReview(topic, paperAbstracts);
+  } else {
+    return await generateTask1LiteratureReview(topic);
+  }
 }
 
 /**

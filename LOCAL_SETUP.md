@@ -1,106 +1,180 @@
 # Local Development Setup
 
-This guide will help you run the academic research platform locally on your machine.
-
 ## Prerequisites
 
-- Node.js 18+ installed
-- Git
+1. **Node.js 18+** - Download from [nodejs.org](https://nodejs.org/)
+2. **PostgreSQL** - Download from [postgresql.org](https://www.postgresql.org/download/)
+3. **Git** - Download from [git-scm.com](https://git-scm.com/)
 
-## Quick Start
+## Installation Steps
 
-1. **Clone and install dependencies:**
-   ```bash
-   git clone <your-repo>
-   cd <project-folder>
-   npm install
-   ```
+### 1. Clone and Install Dependencies
 
-2. **Set up environment variables:**
-   Copy the `.env` file and configure your API keys:
-   ```bash
-   cp .env .env.local
-   ```
+```bash
+# Clone the repository (if from git)
+git clone <repository-url>
+cd academic-research-platform
 
-3. **Database Setup (Choose one option):**
+# Install dependencies
+npm install
+```
 
-### Option A: Free Neon Database (Recommended)
+### 2. Database Setup
 
-1. Visit [neon.tech](https://neon.tech) and create a free account
-2. Create a new project/database
-3. Copy the connection string from the dashboard
-4. Add it to your `.env.local` file:
-   ```
-   DATABASE_URL=postgresql://[username]:[password]@[host]/[database]?sslmode=require
-   ```
+```bash
+# Create PostgreSQL database
+createdb academic_research
 
-### Option B: Local PostgreSQL
+# Or using psql:
+psql -U postgres
+CREATE DATABASE academic_research;
+\q
+```
 
-1. Install PostgreSQL locally
-2. Create a database:
-   ```bash
-   createdb thesis_study
-   ```
-3. Add to `.env.local`:
-   ```
-   DATABASE_URL=postgresql://localhost:5432/thesis_study
-   ```
+### 3. Environment Configuration
 
-### Option C: Docker PostgreSQL
+Create a `.env` file in the root directory:
 
-1. Run PostgreSQL in Docker:
-   ```bash
-   docker run --name thesis-postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=thesis_study -p 5432:5432 -d postgres:14
-   ```
-2. Add to `.env.local`:
-   ```
-   DATABASE_URL=postgresql://postgres:password@localhost:5432/thesis_study
-   ```
+```env
+# Database Configuration
+DATABASE_URL=postgresql://username:password@localhost:5432/academic_research
+PGHOST=localhost
+PGPORT=5432
+PGUSER=your_username
+PGPASSWORD=your_password
+PGDATABASE=academic_research
 
-4. **Push database schema:**
-   ```bash
-   npm run db:push
-   ```
+# OpenAI Configuration (required for AI features)
+OPENAI_API_KEY=your_openai_api_key_here
 
-5. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
+# Development Settings
+NODE_ENV=development
+PORT=5000
+```
 
-The application will be available at `http://localhost:5000`
+### 4. Database Schema Setup
 
-## API Keys Required
+```bash
+# Push database schema
+npm run db:push
+```
 
-- **OPENAI_API_KEY**: For AI-powered literature reviews and argument exploration
-- **DATABASE_URL**: PostgreSQL database connection string
+### 5. Start Development Server
+
+```bash
+# Start the full application
+npm run dev
+```
+
+The application will be available at:
+- **Frontend**: http://localhost:5000
+- **API**: http://localhost:5000/api
+
+## Getting API Keys
+
+### OpenAI API Key (Required)
+1. Go to [platform.openai.com](https://platform.openai.com)
+2. Sign up or log in
+3. Navigate to API Keys section
+4. Create a new secret key
+5. Copy the key to your `.env` file
+
+## Project Structure
+
+```
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/    # UI components
+│   │   ├── pages/         # Page components
+│   │   └── lib/           # Utilities and stores
+├── server/                # Express backend
+│   ├── db.ts             # Database connection
+│   ├── openai.ts         # AI generation logic
+│   ├── routes.ts         # API routes
+│   └── storage.ts        # Data storage interface
+├── shared/
+│   └── schema.ts         # Database schema
+└── package.json          # Dependencies and scripts
+```
+
+## Available Scripts
+
+```bash
+# Development
+npm run dev              # Start development server
+
+# Database
+npm run db:push          # Push schema changes to database
+npm run db:studio        # Open database studio (if available)
+
+# Production
+npm run build            # Build for production
+npm start                # Start production server
+```
+
+## Features
+
+### Task Types
+- **Task 1**: General literature review generation
+- **Task 2**: Literature review with specific paper abstracts and citations
+- **Task 3**: Argument exploration with multiple perspectives
+
+### Study Components
+- Participant management
+- Task completion tracking
+- Questionnaire responses
+- Comprehensive data export
+- Admin dashboard for data analysis
 
 ## Troubleshooting
 
 ### Database Connection Issues
-- Ensure your DATABASE_URL is correctly formatted
-- Check if the database server is running
-- Verify network connectivity to remote databases
+```bash
+# Check PostgreSQL status
+pg_ctl status
 
-### OpenAI API Issues
-- Ensure your API key is valid and has sufficient credits
-- Check the OpenAI service status if requests fail
+# Restart PostgreSQL (macOS with Homebrew)
+brew services restart postgresql
+
+# Windows
+net start postgresql-x64-14
+```
 
 ### Port Already in Use
-- The app runs on port 5000 by default
-- If the port is occupied, stop other services or modify the port in the code
+```bash
+# Find process using port 5000
+lsof -i :5000
 
-## Available Scripts
+# Kill the process
+kill -9 <PID>
+```
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run db:push` - Push database schema changes
-- `npm run check` - Type checking
+### Missing Dependencies
+```bash
+# Clean install
+rm -rf node_modules package-lock.json
+npm install
+```
 
-## Project Structure
+## Development Tips
 
-- `/client` - React frontend application
-- `/server` - Express backend API
-- `/shared` - Shared TypeScript schemas
-- `/attached_assets` - Static assets
+1. **Hot Reload**: The development server automatically reloads on code changes
+2. **Database Changes**: Run `npm run db:push` after modifying `shared/schema.ts`
+3. **API Testing**: Use tools like Postman or curl to test API endpoints
+4. **Logs**: Check the console for detailed error messages and debug information
 
-For more help, check the documentation or create an issue.
+## Production Deployment
+
+For production deployment, ensure:
+1. Set `NODE_ENV=production`
+2. Use a production PostgreSQL instance
+3. Configure proper environment variables
+4. Run `npm run build` before starting
+
+## Support
+
+If you encounter issues:
+1. Check the console logs for error messages
+2. Verify all environment variables are set correctly
+3. Ensure PostgreSQL is running and accessible
+4. Confirm the OpenAI API key is valid and has credits

@@ -46,19 +46,19 @@ Requirements:
       }
     });
 
-    prompt += "\n\nSource materials:";
+    prompt += "\n\nSource materials - CITE USING AUTHOR NAMES ONLY:";
     paperAbstracts.forEach((paper, i) => {
       if (paper.citation && paper.abstract) {
         const match = paper.citation.match(/^([^,]+),.*?\((\d{4})\)/);
         if (match) {
           const author = match[1].trim();
           const year = match[2];
-          prompt += `\n\nSource ${i + 1} - ${author} (${year}):\nFull Citation: ${paper.citation}\nAbstract: ${paper.abstract}`;
+          prompt += `\n\n${author} (${year}):\nCitation: ${paper.citation}\nAbstract: ${paper.abstract}\nIMPORTANT: When discussing this research, write "${author} (${year})" or "(${author}, ${year})"`;
         }
       }
     });
 
-    prompt += "\n\nRemember: NEVER write 'Paper 1', 'Paper 2', etc. Always use the specific author names above.";
+    prompt += "\n\nCRITICAL REQUIREMENTS:\n- Use author names like 'Davis (2023)' when citing\n- Include References section with full citations\n- Never use generic terms like 'the first paper' or 'this study'";
   }
 
   const response = await openai.chat.completions.create({
@@ -66,7 +66,7 @@ Requirements:
     messages: [
       {
         role: "system",
-        content: "You are an academic writing assistant. Use ONLY specific author-year citations. Never use numbered references like 'Paper 1' or 'Study 1'. Always cite using author names and years.",
+        content: "You are an academic writing assistant. You must use specific author-year citations like 'Smith (2023)' or '(Smith, 2023)'. Never use phrases like 'Paper 1', 'Study 1', 'the first paper', 'this study', 'the research', or 'the authors'. Always refer to studies by their specific author names and years.",
       },
       {
         role: "user",
@@ -85,7 +85,15 @@ Requirements:
   let finalContent = content;
   
   if (hasAbstracts && paperAbstracts) {
-    // Replace any numbered references with author citations
+    // Get author citations for replacement
+    const authorCitations = paperAbstracts
+      .map(paper => {
+        const match = paper.citation?.match(/^([^,]+),.*?\((\d{4})\)/);
+        return match ? `${match[1].trim()} (${match[2]})` : null;
+      })
+      .filter(Boolean);
+
+    // Replace numbered references with author citations
     authorMap.forEach((authorCitation, paperNum) => {
       const patterns = [
         new RegExp(`\\bPaper ${paperNum}\\b`, 'g'),
@@ -99,6 +107,24 @@ Requirements:
       patterns.forEach(pattern => {
         finalContent = finalContent.replace(pattern, authorCitation);
       });
+    });
+
+    // Replace generic phrases with author citations
+    const genericPatterns = [
+      { pattern: /\bthe first paper\b/gi, replacement: authorCitations[0] || 'research' },
+      { pattern: /\bthe second paper\b/gi, replacement: authorCitations[1] || 'research' },
+      { pattern: /\bthis study\b/gi, replacement: authorCitations[0] || 'research' },
+      { pattern: /\bthis research\b/gi, replacement: authorCitations[0] || 'research' },
+      { pattern: /\bthe research\b/gi, replacement: authorCitations[0] || 'research' },
+      { pattern: /\bthe authors\b/gi, replacement: authorCitations[0] || 'researchers' },
+      { pattern: /\banother study\b/gi, replacement: authorCitations[1] || 'research' },
+      { pattern: /\bone study\b/gi, replacement: authorCitations[0] || 'research' },
+    ];
+
+    genericPatterns.forEach(({ pattern, replacement }) => {
+      if (replacement && replacement !== 'research' && replacement !== 'researchers') {
+        finalContent = finalContent.replace(pattern, replacement);
+      }
     });
 
     // Force proper References section

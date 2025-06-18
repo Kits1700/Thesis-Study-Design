@@ -21,13 +21,16 @@ Structure:
 <h3>6. References</h3>
 
 Requirements:
-- 1500-2000 words with detailed analysis
+- 2000-3000 words with extensive detailed analysis
 - Use proper APA citations with author names and years
 - Include a comparison table in section 4
 - Write clearly and accessibly with comprehensive explanations
 - Provide thorough theoretical background and context
 - Include detailed methodological discussions
-- Synthesize findings across multiple dimensions`;
+- Synthesize findings across multiple dimensions
+- Expand each section with rich content and detailed explanations
+- Include extensive critical analysis and evaluation
+- Provide comprehensive coverage of all aspects of the topic`;
 
   if (hasAbstracts && paperAbstracts) {
     prompt += "\n\nCitation mapping - Use these exact author citations:";

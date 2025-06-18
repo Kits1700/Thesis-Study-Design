@@ -3,47 +3,21 @@
 ## Prerequisites
 
 1. **Node.js 18+** - Download from [nodejs.org](https://nodejs.org/)
-2. **PostgreSQL** - Download from [postgresql.org](https://www.postgresql.org/download/)
-3. **Git** - Download from [git-scm.com](https://git-scm.com/)
 
-## Installation Steps
+## Quick Setup (No Database Required)
 
-### 1. Clone and Install Dependencies
+### 1. Install Dependencies
 
 ```bash
-# Clone the repository (if from git)
-git clone <repository-url>
-cd academic-research-platform
-
 # Install dependencies
 npm install
 ```
 
-### 2. Database Setup
-
-```bash
-# Create PostgreSQL database
-createdb academic_research
-
-# Or using psql:
-psql -U postgres
-CREATE DATABASE academic_research;
-\q
-```
-
-### 3. Environment Configuration
+### 2. Environment Configuration
 
 Create a `.env` file in the root directory:
 
 ```env
-# Database Configuration
-DATABASE_URL=postgresql://username:password@localhost:5432/academic_research
-PGHOST=localhost
-PGPORT=5432
-PGUSER=your_username
-PGPASSWORD=your_password
-PGDATABASE=academic_research
-
 # OpenAI Configuration (required for AI features)
 OPENAI_API_KEY=your_openai_api_key_here
 
@@ -52,14 +26,7 @@ NODE_ENV=development
 PORT=5000
 ```
 
-### 4. Database Schema Setup
-
-```bash
-# Push database schema
-npm run db:push
-```
-
-### 5. Start Development Server
+### 3. Start Development Server
 
 ```bash
 # Start the full application

@@ -45,44 +45,25 @@ function processPaperAbstracts(paperAbstracts: { citation?: string; abstract?: s
     }[];
 }
 
-// --- Task 1 Function (No changes needed) ---
+// --- Task 1 Function ---
 export async function generateZeroShotLiteratureReview(topic: string): Promise<string> {
-    // ... (This function is correct and remains unchanged)
-    const prompt = `Write a comprehensive, scholarly literature review on the topic: "${topic}".
-
-Requirements:
-- The review should be approximately 1500-2000 words.
-- Structure the review thematically, creating a smooth, flowing academic narrative. Do not use generic subheadings.
-- Generate and integrate appropriate in-text citations in an author-year format (e.g., Smith, 2023 or (Jones & Lee, 2021)).
-- Your analysis should cover key themes, foundational theories, recent developments, and methodological trends.
-- Conclude with a summary of the current state of the research and identify potential future research directions.
-- End the entire response with a "References" section listing all citations you generated, formatted in APA style.`;
-
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [{
       role: "system",
-      content: "You are a research assistant with expertise in academic writing. Your task is to produce a well-structured, comprehensive literature review based on a given topic, generating all necessary content and citations from your knowledge base."
+      content: "Write comprehensive academic literature reviews with proper APA citations."
     }, {
       role: "user",
-      content: prompt
-    }, ],
+      content: `Write a 1500-2000 word literature review on "${topic}". Use thematic structure with author-year citations (Smith, 2023). Include References section in APA format.`
+    }],
     temperature: 0.6,
   });
 
-  return response.choices[0]?.message?.content || "Error: Could not generate zero-shot literature review.";
+  return response.choices[0]?.message?.content || "Error: Could not generate literature review.";
 }
 
 // --- Task 2 Function (CRITICALLY REVISED) ---
 
-/**
- * Generates a literature review by synthesizing provided abstracts and citations.
- * This version is heavily modified to prevent sequential "Paper 1, Paper 2" summarization.
- *
- * @param {string} topic - The central topic to frame the review.
- * @param {{ citation?: string; abstract?: string }[]} paperAbstracts - An array of paper objects.
- * @returns {Promise<string>} A string containing the synthesized literature review.
- */
 export async function generateLiteratureReviewFromSources(
   topic: string,
   paperAbstracts: { citation?: string; abstract?: string }[],
@@ -91,49 +72,25 @@ export async function generateLiteratureReviewFromSources(
   const processedPapers = processPaperAbstracts(paperAbstracts);
 
   if (!processedPapers || processedPapers.length === 0) {
-    return "Error: No valid papers with citations and abstracts were provided. Please check your input.";
+    return "Error: No valid papers with citations and abstracts provided.";
   }
 
-  // REVISED: Build a non-sequential, un-numbered block of source information.
-  let sourcesBlock = "You must use the following collection of abstracts and papers mentioned by the user as a starting point.Your final task is to produce a well-structured, comprehensive literature review based on the starting point and from your knowledge base, generating all necessary content and citations.\n";
+  // Build minimal source block
+  let sources = "Starting materials:\n";
   processedPapers.forEach(p => {
-    // Using a simple separator instead of "Source X"
-    sourcesBlock += `---\n`;
-    sourcesBlock += `In-Text Citation to use: ${p.authorCitation}\n`;
-    sourcesBlock += `Full Citation for Reference List: ${p.citation}\n`;
-    sourcesBlock += `Abstract Content: ${p.abstract}\n\n`;
+    sources += `${p.authorCitation}: ${p.abstract}\n\n`;
   });
-
-  // REVISED: The prompt is now far more forceful and includes a concrete example.
-  const prompt = `You are an expert research synthesizer. Your task is to write a high-quality, flowing academic literature review on the topic: "${topic}".
-
-You will be given a collection of research abstracts. Your job is to **synthesize** them, not summarize them one by one.
-
-**Your Mandate: Thematic Synthesis**
-- **Identify Core Themes:** Read all the abstracts first to identify overarching themes, debates, contrasting findings, and common methodologies.
-- **Structure by Theme:** Organize your review around these themes, not around the papers. For example, a paragraph might discuss a specific theme and cite three different papers that touch on it.
-- **Integrate, Don't List:** Weave the findings together into a cohesive narrative.
-
-**Example of What to Do vs. What NOT to Do:**
--   **BAD (Do NOT do this):** "Smith et al. (2022) studied X and found Y. Next, Jones (2021) investigated A and discovered B. Finally, a study by Chen (2023) explored C and concluded D."
--   **GOOD (Do THIS):** "A central theme in the literature is the impact of Z on learning outcomes. Several researchers report a positive correlation (Smith et al., 2022; Chen, 2023), although the methodologies vary. For instance, Smith et al. (2022) used a quantitative approach, whereas Chen (2023) employed qualitative case studies. A contrasting view is offered by Jones (2021), who found no significant effect, suggesting the relationship may be context-dependent."
-
-**Strict Rules:**
-1.  **Use ONLY the provided citations** in the author-year format given (e.g., "Smith et al. (2022)").
-2.  **NEVER use forbidden phrases** like "Paper 1," "Source 2," "The first abstract," "The study by," "This paper discusses," or any other language that treats the sources as a sequential list.
-3.  **Conclude** with a brief summary of the synthesized findings and a "References" section listing the "Full Citation" for every source provided.
-
-${sourcesBlock}`;
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [{
-      // REVISED: The system prompt is more focused on the core task.
       role: "system",
-      content: "You are a 'Research Synthesizer' AI. You are an expert at identifying themes across multiple documents and weaving them into a single, cohesive narrative. You are philosophically opposed to summarizing sources sequentially. Your only function is to synthesize."
+      content: "Synthesize literature thematically. Never use numbered references like Paper 1 or Study 2."
     }, {
       role: "user",
-      content: prompt
+      content: `Write a literature review on "${topic}" using these as starting points. Organize by themes, not by individual papers. Use only the author citations provided.
+
+${sources}`
     }],
     stream: true,
   });
@@ -143,10 +100,7 @@ ${sourcesBlock}`;
     content += chunk.choices[0]?.delta?.content || "";
   }
 
-  // Cleanup remains as a final safety check.
-  const finalContent = content.trim();
-
-  return finalContent || "Error: Could not generate literature review from sources.";
+  return content.trim() || "Error: Could not generate literature review.";
 }
 
 // Main function that routes between Task 1 and Task 2
@@ -170,47 +124,30 @@ export async function generateArgumentExploration(
   initialThoughts?: string,
   counterarguments?: string,
 ): Promise<string> {
-  let userInput = `Explore multiple perspectives on the topic: "${topic}".\n`;
-
+  let prompt = `Analyze multiple perspectives on "${topic}".`;
+  
   if (initialThoughts) {
-    userInput += `\nBuild on the following initial thoughts: "${initialThoughts}"`;
+    prompt += ` Build on: ${initialThoughts}`;
   }
-
+  
   if (counterarguments) {
-    userInput += `\nAlso address these counterarguments: "${counterarguments}"`;
+    prompt += ` Address: ${counterarguments}`;
   }
 
-  userInput += `
-Requirements:
-- Analyze at least 3 different perspectives
-- Consider benefits, drawbacks, and context
-- Do not take a side; provide balanced insight
-- Conclude with synthesis and recommendations
-- Use APA in-text citations and APA-style reference list
-- Format using HTML (h3, h4, p, ul, etc.)
-- Target length: 700–900 words
-`;
+  prompt += ` Write 700-900 words in HTML format with balanced analysis and APA citations.`;
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
-    messages: [
-      {
-        role: "system",
-        content: `You are a critical thinking facilitator. 
-Provide a multi-perspective analysis in HTML format. 
-Use APA citation style and avoid bias.`,
-      },
-      {
-        role: "user",
-        content: userInput,
-      },
-    ],
+    messages: [{
+      role: "system",
+      content: "Provide balanced multi-perspective analysis in HTML format with APA citations."
+    }, {
+      role: "user",
+      content: prompt
+    }],
     max_tokens: 2000,
     temperature: 0.7,
   });
 
-  return (
-    response.choices[0]?.message?.content ||
-    "Error generating argument exploration."
-  );
+  return response.choices[0]?.message?.content || "Error generating argument exploration.";
 }

@@ -100,21 +100,24 @@ export default function PreStudyQuestionnaire() {
             <h3 className="text-lg font-medium">
               1. How would you rate your overall familiarity with Large Language Models (LLMs)?
             </h3>
-            <p className="text-sm text-muted-foreground">
-              Scale: 1 = Not at all familiar, 7 = Extremely familiar
-            </p>
-            <RadioGroup 
-              value={responses.q1_familiarity} 
-              onValueChange={(value) => handleScaleChange("q1_familiarity", value)}
-              className="flex space-x-4"
-            >
-              {scaleOptions.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option.value} id={`q1-${option.value}`} />
-                  <Label htmlFor={`q1-${option.value}`}>{option.label}</Label>
-                </div>
-              ))}
-            </RadioGroup>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Not at all familiar</span>
+                <span>Extremely familiar</span>
+              </div>
+              <RadioGroup 
+                value={responses.q1_familiarity} 
+                onValueChange={(value) => handleScaleChange("q1_familiarity", value)}
+                className="flex justify-between items-center"
+              >
+                {scaleOptions.map((option) => (
+                  <div key={option.value} className="flex flex-col items-center space-y-2">
+                    <RadioGroupItem value={option.value} id={`q1-${option.value}`} />
+                    <Label htmlFor={`q1-${option.value}`} className="text-sm">{option.label}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
           </div>
 
           {/* Question 2 */}
@@ -141,21 +144,24 @@ export default function PreStudyQuestionnaire() {
             <h3 className="text-lg font-medium">
               3. Please rate your agreement with the statement: "I have a great deal of knowledge about LLMs."
             </h3>
-            <p className="text-sm text-muted-foreground">
-              Scale: 1 = Strongly Disagree, 7 = Strongly Agree
-            </p>
-            <RadioGroup 
-              value={responses.q3_knowledge} 
-              onValueChange={(value) => handleScaleChange("q3_knowledge", value)}
-              className="flex space-x-4"
-            >
-              {scaleOptions.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option.value} id={`q3-${option.value}`} />
-                  <Label htmlFor={`q3-${option.value}`}>{option.label}</Label>
-                </div>
-              ))}
-            </RadioGroup>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Strongly Disagree</span>
+                <span>Strongly Agree</span>
+              </div>
+              <RadioGroup 
+                value={responses.q3_knowledge} 
+                onValueChange={(value) => handleScaleChange("q3_knowledge", value)}
+                className="flex justify-between items-center"
+              >
+                {scaleOptions.map((option) => (
+                  <div key={option.value} className="flex flex-col items-center space-y-2">
+                    <RadioGroupItem value={option.value} id={`q3-${option.value}`} />
+                    <Label htmlFor={`q3-${option.value}`} className="text-sm">{option.label}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
           </div>
 
           {/* Question 4 */}
@@ -182,21 +188,24 @@ export default function PreStudyQuestionnaire() {
             <h3 className="text-lg font-medium">
               5. Compared to the average person, how would you rate your familiarity with LLMs?
             </h3>
-            <p className="text-sm text-muted-foreground">
-              Scale: 1 = Much less familiar, 7 = Much more familiar
-            </p>
-            <RadioGroup 
-              value={responses.q5_comparative} 
-              onValueChange={(value) => handleScaleChange("q5_comparative", value)}
-              className="flex space-x-4"
-            >
-              {scaleOptions.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option.value} id={`q5-${option.value}`} />
-                  <Label htmlFor={`q5-${option.value}`}>{option.label}</Label>
-                </div>
-              ))}
-            </RadioGroup>
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>Much less familiar</span>
+                <span>Much more familiar</span>
+              </div>
+              <RadioGroup 
+                value={responses.q5_comparative} 
+                onValueChange={(value) => handleScaleChange("q5_comparative", value)}
+                className="flex justify-between items-center"
+              >
+                {scaleOptions.map((option) => (
+                  <div key={option.value} className="flex flex-col items-center space-y-2">
+                    <RadioGroupItem value={option.value} id={`q5-${option.value}`} />
+                    <Label htmlFor={`q5-${option.value}`} className="text-sm">{option.label}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
           </div>
 
           <div className="flex justify-end pt-6">

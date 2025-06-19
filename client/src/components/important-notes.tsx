@@ -7,7 +7,7 @@ export default function ImportantNotes() {
   const { setCurrentStep } = useStudyStore();
 
   const handleNext = () => {
-    setCurrentStep("task_selection");
+    setCurrentStep("pre_study_questionnaire");
   };
 
   const handleBack = () => {

@@ -4,6 +4,7 @@ import { useStudyStore } from "@/lib/study-store";
 import StudyHeader from "@/components/study-header";
 import TaskOverview from "@/components/task-overview";
 import ImportantNotes from "@/components/important-notes";
+import PreStudyQuestionnaire from "@/components/pre-study-questionnaire";
 import TaskSelection from "@/components/task-selection";
 import LiteratureReview from "@/components/literature-review";
 import ArgumentExploration from "@/components/argument-exploration";
@@ -51,6 +52,8 @@ export default function StudyPage() {
         return <TaskOverview />;
       case "important_notes":
         return <ImportantNotes />;
+      case "pre_study_questionnaire":
+        return <PreStudyQuestionnaire />;
       case "task_selection":
         return <TaskSelection />;
       case "literature_review":

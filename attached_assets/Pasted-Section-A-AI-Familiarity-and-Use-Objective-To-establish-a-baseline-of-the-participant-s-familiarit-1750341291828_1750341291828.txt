@@ -1,0 +1,36 @@
+Section A: AI Familiarity and Use
+Objective: To establish a baseline of the participant's familiarity, experience, and self-assessed knowledge regarding Large Language Models (LLMs) before the tasks.
+
+Instructions: Please answer the following questions about your experience with AI tools like ChatGPT, Google Gemini, Claude, etc.
+
+1. How would you rate your overall familiarity with Large Language Models (LLMs)?
+(Scale: 1 = Not at all familiar, 7 = Extremely familiar)
+Source: Adapted from the "Familiarity (F)" subscale developed and validated in Chia, O. H., Jia, S., Li, Y., & Gursoy, D. (2021). Developing a formative scale to measure consumers' trust toward interaction with artificially intelligent (AI) social robots in service delivery. This question uses the core item "I am familiar with..." and adapts the object from "AI social service robots" to "Large Language Models," a common and necessary practice for applying scales to new contexts as discussed in Scharowski et al. (2024).
+
+
+2. In the past month, how often have you used an LLM for tasks related to writing, brainstorming, or research?
+Never
+Rarely (1-2 times a month)
+Sometimes (A few times a month)
+Often (A few times a week)
+Daily
+Source: This question's structure and categorical options are directly based on the "Usage Frequency" measure employed in the validation of the Partner Modelling Questionnaire in Doyle, P. R., et al. (2025). The Partner Modelling Questionnaire (see Table 5, p. 11). It accurately captures the frequency of prior interaction.
+
+
+3. Please rate your agreement with the statement: "I have a great deal of knowledge about LLMs."
+(Scale: 1 = Strongly Disagree, 7 = Strongly Agree)
+Source: Adapted from the "Familiarity (F)" subscale in Chia et al. (2021). This is a direct adaptation of their item "I have much knowledge about AI social service robots" and serves as a measure of self-assessed expertise.
+
+
+4. For which of the following purposes have you previously used LLMs? (Select all that apply)
+Academic writing or research
+Generating ideas or brainstorming
+Professional/work-related tasks
+Creative and/or personal tasks
+Coding or technical problem-solving
+I have never used an LLM
+Source: This question follows the methodological practice of establishing context-specific prior experience, as seen in Thunström et al. (2024), where they asked participants about their prior use of chatbots specifically for mental health. This question adapts that principle to your study's context of writing and brainstorming.
+
+5. Compared to the average person, how would you rate your familiarity with LLMs?
+(Scale: 1 = Much less familiar, 7 = Much more familiar)
+Source: Adapted from the "Familiarity (F)" subscale in Chia et al. (2021). This item, "I am more familiar than the average person regarding AI social service robots," is a validated measure of comparative self-assessment and provides a valuable relational data point.

@@ -93,7 +93,10 @@ export default function CompletionScreen() {
   const downloadDataMutation = useMutation({
     mutationFn: async () => {
       const response = await fetch(`/api/export/${participantId}`);
-      if (!response.ok) throw new Error("Failed to export data");
+      if (!response.ok) {
+        console.error("Failed to export data:", response.status);
+        return null;
+      }
       
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);

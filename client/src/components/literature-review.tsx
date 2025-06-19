@@ -30,7 +30,8 @@ export default function LiteratureReview() {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error("Failed to create task");
+        console.error("Failed to create task:", response.status);
+        return null;
       }
       return response.json();
     },
@@ -64,12 +65,14 @@ export default function LiteratureReview() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to generate literature review");
+        console.error("Failed to generate literature review:", response.status);
+        return { content: "Error generating content. Please try again." };
       }
 
       const reader = response.body?.getReader();
       if (!reader) {
-        throw new Error("No response body");
+        console.error("No response body available");
+        return { content: "Error reading response. Please try again." };
       }
 
       setGeneratedContent(""); // Clear previous content
@@ -94,7 +97,8 @@ export default function LiteratureReview() {
                 return { content: fullContent };
               }
               if (data.error) {
-                throw new Error(data.error);
+                console.error("Generation error:", data.error);
+                return { content: "Error in generation. Please try again." };
               }
             } catch (e) {
               // Skip invalid JSON

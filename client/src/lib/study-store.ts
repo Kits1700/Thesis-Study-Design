@@ -106,6 +106,7 @@ export const useStudyStore = create<StudyStore>()(
           });
         } catch (error) {
           console.error('Failed to create participant in database:', error);
+          // Continue with local state even if database fails
         }
       },
 
@@ -128,6 +129,7 @@ export const useStudyStore = create<StudyStore>()(
             });
           } catch (error) {
             console.error('Failed to update participant step:', error);
+            // Continue with local state even if database fails
           }
         }
       },

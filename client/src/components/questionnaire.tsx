@@ -160,7 +160,12 @@ export default function Questionnaire() {
       ]).size;
 
       if (totalCompleted >= 4) {
-        setCurrentStep("completion");
+        // Check if all tasks are completed
+        if (completedTasks.length >= 4) {
+          setCurrentStep("final_questionnaire");
+        } else {
+          setCurrentStep("task_selection");
+        }
       } else {
         setCurrentStep("task_selection");
       }

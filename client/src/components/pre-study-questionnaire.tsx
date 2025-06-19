@@ -85,11 +85,11 @@ export default function PreStudyQuestionnaire() {
     
     // Save responses with task ID 0 (pre-study) - convert slider arrays to numbers
     const formattedResponses = {
-      q1_familiarity: responses.q1_familiarity[0],
+      q1_familiarity: Math.round(responses.q1_familiarity[0]),
       q2_frequency: responses.q2_frequency,
-      q3_knowledge: responses.q3_knowledge[0],
+      q3_knowledge: Math.round(responses.q3_knowledge[0]),
       q4_purposes: responses.q4_purposes,
-      q5_comparative: responses.q5_comparative[0],
+      q5_comparative: Math.round(responses.q5_comparative[0]),
     };
     saveQuestionnaireResponse(0, formattedResponses);
     setCurrentStep("task_selection");
@@ -123,7 +123,7 @@ export default function PreStudyQuestionnaire() {
                   onValueChange={(value) => handleSliderChange("q1_familiarity", value)}
                   max={7}
                   min={1}
-                  step={1}
+                  step={0.1}
                   className="w-full"
                 />
               </div>
@@ -137,7 +137,7 @@ export default function PreStudyQuestionnaire() {
                 <span>7</span>
               </div>
               <div className="text-center text-sm">
-                Current value: {responses.q1_familiarity[0]}
+                Current value: {Math.round(responses.q1_familiarity[0])}
               </div>
             </div>
           </div>
@@ -177,7 +177,7 @@ export default function PreStudyQuestionnaire() {
                   onValueChange={(value) => handleSliderChange("q3_knowledge", value)}
                   max={7}
                   min={1}
-                  step={1}
+                  step={0.1}
                   className="w-full"
                 />
               </div>
@@ -191,7 +191,7 @@ export default function PreStudyQuestionnaire() {
                 <span>7</span>
               </div>
               <div className="text-center text-sm">
-                Current value: {responses.q3_knowledge[0]}
+                Current value: {Math.round(responses.q3_knowledge[0])}
               </div>
             </div>
           </div>
@@ -231,7 +231,7 @@ export default function PreStudyQuestionnaire() {
                   onValueChange={(value) => handleSliderChange("q5_comparative", value)}
                   max={7}
                   min={1}
-                  step={1}
+                  step={0.1}
                   className="w-full"
                 />
               </div>
@@ -245,7 +245,7 @@ export default function PreStudyQuestionnaire() {
                 <span>7</span>
               </div>
               <div className="text-center text-sm">
-                Current value: {responses.q5_comparative[0]}
+                Current value: {Math.round(responses.q5_comparative[0])}
               </div>
             </div>
           </div>

@@ -76,6 +76,12 @@ export default function TaskSelection() {
   const tasks = randomizedTasks;
 
   const handleStartTask = (task: Task) => {
+    // Don't allow clicking on completed tasks
+    const isCompleted = completedTasks.some(t => t.taskId === task.id);
+    if (isCompleted) {
+      return; // Prevent clicking on completed tasks
+    }
+    
     // Only allow sequential task completion
     const nextTaskId = completedTasks.length + 1;
     if (task.id !== nextTaskId) {
@@ -121,13 +127,14 @@ export default function TaskSelection() {
           {tasks.map((task: Task) => {
             const isCompleted = completedTasks.some(t => t.taskId === task.id);
             const isNext = task.id === getNextTaskId();
-            const isAvailable = isCompleted || isNext;
+            const isAvailable = !isCompleted && isNext;
             const isSecondary = task.color === "secondary";
             
             return (
               <Card 
                 key={task.id}
                 className={`bg-gray-800 border border-gray-700 transition-colors ${
+                  isCompleted ? 'border-green-600 bg-green-900/20' : 
                   isAvailable ? 'hover:border-gray-500 cursor-pointer' : 'opacity-50 cursor-not-allowed'
                 }`}
                 onClick={isAvailable ? () => handleStartTask(task) : undefined}

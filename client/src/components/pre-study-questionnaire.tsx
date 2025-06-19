@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 import { useStudyStore } from "@/lib/study-store";
 
 const scaleOptions = [
@@ -36,14 +37,18 @@ const usagePurposes = [
 export default function PreStudyQuestionnaire() {
   const { setCurrentStep, saveQuestionnaireResponse, participantId } = useStudyStore();
   const [responses, setResponses] = useState({
-    q1_familiarity: "",
+    q1_familiarity: [4] as number[],
     q2_frequency: "",
-    q3_knowledge: "",
+    q3_knowledge: [4] as number[],
     q4_purposes: [] as string[],
-    q5_comparative: "",
+    q5_comparative: [4] as number[],
   });
 
   const handleScaleChange = (question: string, value: string) => {
+    setResponses(prev => ({ ...prev, [question]: value }));
+  };
+
+  const handleSliderChange = (question: string, value: number[]) => {
     setResponses(prev => ({ ...prev, [question]: value }));
   };
 
@@ -68,18 +73,25 @@ export default function PreStudyQuestionnaire() {
   };
 
   const isComplete = () => {
-    return responses.q1_familiarity && 
+    return responses.q1_familiarity.length > 0 && 
            responses.q2_frequency && 
-           responses.q3_knowledge && 
+           responses.q3_knowledge.length > 0 && 
            responses.q4_purposes.length > 0 && 
-           responses.q5_comparative;
+           responses.q5_comparative.length > 0;
   };
 
   const handleSubmit = () => {
     if (!isComplete()) return;
     
-    // Save responses with task ID 0 (pre-study)
-    saveQuestionnaireResponse(0, responses);
+    // Save responses with task ID 0 (pre-study) - convert slider arrays to numbers
+    const formattedResponses = {
+      q1_familiarity: responses.q1_familiarity[0],
+      q2_frequency: responses.q2_frequency,
+      q3_knowledge: responses.q3_knowledge[0],
+      q4_purposes: responses.q4_purposes,
+      q5_comparative: responses.q5_comparative[0],
+    };
+    saveQuestionnaireResponse(0, formattedResponses);
     setCurrentStep("task_selection");
   };
 
@@ -100,23 +112,33 @@ export default function PreStudyQuestionnaire() {
             <h3 className="text-lg font-medium">
               1. How would you rate your overall familiarity with Large Language Models (LLMs)?
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Not at all familiar</span>
                 <span>Extremely familiar</span>
               </div>
-              <RadioGroup 
-                value={responses.q1_familiarity} 
-                onValueChange={(value) => handleScaleChange("q1_familiarity", value)}
-                className="flex justify-between items-center"
-              >
-                {scaleOptions.map((option) => (
-                  <div key={option.value} className="flex flex-col items-center space-y-2">
-                    <RadioGroupItem value={option.value} id={`q1-${option.value}`} />
-                    <Label htmlFor={`q1-${option.value}`} className="text-sm">{option.label}</Label>
-                  </div>
-                ))}
-              </RadioGroup>
+              <div className="px-3">
+                <Slider
+                  value={responses.q1_familiarity}
+                  onValueChange={(value) => handleSliderChange("q1_familiarity", value)}
+                  max={7}
+                  min={1}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex justify-between text-xs text-muted-foreground px-3">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+                <span>6</span>
+                <span>7</span>
+              </div>
+              <div className="text-center text-sm">
+                Current value: {responses.q1_familiarity[0]}
+              </div>
             </div>
           </div>
 
@@ -144,23 +166,33 @@ export default function PreStudyQuestionnaire() {
             <h3 className="text-lg font-medium">
               3. Please rate your agreement with the statement: "I have a great deal of knowledge about LLMs."
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Strongly Disagree</span>
                 <span>Strongly Agree</span>
               </div>
-              <RadioGroup 
-                value={responses.q3_knowledge} 
-                onValueChange={(value) => handleScaleChange("q3_knowledge", value)}
-                className="flex justify-between items-center"
-              >
-                {scaleOptions.map((option) => (
-                  <div key={option.value} className="flex flex-col items-center space-y-2">
-                    <RadioGroupItem value={option.value} id={`q3-${option.value}`} />
-                    <Label htmlFor={`q3-${option.value}`} className="text-sm">{option.label}</Label>
-                  </div>
-                ))}
-              </RadioGroup>
+              <div className="px-3">
+                <Slider
+                  value={responses.q3_knowledge}
+                  onValueChange={(value) => handleSliderChange("q3_knowledge", value)}
+                  max={7}
+                  min={1}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex justify-between text-xs text-muted-foreground px-3">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+                <span>6</span>
+                <span>7</span>
+              </div>
+              <div className="text-center text-sm">
+                Current value: {responses.q3_knowledge[0]}
+              </div>
             </div>
           </div>
 
@@ -188,23 +220,33 @@ export default function PreStudyQuestionnaire() {
             <h3 className="text-lg font-medium">
               5. Compared to the average person, how would you rate your familiarity with LLMs?
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Much less familiar</span>
                 <span>Much more familiar</span>
               </div>
-              <RadioGroup 
-                value={responses.q5_comparative} 
-                onValueChange={(value) => handleScaleChange("q5_comparative", value)}
-                className="flex justify-between items-center"
-              >
-                {scaleOptions.map((option) => (
-                  <div key={option.value} className="flex flex-col items-center space-y-2">
-                    <RadioGroupItem value={option.value} id={`q5-${option.value}`} />
-                    <Label htmlFor={`q5-${option.value}`} className="text-sm">{option.label}</Label>
-                  </div>
-                ))}
-              </RadioGroup>
+              <div className="px-3">
+                <Slider
+                  value={responses.q5_comparative}
+                  onValueChange={(value) => handleSliderChange("q5_comparative", value)}
+                  max={7}
+                  min={1}
+                  step={1}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex justify-between text-xs text-muted-foreground px-3">
+                <span>1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+                <span>6</span>
+                <span>7</span>
+              </div>
+              <div className="text-center text-sm">
+                Current value: {responses.q5_comparative[0]}
+              </div>
             </div>
           </div>
 

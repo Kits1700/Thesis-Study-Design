@@ -189,7 +189,8 @@ export const useStudyStore = create<StudyStore>()(
           task_selection: 30,
           literature_review: 50,
           argument_exploration: 70,
-          questionnaire: 90,
+          questionnaire: 85,
+          final_questionnaire: 95,
           completion: 100,
         };
         

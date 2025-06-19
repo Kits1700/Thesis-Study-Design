@@ -1,258 +1,208 @@
 import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
 import { useStudyStore } from "@/lib/study-store";
 
-const scaleOptions = [
-  { value: "1", label: "1" },
-  { value: "2", label: "2" },
-  { value: "3", label: "3" },
-  { value: "4", label: "4" },
-  { value: "5", label: "5" },
-  { value: "6", label: "6" },
-  { value: "7", label: "7" },
-];
-
-const frequencyOptions = [
-  { value: "never", label: "Never" },
-  { value: "rarely", label: "Rarely (1-2 times a month)" },
-  { value: "sometimes", label: "Sometimes (A few times a month)" },
-  { value: "often", label: "Often (A few times a week)" },
-  { value: "daily", label: "Daily" },
-];
-
-const usagePurposes = [
-  { id: "academic", label: "Academic writing or research" },
-  { id: "brainstorming", label: "Generating ideas or brainstorming" },
-  { id: "professional", label: "Professional/work-related tasks" },
-  { id: "creative", label: "Creative and/or personal tasks" },
-  { id: "coding", label: "Coding or technical problem-solving" },
-  { id: "never", label: "I have never used an LLM" },
-];
-
 export default function PreStudyQuestionnaire() {
-  const { setCurrentStep, saveQuestionnaireResponse, participantId } = useStudyStore();
+  const { setCurrentStep, saveQuestionnaireResponse } = useStudyStore();
+
   const [responses, setResponses] = useState({
-    q1_familiarity: [4] as number[],
+    q1_familiarity: [4],
     q2_frequency: "",
-    q3_knowledge: [4] as number[],
-    q4_purposes: [] as string[],
-    q5_comparative: [4] as number[],
+    q3_knowledge: [4],
+    q4_trust1: [4],
+    q5_trust2: [4],
+    q6_age: "",
+    q7_gender: "",
+    q8_field: "",
   });
 
-  const handleScaleChange = (question: string, value: string) => {
-    setResponses(prev => ({ ...prev, [question]: value }));
+  const isComplete = () =>
+    responses.q1_familiarity.length &&
+    responses.q2_frequency &&
+    responses.q3_knowledge.length &&
+    responses.q4_trust1.length &&
+    responses.q5_trust2.length;
+
+  const handleSliderChange = (key: string, value: number[]) => {
+    setResponses((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSliderChange = (question: string, value: number[]) => {
-    setResponses(prev => ({ ...prev, [question]: value }));
-  };
-
-  const handlePurposeChange = (purposeId: string, checked: boolean) => {
-    setResponses(prev => {
-      const purposes = checked 
-        ? [...prev.q4_purposes, purposeId]
-        : prev.q4_purposes.filter(p => p !== purposeId);
-      
-      // If "never used" is checked, uncheck all others
-      if (purposeId === "never" && checked) {
-        return { ...prev, q4_purposes: ["never"] };
-      }
-      
-      // If any other option is checked, uncheck "never used"
-      if (purposeId !== "never" && checked) {
-        return { ...prev, q4_purposes: purposes.filter(p => p !== "never") };
-      }
-      
-      return { ...prev, q4_purposes: purposes };
-    });
-  };
-
-  const isComplete = () => {
-    return responses.q1_familiarity.length > 0 && 
-           responses.q2_frequency && 
-           responses.q3_knowledge.length > 0 && 
-           responses.q4_purposes.length > 0 && 
-           responses.q5_comparative.length > 0;
+  const handleInputChange = (key: string, value: string) => {
+    setResponses((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSubmit = () => {
     if (!isComplete()) return;
-    
-    // Save responses with task ID 0 (pre-study) - convert slider arrays to numbers
-    const formattedResponses = {
+
+    const formatted = {
       q1_familiarity: Math.round(responses.q1_familiarity[0]),
       q2_frequency: responses.q2_frequency,
       q3_knowledge: Math.round(responses.q3_knowledge[0]),
-      q4_purposes: responses.q4_purposes,
-      q5_comparative: Math.round(responses.q5_comparative[0]),
+      q4_trust1: Math.round(responses.q4_trust1[0]),
+      q5_trust2: Math.round(responses.q5_trust2[0]),
+      q6_age: responses.q6_age || null,
+      q7_gender: responses.q7_gender || null,
+      q8_field: responses.q8_field || null,
     };
-    saveQuestionnaireResponse(0, formattedResponses);
+
+    saveQuestionnaireResponse(0, formatted);
     setCurrentStep("task_selection");
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
       <Card>
         <CardHeader>
           <CardTitle>Pre-Study Questionnaire</CardTitle>
           <CardDescription>
-            Section A: AI Familiarity and Use
-            <br />
-            Please answer the following questions about your experience with AI tools like ChatGPT, Google Gemini, Claude, etc.
+            This short survey helps us understand your background and attitudes.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-8">
-          {/* Question 1 */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">
-              1. How would you rate your overall familiarity with Large Language Models (LLMs)?
+
+        <CardContent className="space-y-10">
+          {/* Section A: Slider-Based Questions */}
+          <section className="space-y-6">
+            <h3 className="text-xl font-semibold">
+              Section A: Familiarity & Trust (Sliders)
             </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>Not at all familiar</span>
-                <span>Extremely familiar</span>
-              </div>
-              <div className="px-3">
+
+            {[
+              {
+                key: "q1_familiarity",
+                text: "1. How familiar are you with Large Language Models (LLMs)?",
+              },
+              {
+                key: "q3_knowledge",
+                text: "2. I have a great deal of knowledge about LLMs.",
+              },
+              {
+                key: "q4_trust1",
+                text: "3. In general, I believe that most people can be counted on to do what they say they will do.",
+              },
+              {
+                key: "q5_trust2",
+                text: "4. I am inclined to trust people until I see evidence to the contrary.",
+              },
+            ].map(({ key, text }, index) => (
+              <div key={key} className="space-y-2">
+                <p className="font-medium">{text}</p>
                 <Slider
-                  value={responses.q1_familiarity}
-                  onValueChange={(value) => handleSliderChange("q1_familiarity", value)}
-                  max={7}
+                  value={responses[key as keyof typeof responses] as number[]}
+                  onValueChange={(v) => handleSliderChange(key, v)}
                   min={1}
+                  max={7}
                   step={0.1}
-                  className="w-full"
+                />
+                <p className="text-sm text-muted-foreground text-center">
+                  Current:{" "}
+                  {Math.round(
+                    (responses[key as keyof typeof responses] as number[])[0],
+                  )}{" "}
+                  (1 = Strongly Disagree, 7 = Strongly Agree)
+                </p>
+              </div>
+            ))}
+          </section>
+
+          {/* Section B: Frequency (MCQ) */}
+          <section className="space-y-4">
+            <h3 className="text-xl font-semibold">
+              Section B: Usage Frequency (Multiple Choice)
+            </h3>
+
+            <div className="space-y-2">
+              <p className="font-medium">
+                5. In the past month, how often have you used an LLM?
+              </p>
+              <RadioGroup
+                value={responses.q2_frequency}
+                onValueChange={(v) => handleInputChange("q2_frequency", v)}
+                className="space-y-1"
+              >
+                {[
+                  { value: "never", label: "Never" },
+                  { value: "rarely", label: "Rarely (1–2 times/month)" },
+                  {
+                    value: "sometimes",
+                    label: "Sometimes (a few times/month)",
+                  },
+                  { value: "often", label: "Often (a few times/week)" },
+                  { value: "daily", label: "Daily" },
+                ].map((opt) => (
+                  <div key={opt.value} className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      id={`freq-${opt.value}`}
+                      value={opt.value}
+                    />
+                    <Label htmlFor={`freq-${opt.value}`}>{opt.label}</Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+          </section>
+
+          {/* Section C: Demographics */}
+          <section className="space-y-4">
+            <h3 className="text-xl font-semibold">
+              Section C: Demographics{" "}
+              <span className="text-sm text-muted-foreground">(Optional)</span>
+            </h3>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="age">Age</Label>
+                <Input
+                  id="age"
+                  type="number"
+                  placeholder="e.g., 29"
+                  value={responses.q6_age}
+                  onChange={(e) => handleInputChange("q6_age", e.target.value)}
                 />
               </div>
-              <div className="flex justify-between text-xs text-muted-foreground px-3">
-                <span>1</span>
-                <span>2</span>
-                <span>3</span>
-                <span>4</span>
-                <span>5</span>
-                <span>6</span>
-                <span>7</span>
-              </div>
-              <div className="text-center text-sm">
-                Current value: {Math.round(responses.q1_familiarity[0])}
-              </div>
-            </div>
-          </div>
 
-          {/* Question 2 */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">
-              2. In the past month, how often have you used an LLM for tasks related to writing, brainstorming, or research?
-            </h3>
-            <RadioGroup 
-              value={responses.q2_frequency} 
-              onValueChange={(value) => handleScaleChange("q2_frequency", value)}
-              className="space-y-2"
-            >
-              {frequencyOptions.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option.value} id={`q2-${option.value}`} />
-                  <Label htmlFor={`q2-${option.value}`}>{option.label}</Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </div>
-
-          {/* Question 3 */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">
-              3. Please rate your agreement with the statement: "I have a great deal of knowledge about LLMs."
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>Strongly Disagree</span>
-                <span>Strongly Agree</span>
-              </div>
-              <div className="px-3">
-                <Slider
-                  value={responses.q3_knowledge}
-                  onValueChange={(value) => handleSliderChange("q3_knowledge", value)}
-                  max={7}
-                  min={1}
-                  step={0.1}
-                  className="w-full"
+              <div>
+                <Label htmlFor="gender">Gender</Label>
+                <Input
+                  id="gender"
+                  placeholder="e.g., Female, Male, Non-binary..."
+                  value={responses.q7_gender}
+                  onChange={(e) =>
+                    handleInputChange("q7_gender", e.target.value)
+                  }
                 />
               </div>
-              <div className="flex justify-between text-xs text-muted-foreground px-3">
-                <span>1</span>
-                <span>2</span>
-                <span>3</span>
-                <span>4</span>
-                <span>5</span>
-                <span>6</span>
-                <span>7</span>
-              </div>
-              <div className="text-center text-sm">
-                Current value: {Math.round(responses.q3_knowledge[0])}
-              </div>
-            </div>
-          </div>
 
-          {/* Question 4 */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">
-              4. For which of the following purposes have you previously used LLMs? (Select all that apply)
-            </h3>
-            <div className="space-y-3">
-              {usagePurposes.map((purpose) => (
-                <div key={purpose.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`purpose-${purpose.id}`}
-                    checked={responses.q4_purposes.includes(purpose.id)}
-                    onCheckedChange={(checked) => handlePurposeChange(purpose.id, checked as boolean)}
-                  />
-                  <Label htmlFor={`purpose-${purpose.id}`}>{purpose.label}</Label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Question 5 */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">
-              5. Compared to the average person, how would you rate your familiarity with LLMs?
-            </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>Much less familiar</span>
-                <span>Much more familiar</span>
-              </div>
-              <div className="px-3">
-                <Slider
-                  value={responses.q5_comparative}
-                  onValueChange={(value) => handleSliderChange("q5_comparative", value)}
-                  max={7}
-                  min={1}
-                  step={0.1}
-                  className="w-full"
+              <div className="md:col-span-2">
+                <Label htmlFor="field">
+                  Primary field of study or profession
+                </Label>
+                <Input
+                  id="field"
+                  placeholder="e.g., Computer Science, Marketing, Law"
+                  value={responses.q8_field}
+                  onChange={(e) =>
+                    handleInputChange("q8_field", e.target.value)
+                  }
                 />
               </div>
-              <div className="flex justify-between text-xs text-muted-foreground px-3">
-                <span>1</span>
-                <span>2</span>
-                <span>3</span>
-                <span>4</span>
-                <span>5</span>
-                <span>6</span>
-                <span>7</span>
-              </div>
-              <div className="text-center text-sm">
-                Current value: {Math.round(responses.q5_comparative[0])}
-              </div>
             </div>
-          </div>
+          </section>
 
+          {/* Submit Button */}
           <div className="flex justify-end pt-6">
-            <Button 
-              onClick={handleSubmit} 
+            <Button
+              onClick={handleSubmit}
               disabled={!isComplete()}
               className="px-8"
             >

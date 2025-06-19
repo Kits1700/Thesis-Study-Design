@@ -1,0 +1,39 @@
+Part 3: Final Overall Questionnaire
+(Administered ONCE at the end of the entire experiment)
+Instructions: The following questions ask you to reflect on your entire experience across all four tasks.
+Section A: Comparative Judgment (Friction vs. No Friction)
+(Custom questions for direct comparison, a standard practice in within-subjects experimental design.)
+1. Reflecting on all tasks, which format encouraged you to think more deeply and critically about the subject matter?
+The format without the extra "friction" step.
+The format with the extra "friction" step.
+Both formats encouraged equal depth of thought.
+2. Which format do you believe resulted in a higher quality final output?
+The format without friction was much better.
+The format without friction was slightly better.
+Both formats produced similar quality outputs.
+The format with friction was slightly better.
+The format with friction was much better.
+Section B: Overall Trust & Distrust in the AI
+(The full TPA scale (Jian et al., 2000), analyzed as two separate factors with item removals as strongly validated and recommended by Scharowski, N., et al. (2024). To Trust or Distrust Trust Measures.)
+Instructions: The following questions ask for your overall impression of the AI you interacted with across all tasks. (Scale: 1 = Not at all, 7 = Extremely)
+Distrust Subscale (Analyze as a separate factor, do not reverse score)
+3. The AI is deceptive. (TPA Item 1)
+4. The AI behaves in an underhanded manner. (TPA Item 2)
+5. I am suspicious of the AI’s intent, action, or outputs. (TPA Item 3)
+6. The AI’s actions will have a harmful or injurious outcome. (TPA Item 5)
+Source for all items and two-factor structure: TPA Scale (Jian et al., 2000), as analyzed and recommended in Scharowski et al. (2024).
+Trust Subscale (Analyze as a separate factor)
+7. I am confident in the AI. (TPA Item 6)
+8. The AI provides security. (TPA Item 7)
+9. The AI has integrity. (TPA Item 8)
+10. The AI is dependable. (TPA Item 9)
+11. The AI is reliable. (TPA Item 10)
+12. I can trust the AI. (TPA Item 11)
+Source for all items and two-factor structure: TPA Scale (Jian et al., 2000), as analyzed and recommended in Scharowski et al. (2024).
+Section C: Final Reflections & Behavioral Intent
+13. Overall, how would you describe your final working relationship with the AI across the tasks?
+(Scale: 1 = I passively accepted what the AI provided, 7 = I actively collaborated with the AI)
+Source: This is a custom question designed to summarize the user's overall reliance behavior, directly addressing the concept of overreliance central to your project.
+14. Please briefly describe any final thoughts on how the "friction" steps changed your relationship with or reliance on the AI, if at all. (Open-ended)
+Source: Standard qualitative follow-up question.
+

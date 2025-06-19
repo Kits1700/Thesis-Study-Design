@@ -9,6 +9,7 @@ import TaskSelection from "@/components/task-selection";
 import LiteratureReview from "@/components/literature-review";
 import ArgumentExploration from "@/components/argument-exploration";
 import Questionnaire from "@/components/questionnaire";
+import FinalQuestionnaire from "@/components/final-questionnaire";
 import CompletionScreen from "@/components/completion-screen";
 import HelpTooltip from "@/components/ui/help-tooltip";
 
@@ -62,6 +63,8 @@ export default function StudyPage() {
         return <ArgumentExploration />;
       case "questionnaire":
         return <Questionnaire />;
+      case "final_questionnaire":
+        return <FinalQuestionnaire />;
       case "completion":
         return <CompletionScreen />;
       default:

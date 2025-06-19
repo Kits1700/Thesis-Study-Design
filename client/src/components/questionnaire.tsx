@@ -1,186 +1,216 @@
-import { useState, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import React, { useState } from "react";
 import { useStudyStore } from "@/lib/study-store";
-import { apiRequest } from "@/lib/queryClient";
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
 
 export default function Questionnaire() {
-  const { currentTask, participantId, setCurrentStep, setCurrentTask, markTaskComplete, saveQuestionnaireResponse, updateProgress } = useStudyStore();
-  const [responses, setResponses] = useState<Record<string, string>>({});
+  const {
+    currentTask,
+    setCurrentStep,
+    completedTasks,
+    // saveCompletedTask (removed as it does not exist on StudyStore)
+  } = useStudyStore();
 
-  // Scroll to top when questionnaire loads
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  const showFrictionQuestions = currentTask?.id === 1 || currentTask?.id === 2;
+
+  const scaleDescriptions: Record<string, { low: string; high: string }> = {
+    mental_demand: {
+      low: "Very Low",
+      high: "Very High",
+    },
+    usefulness: {
+      low: "Not at all useful",
+      high: "Extremely useful",
+    },
+    satisfaction: {
+      low: "Very Unsatisfied",
+      high: "Very Satisfied",
+    },
+    critical_evaluation: {
+      low: "Did not evaluate critically",
+      high: "Evaluated very critically",
+    },
+    reliance: {
+      low: "Relied entirely on own ideas",
+      high: "Relied entirely on AI's output",
+    },
+    dependable: {
+      low: "Not at all",
+      high: "Extremely",
+    },
+    confidence: {
+      low: "Not at all",
+      high: "Extremely",
+    },
+    integrity: {
+      low: "Not at all",
+      high: "Extremely",
+    },
+    reliable: {
+      low: "Not at all",
+      high: "Extremely",
+    },
+    trust: {
+      low: "Not at all",
+      high: "Extremely",
+    },
+    friction_step_value: {
+      low: "A frustrating obstacle",
+      high: "A helpful step for reflection",
+    },
+    friction_step_impact: {
+      low: "No influence",
+      high: "Made me much more critical",
+    },
+  };
 
   const questions = [
     {
-      id: "engagement_1",
-      text: "How engaged did you feel during this task?",
-      options: [
-        { value: "1", label: "1 - Not engaged at all" },
-        { value: "2", label: "2 - Slightly engaged" },
-        { value: "3", label: "3 - Moderately engaged" },
-        { value: "4", label: "4 - Very engaged" },
-        { value: "5", label: "5 - Extremely engaged" },
+      section: "A",
+      title: "Task Perception & Usefulness",
+      items: [
+        {
+          id: "mental_demand",
+          text: "How mentally demanding was this task?",
+        },
+        {
+          id: "usefulness",
+          text: "How useful was the AI-generated output for accomplishing your task goal?",
+        },
+        {
+          id: "satisfaction",
+          text: "How satisfied are you with the quality of the final output you created?",
+        },
       ],
     },
     {
-      id: "engagement_2",
-      text: "How engaged did you feel during this task?",
-      options: [
-        { value: "1", label: "1 - Not engaged at all" },
-        { value: "2", label: "2 - Slightly engaged" },
-        { value: "3", label: "3 - Moderately engaged" },
-        { value: "4", label: "4 - Very engaged" },
-        { value: "5", label: "5 - Extremely engaged" },
+      section: "B",
+      title: "Reliance & Critical Engagement",
+      items: [
+        {
+          id: "critical_evaluation",
+          text: "To what extent did you critically evaluate the AI's response instead of accepting it as correct?",
+        },
+        {
+          id: "reliance",
+          text: "Please rate your reliance on the AI's output for this task.",
+        },
       ],
     },
     {
-      id: "engagement_3",
-      text: "How engaged did you feel during this task?",
-      options: [
-        { value: "1", label: "1 - Not engaged at all" },
-        { value: "2", label: "2 - Slightly engaged" },
-        { value: "3", label: "3 - Moderately engaged" },
-        { value: "4", label: "4 - Very engaged" },
-        { value: "5", label: "5 - Extremely engaged" },
+      section: "C",
+      title: "Perceived AI Trustworthiness for This Task",
+      items: [
+        { id: "dependable", text: "The AI is dependable." },
+        { id: "confidence", text: "I am confident in the AI." },
+        { id: "integrity", text: "The AI has integrity." },
+        { id: "reliable", text: "The AI is reliable." },
+        { id: "trust", text: "I can trust the AI." },
       ],
     },
-    {
-      id: "engagement_4",
-      text: "How engaged did you feel during this task?",
-      options: [
-        { value: "1", label: "1 - Not engaged at all" },
-        { value: "2", label: "2 - Slightly engaged" },
-        { value: "3", label: "3 - Moderately engaged" },
-        { value: "4", label: "4 - Very engaged" },
-        { value: "5", label: "5 - Extremely engaged" },
-      ],
-    },
-    {
-      id: "engagement_5",
-      text: "How engaged did you feel during this task?",
-      options: [
-        { value: "1", label: "1 - Not engaged at all" },
-        { value: "2", label: "2 - Slightly engaged" },
-        { value: "3", label: "3 - Moderately engaged" },
-        { value: "4", label: "4 - Very engaged" },
-        { value: "5", label: "5 - Extremely engaged" },
-      ],
-    },
+    ...(showFrictionQuestions
+      ? [
+          {
+            section: "D",
+            title: "Reflection on Extra Step",
+            items: [
+              {
+                id: "friction_step_value",
+                text:
+                  currentTask?.taskType === "literature_review"
+                    ? "This task required you to find 5 abstracts before seeing the AI’s response. How did this extra step feel to you?"
+                    : "This task required you to provide a counter-argument before seeing the AI’s response. How did this extra step feel to you?",
+              },
+              {
+                id: "friction_step_impact",
+                text: "How did this extra step influence your approach to the AI-generated text?",
+              },
+            ],
+          },
+        ]
+      : []),
   ];
 
-  const submitQuestionnaireMutation = useMutation({
-    mutationFn: async (data: any) => {
-      const response = await apiRequest("POST", "/api/questionnaire", data);
-      return response.json();
-    },
-    onSuccess: () => {
-      // Save questionnaire response to local storage
-      if (currentTask) {
-        saveQuestionnaireResponse(currentTask.id, responses);
-        
-        // Note: Do not call markTaskComplete here as it would override
-        // the comprehensive task data already saved by the task components
-        
-        updateProgress();
-        
-        // Check if all tasks are completed
-        if (currentTask.id >= 4) {
-          setCurrentStep("completion");
-        } else {
-          // Return to task selection to show sequential progress
-          setCurrentStep("task_selection");
-        }
-      }
-    },
+  // State to store slider values for each question
+  const [responses, setResponses] = useState<Record<string, number>>(() => {
+    const initial: Record<string, number> = {};
+    questions.forEach((section) => {
+      section.items.forEach((item) => {
+        initial[item.id] = 4; // default middle value
+      });
+    });
+    return initial;
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validate all questions are answered
-    const unanswered = questions.filter(q => !responses[q.id]);
-    if (unanswered.length > 0) {
-      alert(`Please answer all questions. Missing: ${unanswered.map(q => q.text).join(", ")}`);
-      return;
-    }
-
-    submitQuestionnaireMutation.mutate({
-      participantId,
-      taskId: currentTask?.id || 0,
-      responses,
-    });
+  const handleChange = (id: string, value: number) => {
+    setResponses((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleBack = () => {
-    if (currentTask?.taskType === "literature_review") {
-      setCurrentStep("literature_review");
-    } else {
-      setCurrentStep("argument_exploration");
+  const handleSubmit = () => {
+    console.log("Submitted questionnaire responses:", responses);
+
+    if (currentTask?.id) {
+      // saveCompletedTask(currentTask.id); (removed as it does not exist on StudyStore)
+
+      const totalCompleted = new Set([
+        ...completedTasks.map((t) => t.taskId),
+        currentTask.id,
+      ]).size;
+
+      if (totalCompleted >= 4) {
+        setCurrentStep("completion");
+      } else {
+        setCurrentStep("task_selection");
+      }
     }
   };
-
-  const isSelectiveFriction = currentTask?.frictionType === "selective_friction";
 
   return (
-    <section className="py-8 px-6">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">
-            Task {currentTask?.id}: {currentTask?.taskType === "literature_review" ? "Literature Review" : "Argument Exploration"}{" "}
-            <span className={isSelectiveFriction ? "text-primary" : "text-secondary"}>
-              ({isSelectiveFriction ? "Selective Friction" : "Full AI Assistance"})
-            </span>
-          </h1>
-          <p className="text-secondary">Questionnaire</p>
-        </div>
+    <div className="max-w-3xl mx-auto py-8 px-4">
+      <h1 className="text-2xl font-bold text-white mb-6">
+        Post-Task Questionnaire
+      </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {questions.map((question, index) => (
-            <Card key={question.id} className="surface border border-border">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-medium mb-6">{question.text}</h3>
-                
-                <RadioGroup
-                  value={responses[question.id] || ""}
-                  onValueChange={(value) => setResponses(prev => ({ ...prev, [question.id]: value }))}
-                  className="space-y-3"
-                >
-                  {question.options.map((option) => (
-                    <div key={option.value} className="flex items-center space-x-3 cursor-pointer hover:bg-surface-variant rounded-lg p-2 transition-colors">
-                      <RadioGroupItem value={option.value} id={`${question.id}_${option.value}`} />
-                      <Label 
-                        htmlFor={`${question.id}_${option.value}`} 
-                        className="text-secondary cursor-pointer flex-1"
-                      >
-                        {option.label}
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </CardContent>
-            </Card>
-          ))}
-
-          <div className="flex justify-center space-x-4">
-            <Button type="button" variant="outline" onClick={handleBack} className="btn-surface">
-              Back
-            </Button>
-            <Button 
-              type="submit" 
-              disabled={submitQuestionnaireMutation.isPending}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {submitQuestionnaireMutation.isPending ? "Submitting..." : "Next"}
-            </Button>
+      {questions.map((section) => (
+        <div key={section.section} className="mb-10">
+          <h2 className="text-xl font-semibold text-gray-200 mb-3">
+            Section {section.section}: {section.title}
+          </h2>
+          <div className="space-y-6">
+            {section.items.map((q) => (
+              <Card key={q.id} className="bg-gray-800 border-gray-700">
+                <CardContent className="p-6">
+                  <Label htmlFor={q.id} className="text-white block mb-1">
+                    {q.text}
+                  </Label>
+                  <div className="flex justify-between text-xs text-gray-400 mb-2 px-1 select-none">
+                    <span>1 = {scaleDescriptions[q.id]?.low || "Low"}</span>
+                    <span>7 = {scaleDescriptions[q.id]?.high || "High"}</span>
+                  </div>
+                  <Slider
+                    id={q.id}
+                    name={q.id}
+                    min={1}
+                    max={7}
+                    step={1}
+                    value={[responses[q.id]]}
+                    onValueChange={(val) => handleChange(q.id, val[0])}
+                    className="w-full"
+                  />
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </form>
+        </div>
+      ))}
+
+      <div className="flex justify-center mt-8">
+        <Button onClick={handleSubmit} className="px-8 py-3">
+          Submit
+        </Button>
       </div>
-    </section>
+    </div>
   );
 }

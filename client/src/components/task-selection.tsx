@@ -71,7 +71,7 @@ export default function TaskSelection() {
       id: index + 1
     }));
     setRandomizedTasks(reorderedTasks);
-  }, [baseTasks]);
+  }, []);
 
   const tasks = randomizedTasks;
 
@@ -118,7 +118,7 @@ export default function TaskSelection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          {tasks.map((task) => {
+          {tasks.map((task: Task) => {
             const isCompleted = completedTasks.includes(task.id);
             const isNext = task.id === getNextTaskId();
             const isAvailable = isCompleted || isNext;

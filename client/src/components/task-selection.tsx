@@ -142,10 +142,10 @@ export default function TaskSelection() {
               <Card 
                 key={task.id}
                 className={`bg-gray-800 border border-gray-700 transition-colors ${
-                  isCompleted ? 'border-green-600 bg-green-900/20' : 
+                  isCompleted ? 'border-green-600 bg-green-900/20 cursor-not-allowed' : 
                   isAvailable ? 'hover:border-gray-500 cursor-pointer' : 'opacity-50 cursor-not-allowed'
                 }`}
-                onClick={isAvailable ? () => handleStartTask(task) : () => {
+                onClick={isAvailable && !isCompleted ? () => handleStartTask(task) : () => {
                   console.log(`Task ${task.id} clicked but not available. isCompleted=${isCompleted}, isNext=${isNext}`);
                 }}
               >
@@ -155,26 +155,38 @@ export default function TaskSelection() {
                       !isAvailable ? 'opacity-50' : ''
                     }`}>
                       {isCompleted ? (
-                        <CheckCircle className="w-6 h-6" />
+                        <CheckCircle className="w-6 h-6 text-green-400" />
                       ) : (
                         task.id
                       )}
                     </div>
                     <div className="flex-1">
-                      <h3 className={`text-xl font-semibold mb-2 ${!isAvailable ? 'text-gray-500' : 'text-white'}`}>
-                        {task.title}
+                      <h3 className={`text-xl font-semibold mb-2 ${
+                        isCompleted ? 'text-green-300' : 
+                        !isAvailable ? 'text-gray-500' : 'text-white'
+                      }`}>
+                        {task.title} {isCompleted && '✓'}
                       </h3>
                       <p className={`text-sm font-medium mb-1 ${
+                        isCompleted ? 'text-green-400' :
                         !isAvailable ? 'text-gray-500' : task.color === 'teal' ? 'text-teal-400' : 'text-purple-400'
                       }`}>
                         {task.color === 'teal' ? 'Summative Task' : 'Generative Task'}
                       </p>
-                      <p className={`text-sm ${!isAvailable ? 'text-gray-500' : 'text-gray-300'}`}>
-                        {task.description}
+                      <p className={`text-sm ${
+                        isCompleted ? 'text-green-500' :
+                        !isAvailable ? 'text-gray-500' : 'text-gray-300'
+                      }`}>
+                        {isCompleted ? 'Completed' : task.description}
                       </p>
                       {!isAvailable && !isCompleted && (
                         <p className="text-xs text-gray-500 mt-2 italic">
                           Complete previous tasks first
+                        </p>
+                      )}
+                      {isCompleted && (
+                        <p className="text-xs text-green-600 mt-2 italic">
+                          Task completed successfully
                         </p>
                       )}
                     </div>

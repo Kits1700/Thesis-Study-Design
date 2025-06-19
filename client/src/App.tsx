@@ -7,7 +7,7 @@ import StudyPage from "@/pages/study";
 import AdminPage from "@/pages/admin";
 import ResponsesPage from "@/pages/responses";
 import SimpleAdminPage from "@/pages/simple-admin";
-import FlowchartPage from "@/pages/flowchart";
+
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,7 +17,7 @@ function Router() {
       <Route path="/study" component={StudyPage} />
       <Route path="/admin" component={SimpleAdminPage} />
       <Route path="/responses" component={ResponsesPage} />
-      <Route path="/flowchart" component={FlowchartPage} />
+
       <Route component={NotFound} />
     </Switch>
   );

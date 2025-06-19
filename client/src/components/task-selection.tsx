@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useStudyStore } from "@/lib/study-store";
@@ -6,11 +6,7 @@ import { Circle, CheckCircle } from "lucide-react";
 
 export default function TaskSelection() {
   const { setCurrentStep, setCurrentTask, completedTasks } = useStudyStore();
-  const [randomizedTasks, setRandomizedTasks] = useState<any[]>([]);
-  
-  // Debug logging
-  console.log('TaskSelection - completedTasks:', completedTasks);
-  console.log('TaskSelection - completedTaskIds:', completedTasks.map(t => t.taskId));
+
 
   interface Task {
     id: number;
@@ -23,7 +19,7 @@ export default function TaskSelection() {
     category: string;
   }
 
-  const baseTasks = [
+  const staticTasks = [
     {
       id: 1,
       title: "Literature Review", 
@@ -36,16 +32,6 @@ export default function TaskSelection() {
     },
     {
       id: 2,
-      title: "Literature Review",
-      type: "Full AI Assistance",
-      description: "Immediate access to AI responses",
-      color: "teal",
-      taskType: "literature_review",
-      frictionType: "full_ai",
-      category: "summative"
-    },
-    {
-      id: 3,
       title: "Argument Exploration",
       type: "AI Assistance with Brief Reflection Step",
       description: "Complete preparatory work before accessing AI",
@@ -53,6 +39,16 @@ export default function TaskSelection() {
       taskType: "argument_exploration", 
       frictionType: "selective_friction",
       category: "generative"
+    },
+    {
+      id: 3,
+      title: "Literature Review",
+      type: "Full AI Assistance",
+      description: "Immediate access to AI responses",
+      color: "teal",
+      taskType: "literature_review",
+      frictionType: "full_ai",
+      category: "summative"
     },
     {
       id: 4,
@@ -66,18 +62,7 @@ export default function TaskSelection() {
     }
   ];
 
-  // Randomize task order on component mount
-  useEffect(() => {
-    const shuffled = [...baseTasks].sort(() => Math.random() - 0.5);
-    // Reassign IDs to maintain sequential order
-    const reorderedTasks = shuffled.map((task, index) => ({
-      ...task,
-      id: index + 1
-    }));
-    setRandomizedTasks(reorderedTasks);
-  }, []);
-
-  const tasks = randomizedTasks;
+  const tasks = staticTasks;
 
   const handleStartTask = (task: Task) => {
     // Don't allow clicking on completed tasks
@@ -112,17 +97,20 @@ export default function TaskSelection() {
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold mb-4 text-white">Complete Four Tasks</h1>
           <div className="space-y-4">
-            <div className="flex items-center justify-center space-x-2">
-              <Circle className="w-3 h-3 fill-teal-400 text-teal-400" />
-              <span className="text-lg text-gray-300">
-                <strong>Summative Task:</strong> Literature Review tasks with immediate or reflection-based AI assistance
-              </span>
-            </div>
-            <div className="flex items-center justify-center space-x-2">
-              <Circle className="w-3 h-3 fill-purple-400 text-purple-400" />
-              <span className="text-lg text-gray-300">
-                <strong>Generative Task:</strong> Argument Exploration tasks with immediate or reflection-based AI assistance
-              </span>
+            <div className="text-center text-gray-300 mb-4">
+              <p className="text-sm mb-2">
+                <strong>Task Order:</strong> Friction tasks first (with reflection steps), then full AI assistance tasks
+              </p>
+              <div className="text-xs text-gray-400 flex justify-center space-x-8">
+                <div className="flex items-center space-x-1">
+                  <Circle className="w-3 h-3 fill-teal-400 text-teal-400" />
+                  <span><strong>Summative:</strong> Literature Review</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Circle className="w-3 h-3 fill-purple-400 text-purple-400" />
+                  <span><strong>Generative:</strong> Argument Exploration</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -134,9 +122,7 @@ export default function TaskSelection() {
             const isAvailable = !isCompleted && isNext;
             const isSecondary = task.color === "secondary";
             
-            // Debug logging for each task
-            console.log(`Task ${task.id}: isCompleted=${isCompleted}, isNext=${isNext}, isAvailable=${isAvailable}`, 
-                       `completedTaskIds: [${completedTasks.map(t => t.taskId).join(', ')}]`);
+
             
             return (
               <Card 
@@ -145,9 +131,7 @@ export default function TaskSelection() {
                   isCompleted ? 'border-green-600 bg-green-900/20 cursor-not-allowed' : 
                   isAvailable ? 'hover:border-gray-500 cursor-pointer' : 'opacity-50 cursor-not-allowed'
                 }`}
-                onClick={isAvailable && !isCompleted ? () => handleStartTask(task) : () => {
-                  console.log(`Task ${task.id} clicked but not available. isCompleted=${isCompleted}, isNext=${isNext}`);
-                }}
+                onClick={isAvailable && !isCompleted ? () => handleStartTask(task) : undefined}
               >
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">

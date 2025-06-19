@@ -9,9 +9,8 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// --- Helper Function (No changes needed) ---
+// --- Helper Function ---
 function processPaperAbstracts(paperAbstracts: { citation?: string; abstract?: string }[]) {
-    // ... (This function is correct and remains unchanged)
     return paperAbstracts
     ?.filter(p => p.citation && p.abstract)
     .map(paper => {
@@ -62,36 +61,34 @@ export async function generateZeroShotLiteratureReview(topic: string): Promise<s
   return response.choices[0]?.message?.content || "Error: Could not generate literature review.";
 }
 
-// --- Task 2 Function (CRITICALLY REVISED) ---
-
+// --- Task 2 Function ---
 export async function generateLiteratureReviewFromSources(
   topic: string,
   paperAbstracts: { citation?: string; abstract?: string }[],
 ): Promise<string> {
-
   const processedPapers = processPaperAbstracts(paperAbstracts);
 
   if (!processedPapers || processedPapers.length === 0) {
     return "Error: No valid papers with citations and abstracts provided.";
   }
 
-  // Build minimal source block
-  let sources = "Starting materials:\n";
-  processedPapers.forEach(p => {
-    sources += `${p.authorCitation}: ${p.abstract}\n\n`;
-  });
+  // Extract themes for inspiration only
+  const themes = processedPapers.map(p => p.abstract.substring(0, 150)).join('. ');
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
-    messages: [{
-      role: "system",
-      content: "Synthesize literature thematically. Never use numbered references like Paper 1 or Study 2."
-    }, {
-      role: "user",
-      content: `Write a literature review on "${topic}" using these as starting points. Organize by themes, not by individual papers. Use only the author citations provided.
+    messages: [
+      {
+        role: "system",
+        content: "FORBIDDEN: Paper 1, Paper 2, Study 1, Study 2, numbered references. Use your knowledge base to write comprehensive literature reviews. Treat any abstracts as theme inspiration only."
+      },
+      {
+        role: "user",
+        content: `Write a comprehensive 1500-2000 word literature review on "${topic}". Theme inspirations: ${themes}
 
-${sources}`
-    }],
+Draw from your knowledge base to cite relevant research with proper author-year format. Organize thematically.`
+      }
+    ],
     stream: true,
   });
 

@@ -7,6 +7,9 @@ import { Circle, CheckCircle } from "lucide-react";
 export default function TaskSelection() {
   const { setCurrentStep, setCurrentTask, completedTasks } = useStudyStore();
   const [randomizedTasks, setRandomizedTasks] = useState<any[]>([]);
+  
+  // Debug logging
+  console.log('TaskSelection - completedTasks:', completedTasks);
 
   interface Task {
     id: number;
@@ -129,6 +132,9 @@ export default function TaskSelection() {
             const isNext = task.id === getNextTaskId();
             const isAvailable = !isCompleted && isNext;
             const isSecondary = task.color === "secondary";
+            
+            // Debug logging for each task
+            console.log(`Task ${task.id}: isCompleted=${isCompleted}, isNext=${isNext}, isAvailable=${isAvailable}`);
             
             return (
               <Card 

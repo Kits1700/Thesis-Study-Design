@@ -247,6 +247,19 @@ export default function LiteratureReview() {
               : "Your goal is to create a short literature review on a topic of your choice by directly receiving help from the AI to generate a structured summary"
             }
           </p>
+          
+          {isSelectiveFriction && (
+            <div className="mt-6 bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-blue-300 mb-3">Suggested Approach (not the only way):</h3>
+              <div className="space-y-2 text-sm text-blue-200">
+                <p><strong>1.</strong> Open Google Scholar and search for your topic</p>
+                <p><strong>2.</strong> Find relevant papers and copy their abstracts</p>
+                <p><strong>3.</strong> For citations, paste the DOI into a QuillBot citation generator or similar tool</p>
+                <p><strong>4.</strong> Rank the papers by relevance to your research question</p>
+                <p className="text-blue-300 italic mt-3">Feel free to use any method you prefer to find and organize academic sources.</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {isSelectiveFriction && !isPreparatoryComplete && (

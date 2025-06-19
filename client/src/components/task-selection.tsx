@@ -119,7 +119,7 @@ export default function TaskSelection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
           {tasks.map((task: Task) => {
-            const isCompleted = completedTasks.includes(task.id);
+            const isCompleted = completedTasks.some(t => t.taskId === task.id);
             const isNext = task.id === getNextTaskId();
             const isAvailable = isCompleted || isNext;
             const isSecondary = task.color === "secondary";

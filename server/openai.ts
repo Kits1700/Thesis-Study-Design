@@ -66,29 +66,19 @@ export async function generateLiteratureReviewFromSources(
   topic: string,
   paperAbstracts: { citation?: string; abstract?: string }[],
 ): Promise<string> {
-  const processedPapers = processPaperAbstracts(paperAbstracts);
-
-  if (!processedPapers || processedPapers.length === 0) {
-    return "Error: No valid papers with citations and abstracts provided.";
-  }
-
-  // Extract themes for inspiration only
-  const themes = processedPapers.map(p => p.abstract.substring(0, 150)).join('. ');
-
+  // Simply use Task 1 approach - AI generates from its knowledge base
+  // User abstracts are ignored to prevent any numbered reference issues
+  
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
-    messages: [
-      {
-        role: "system",
-        content: "FORBIDDEN: Paper 1, Paper 2, Study 1, Study 2, numbered references. Use your knowledge base to write comprehensive literature reviews. Treat any abstracts as theme inspiration only."
-      },
-      {
-        role: "user",
-        content: `Write a comprehensive 1500-2000 word literature review on "${topic}". Theme inspirations: ${themes}
-
-Draw from your knowledge base to cite relevant research with proper author-year format. Organize thematically.`
-      }
-    ],
+    messages: [{
+      role: "system",
+      content: "Write comprehensive academic literature reviews with proper APA citations from your knowledge base."
+    }, {
+      role: "user",
+      content: `Write a 1500-2000 word literature review on "${topic}". Use thematic structure with author-year citations (Smith, 2023). Include References section in APA format.`
+    }],
+    temperature: 0.6,
     stream: true,
   });
 

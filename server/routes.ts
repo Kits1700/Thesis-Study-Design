@@ -1,12 +1,21 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertParticipantSchema, insertTaskSchema, insertQuestionnaireSchema } from "@shared/schema";
-import { generateLiteratureReview, generateArgumentExploration } from "./openai";
+import {
+  insertParticipantSchema,
+  insertTaskSchema,
+  insertQuestionnaireSchema,
+} from "@shared/schema";
+import {
+  generateLiteratureReview,
+  generateArgumentExploration,
+} from "./openai";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || "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"
+const openai = new OpenAI({
+  apiKey:
+    process.env.OPENAI_API_KEY ||
+    "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",
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -14,14 +23,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/participant", async (req, res) => {
     try {
       const participantData = insertParticipantSchema.parse(req.body);
-      
+
       // Check if participant already exists
-      const existing = await storage.getParticipant(participantData.participantId);
+      const existing = await storage.getParticipant(
+        participantData.participantId,
+      );
       if (existing) {
         return res.json(existing);
       }
-      
-      const participant = await storage.createParticipant(participantData);
+
+      const participant = await storage.createParticipant({
+        ...participantData,
+        completedAt: participantData.completedAt
+          ? participantData.completedAt.toISOString()
+          : null, // Convert Date to string or set to null
+        currentStep: participantData.currentStep || "", // Ensure currentStep is always a string
+        studyData: participantData.studyData || {}, // Ensure studyData is always included
+      });
       res.json(participant);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
@@ -44,7 +62,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Update participant
   app.patch("/api/participant/:id", async (req, res) => {
     try {
-      const participant = await storage.updateParticipant(req.params.id, req.body);
+      const participant = await storage.updateParticipant(
+        req.params.id,
+        req.body,
+      );
       if (!participant) {
         return res.status(404).json({ message: "Participant not found" });
       }
@@ -58,7 +79,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/task", async (req, res) => {
     try {
       const taskData = insertTaskSchema.parse(req.body);
-      const task = await storage.createTask(taskData);
+      const task = await storage.createTask({
+        ...taskData,
+        topic: taskData.topic ?? null, // Ensure topic is either string or null
+        completedAt: taskData.completedAt
+          ? taskData.completedAt.toISOString()
+          : null, // Convert Date to string or set to null
+        initialThoughts: taskData.initialThoughts ?? null, // Ensure initialThoughts is either string or null
+        counterarguments: taskData.counterarguments ?? null, // Ensure counterarguments is either string or null
+        generatedContent: taskData.generatedContent ?? {}, // Ensure generatedContent is always provided
+      });
       res.json(task);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
@@ -68,7 +98,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get tasks by participant
   app.get("/api/tasks/:participantId", async (req, res) => {
     try {
-      const tasks = await storage.getTasksByParticipant(req.params.participantId);
+      const tasks = await storage.getTasksByParticipant(
+        req.params.participantId,
+      );
       res.json(tasks);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
@@ -96,7 +128,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!topic) {
         return res.status(400).json({ message: "Topic is required" });
       }
-      
+
       const review = await generateLiteratureReview(topic);
       res.json({ content: review });
     } catch (error: any) {
@@ -111,8 +143,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!topic) {
         return res.status(400).json({ message: "Topic is required" });
       }
-      
-      const exploration = await generateArgumentExploration(topic, initialThoughts, counterarguments);
+
+      const exploration = await generateArgumentExploration(
+        topic,
+        initialThoughts,
+        counterarguments,
+      );
       res.json({ content: exploration });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
@@ -127,42 +163,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Topic is required" });
       }
 
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
-      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader("Content-Type", "text/event-stream");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Connection", "keep-alive");
+      res.setHeader("Access-Control-Allow-Origin", "*");
 
-      const systemPrompt = "You are an expert academic researcher. Generate comprehensive, well-structured literature reviews that synthesize current research, identify gaps, and provide scholarly insights. When provided with specific paper abstracts, focus your analysis on those papers while adding broader theoretical context. Format your response as HTML with proper headings and structure.";
-      
+      const systemPrompt =
+        "You are an expert academic researcher. Generate comprehensive, well-structured literature reviews that synthesize current research, identify gaps, and provide scholarly insights. When provided with specific paper abstracts, focus your analysis on those papers while adding broader theoretical context. Format your response as HTML with proper headings and structure.";
+
       let userPrompt = `Generate a comprehensive academic literature review on: "${topic}".`;
-      
+
       // If paper abstracts are provided (selective friction mode), incorporate them
       if (paperAbstracts && paperAbstracts.length > 0) {
-        const validAbstracts = paperAbstracts.filter((p: any) => p.abstract && p.abstract.trim().length > 10);
+        const validAbstracts = paperAbstracts.filter(
+          (p: any) => p.abstract && p.abstract.trim().length > 10,
+        );
         if (validAbstracts.length > 0) {
-          userPrompt += `\n\nIMPORTANT: Base your literature review on these specific paper abstracts provided by the user. Synthesize and analyze these papers as the core foundation of your review:\n\n`;
-          
-          validAbstracts.forEach((paper: any, index: number) => {
-            userPrompt += `Paper ${index + 1}:\n${paper.abstract}\n\n`;
+          userPrompt += `\n\nThe user has provided some relevant paper abstracts to help contextualize this topic. Consider these as a starting point for your literature review:\n\n`;
+
+          validAbstracts.forEach((paper: any) => {
+            const citation = paper.citation ? `(${paper.citation})` : "";
+            userPrompt += `Abstract${citation ? ` ${citation}` : ""}:\n${paper.abstract}\n\n`;
           });
-          
-          userPrompt += `Requirements:
-- Build your literature review primarily around these ${validAbstracts.length} papers
-- Synthesize findings and themes across these specific abstracts
-- Identify connections, contradictions, and patterns among these studies
-- Reference these papers directly in your analysis
-- Add theoretical context and broader field knowledge to enhance the review
-- Use proper academic tone and structure
+
+          userPrompt += `\nUse these abstracts to inform your understanding, but you should incorporate broader academic knowledge of the field.
+
+Requirements:
+- Build a comprehensive, standalone literature review
+- Use proper academic tone and critical synthesis
+- Do NOT refer to "Paper 1", "Paper 2", etc.
+- Do NOT structure the review around the abstracts — use them for insight and examples only
+- Include realistic citations and references (you may use plausible author-date style)
 - Format as HTML with h3, h4, p, ul, li tags
-- Aim for approximately 800-1000 words
-- Provide scholarly analysis and synthesis focusing on these specific studies`;
+- Length: approximately 800–1000 words
+- Include introduction, key debates, methods, findings, and gaps
+`;
         } else {
           userPrompt += `\n\nRequirements:
 - Include introduction, theoretical foundations, current research landscape, methodological approaches, key findings, research gaps, and conclusion
 - Use proper academic tone and structure
 - Include realistic citations and references (you may create plausible academic citations)
 - Format as HTML with h3, h4, p, ul, li tags
-- Aim for approximately 800-1000 words
+- Aim for approximately 2000 - 3000 words
 - Provide scholarly analysis and synthesis of the field`;
         }
       } else {
@@ -171,26 +213,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
 - Use proper academic tone and structure
 - Include realistic citations and references (you may create plausible academic citations)
 - Format as HTML with h3, h4, p, ul, li tags
-- Aim for approximately 800-1000 words
+- Aim for approximately 2000 - 3000 words
 - Provide scholarly analysis and synthesis of the field`;
       }
 
       // Store prompts in task if provided
       if (participantId && taskId) {
         try {
-          const existingTask = await storage.getTasksByParticipant(participantId);
-          const task = existingTask.find(t => t.taskId === taskId);
+          const existingTask =
+            await storage.getTasksByParticipant(participantId);
+          const task = existingTask.find((t) => t.taskId === taskId);
           if (task) {
-            await storage.updateTask(task.id, {
+            await storage.updateTask(Number(task.id), {
               prompts: {
                 systemPrompt,
                 userPrompt,
-                timestamp: new Date().toISOString()
-              }
+                timestamp: new Date().toISOString(),
+              },
             });
           }
         } catch (error) {
-          console.error('Failed to store prompts:', error);
+          console.error("Failed to store prompts:", error);
         }
       }
 
@@ -199,12 +242,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: systemPrompt
+            content: systemPrompt,
           },
           {
             role: "user",
-            content: userPrompt
-          }
+            content: userPrompt,
+          },
         ],
         max_tokens: 2000,
         temperature: 0.7,
@@ -216,11 +259,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const content = chunk.choices[0]?.delta?.content || "";
         if (content) {
           fullContent += content;
-          res.write(`data: ${JSON.stringify({ content: fullContent, partial: true })}\n\n`);
+          res.write(
+            `data: ${JSON.stringify({ content: fullContent, partial: true })}\n\n`,
+          );
         }
       }
 
-      res.write(`data: ${JSON.stringify({ content: fullContent, done: true })}\n\n`);
+      res.write(
+        `data: ${JSON.stringify({ content: fullContent, done: true })}\n\n`,
+      );
       res.end();
     } catch (error: any) {
       res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
@@ -231,15 +278,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Streaming argument exploration generation
   app.post("/api/generate/argument-exploration/stream", async (req, res) => {
     try {
-      const { topic, initialThoughts, counterarguments, participantId, taskId } = req.body;
+      const {
+        topic,
+        initialThoughts,
+        counterarguments,
+        participantId,
+        taskId,
+      } = req.body;
       if (!topic) {
         return res.status(400).json({ message: "Topic is required" });
       }
 
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
-      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader("Content-Type", "text/event-stream");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Connection", "keep-alive");
+      res.setHeader("Access-Control-Allow-Origin", "*");
 
       let userContext = "";
       if (initialThoughts) {
@@ -249,7 +302,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userContext += `\n\nAddress and explore these counterarguments provided by the user: "${counterarguments}"`;
       }
 
-      const systemPrompt = "You are an expert critical thinking facilitator and academic researcher. Generate balanced, nuanced argument explorations that examine multiple perspectives, consider various stakeholders, and provide thoughtful analysis. Format your response as HTML with proper headings and structure.";
+      const systemPrompt =
+        "You are an expert critical thinking facilitator and academic researcher. Generate balanced, nuanced argument explorations that examine multiple perspectives, consider various stakeholders, and provide thoughtful analysis. Format your response as HTML with proper headings and structure.";
       const userPrompt = `Explore multiple perspectives and arguments on the topic: "${topic}".${userContext}
 
 Requirements:
@@ -265,20 +319,21 @@ Requirements:
       // Store prompts in task if provided
       if (participantId && taskId) {
         try {
-          const existingTask = await storage.getTasksByParticipant(participantId);
-          const task = existingTask.find(t => t.taskId === taskId);
+          const existingTask =
+            await storage.getTasksByParticipant(participantId);
+          const task = existingTask.find((t) => t.taskId === taskId);
           if (task) {
-            await storage.updateTask(task.id, {
+            await storage.updateTask(Number(task.id), {
               prompts: {
                 systemPrompt,
                 userPrompt,
                 userInputs: { topic, initialThoughts, counterarguments },
-                timestamp: new Date().toISOString()
-              }
+                timestamp: new Date().toISOString(),
+              },
             });
           }
         } catch (error) {
-          console.error('Failed to store prompts:', error);
+          console.error("Failed to store prompts:", error);
         }
       }
 
@@ -287,12 +342,12 @@ Requirements:
         messages: [
           {
             role: "system",
-            content: systemPrompt
+            content: systemPrompt,
           },
           {
             role: "user",
-            content: userPrompt
-          }
+            content: userPrompt,
+          },
         ],
         max_tokens: 2000,
         temperature: 0.7,
@@ -304,11 +359,15 @@ Requirements:
         const content = chunk.choices[0]?.delta?.content || "";
         if (content) {
           fullContent += content;
-          res.write(`data: ${JSON.stringify({ content: fullContent, partial: true })}\n\n`);
+          res.write(
+            `data: ${JSON.stringify({ content: fullContent, partial: true })}\n\n`,
+          );
         }
       }
 
-      res.write(`data: ${JSON.stringify({ content: fullContent, done: true })}\n\n`);
+      res.write(
+        `data: ${JSON.stringify({ content: fullContent, done: true })}\n\n`,
+      );
       res.end();
     } catch (error: any) {
       res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
@@ -320,7 +379,8 @@ Requirements:
   app.post("/api/questionnaire", async (req, res) => {
     try {
       const questionnaireData = insertQuestionnaireSchema.parse(req.body);
-      const questionnaire = await storage.createQuestionnaire(questionnaireData);
+      const questionnaire =
+        await storage.createQuestionnaire(questionnaireData);
       res.json(questionnaire);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
@@ -337,8 +397,9 @@ Requirements:
         taskId: 999, // Use special ID for final questionnaire
         responses: responses,
       };
-      
-      const questionnaire = await storage.createQuestionnaire(questionnaireData);
+
+      const questionnaire =
+        await storage.createQuestionnaire(questionnaireData);
       res.json(questionnaire);
     } catch (error: any) {
       res.status(400).json({ message: error.message });
@@ -348,7 +409,9 @@ Requirements:
   // Get questionnaires by participant
   app.get("/api/questionnaires/:participantId", async (req, res) => {
     try {
-      const questionnaires = await storage.getQuestionnairesByParticipant(req.params.participantId);
+      const questionnaires = await storage.getQuestionnairesByParticipant(
+        req.params.participantId,
+      );
       res.json(questionnaires);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
@@ -362,9 +425,9 @@ Requirements:
       res.json(allParticipants);
     } catch (error: any) {
       console.error("Error fetching all participants:", error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: "Failed to fetch participants",
-        error: error.message 
+        error: error.message,
       });
     }
   });
@@ -375,9 +438,9 @@ Requirements:
       res.json(allTasks);
     } catch (error: any) {
       console.error("Error fetching all tasks:", error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: "Failed to fetch tasks",
-        error: error.message 
+        error: error.message,
       });
     }
   });
@@ -388,9 +451,9 @@ Requirements:
       res.json(allQuestionnaires);
     } catch (error: any) {
       console.error("Error fetching all questionnaires:", error);
-      res.status(500).json({ 
+      res.status(500).json({
         message: "Failed to fetch questionnaires",
-        error: error.message 
+        error: error.message,
       });
     }
   });
@@ -401,17 +464,21 @@ Requirements:
       const participantId = req.params.participantId;
       const participant = await storage.getParticipant(participantId);
       const tasks = await storage.getTasksByParticipant(participantId);
-      const questionnaires = await storage.getQuestionnairesByParticipant(participantId);
-      
+      const questionnaires =
+        await storage.getQuestionnairesByParticipant(participantId);
+
       const exportData = {
         participant,
         tasks,
         questionnaires,
         exportedAt: new Date().toISOString(),
       };
-      
-      res.setHeader('Content-Type', 'application/json');
-      res.setHeader('Content-Disposition', `attachment; filename=study_data_${participantId}.json`);
+
+      res.setHeader("Content-Type", "application/json");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=study_data_${participantId}.json`,
+      );
       res.json(exportData);
     } catch (error: any) {
       res.status(500).json({ message: error.message });

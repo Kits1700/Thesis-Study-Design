@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 // Initialize environment variables from a .env file
 dotenv.config();
@@ -10,23 +10,25 @@ const openai = new OpenAI({
 });
 
 // --- Helper Function ---
-function processPaperAbstracts(paperAbstracts: { citation?: string; abstract?: string }[]) {
-    return paperAbstracts
-    ?.filter(p => p.citation && p.abstract)
-    .map(paper => {
+function processPaperAbstracts(
+  paperAbstracts: { citation?: string; abstract?: string }[],
+) {
+  return paperAbstracts
+    ?.filter((p) => p.citation && p.abstract)
+    .map((paper) => {
       const citation = paper.citation!;
       const abstract = paper.abstract!;
       const yearMatch = citation.match(/\((\d{4})\)/);
       const year = yearMatch?.[1];
       if (!year) return null;
-      const authorsRaw = citation.split('(')[0].trim();
+      const authorsRaw = citation.split("(")[0].trim();
       const authorLastNames = authorsRaw
         .split(/,\s*(?=[A-Z]\.)/g)
-        .map(a => a.split(',')[0].trim())
+        .map((a) => a.split(",")[0].trim())
         .filter(Boolean);
       const firstAuthor = authorLastNames[0];
       if (!firstAuthor) return null;
-      let authorCitation = '';
+      let authorCitation = "";
       if (authorLastNames.length === 1) {
         authorCitation = `${firstAuthor} (${year})`;
       } else if (authorLastNames.length === 2) {
@@ -37,28 +39,37 @@ function processPaperAbstracts(paperAbstracts: { citation?: string; abstract?: s
       return { year, citation, abstract, authorCitation };
     })
     .filter(Boolean) as {
-      year: string;
-      citation: string;
-      abstract: string;
-      authorCitation: string;
-    }[];
+    year: string;
+    citation: string;
+    abstract: string;
+    authorCitation: string;
+  }[];
 }
 
 // --- Task 1 Function ---
-export async function generateZeroShotLiteratureReview(topic: string): Promise<string> {
+export async function generateZeroShotLiteratureReview(
+  topic: string,
+): Promise<string> {
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
-    messages: [{
-      role: "system",
-      content: "Write comprehensive academic literature reviews with proper APA citations."
-    }, {
-      role: "user",
-      content: `Write a 1500-2000 word literature review on "${topic}". Use thematic structure with author-year citations (Smith, 2023). Include References section in APA format.`
-    }],
+    messages: [
+      {
+        role: "system",
+        content:
+          "Write comprehensive academic literature reviews with proper APA citations.",
+      },
+      {
+        role: "user",
+        content: `Write a 1500-2000 word literature review on "${topic}". Use thematic structure with author-year citations (Smith, 2023). Include References section in APA format.`,
+      },
+    ],
     temperature: 0.6,
   });
 
-  return response.choices[0]?.message?.content || "Error: Could not generate literature review.";
+  return (
+    response.choices[0]?.message?.content ||
+    "Error: Could not generate literature review."
+  );
 }
 
 // --- Task 2 Function ---
@@ -68,16 +79,20 @@ export async function generateLiteratureReviewFromSources(
 ): Promise<string> {
   // Simply use Task 1 approach - AI generates from its knowledge base
   // User abstracts are ignored to prevent any numbered reference issues
-  
+
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
-    messages: [{
-      role: "system",
-      content: "Write comprehensive academic literature reviews with proper APA citations from your knowledge base."
-    }, {
-      role: "user",
-      content: `Write a 1500-2000 word literature review on "${topic}". Use thematic structure with author-year citations (Smith, 2023). Include References section in APA format.`
-    }],
+    messages: [
+      {
+        role: "system",
+        content:
+          "Write comprehensive academic literature reviews with proper APA citations from your knowledge base.",
+      },
+      {
+        role: "user",
+        content: `Write a 1500-2000 word literature review on "${topic}". Use thematic structure with author-year citations (Smith, 2023). Include References section in APA format.`,
+      },
+    ],
     temperature: 0.6,
     stream: true,
   });
@@ -95,8 +110,10 @@ export async function generateLiteratureReview(
   topic: string,
   paperAbstracts?: { citation?: string; abstract?: string }[],
 ): Promise<string> {
-  const hasAbstracts = paperAbstracts?.some(p => p.abstract && p.abstract.trim().length > 10);
-  
+  const hasAbstracts = paperAbstracts?.some(
+    (p) => p.abstract && p.abstract.trim().length > 10,
+  );
+
   if (!hasAbstracts || !paperAbstracts) {
     // Task 1: Generate without specific papers
     return generateZeroShotLiteratureReview(topic);
@@ -112,11 +129,11 @@ export async function generateArgumentExploration(
   counterarguments?: string,
 ): Promise<string> {
   let prompt = `Analyze multiple perspectives on "${topic}".`;
-  
+
   if (initialThoughts) {
     prompt += ` Build on: ${initialThoughts}`;
   }
-  
+
   if (counterarguments) {
     prompt += ` Address: ${counterarguments}`;
   }
@@ -125,16 +142,23 @@ export async function generateArgumentExploration(
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
-    messages: [{
-      role: "system",
-      content: "Provide balanced multi-perspective analysis in HTML format with APA citations."
-    }, {
-      role: "user",
-      content: prompt
-    }],
+    messages: [
+      {
+        role: "system",
+        content:
+          "Provide balanced multi-perspective analysis in HTML format with APA citations.",
+      },
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
     max_tokens: 2000,
     temperature: 0.7,
   });
 
-  return response.choices[0]?.message?.content || "Error generating argument exploration.";
+  return (
+    response.choices[0]?.message?.content ||
+    "Error generating argument exploration."
+  );
 }

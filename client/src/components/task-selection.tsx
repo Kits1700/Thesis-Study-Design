@@ -10,6 +10,7 @@ export default function TaskSelection() {
   
   // Debug logging
   console.log('TaskSelection - completedTasks:', completedTasks);
+  console.log('TaskSelection - completedTaskIds:', completedTasks.map(t => t.taskId));
 
   interface Task {
     id: number;
@@ -134,7 +135,8 @@ export default function TaskSelection() {
             const isSecondary = task.color === "secondary";
             
             // Debug logging for each task
-            console.log(`Task ${task.id}: isCompleted=${isCompleted}, isNext=${isNext}, isAvailable=${isAvailable}`);
+            console.log(`Task ${task.id}: isCompleted=${isCompleted}, isNext=${isNext}, isAvailable=${isAvailable}`, 
+                       `completedTaskIds: [${completedTasks.map(t => t.taskId).join(', ')}]`);
             
             return (
               <Card 
@@ -143,7 +145,9 @@ export default function TaskSelection() {
                   isCompleted ? 'border-green-600 bg-green-900/20' : 
                   isAvailable ? 'hover:border-gray-500 cursor-pointer' : 'opacity-50 cursor-not-allowed'
                 }`}
-                onClick={isAvailable ? () => handleStartTask(task) : undefined}
+                onClick={isAvailable ? () => handleStartTask(task) : () => {
+                  console.log(`Task ${task.id} clicked but not available. isCompleted=${isCompleted}, isNext=${isNext}`);
+                }}
               >
                 <CardContent className="p-6">
                   <div className="flex items-start space-x-4">

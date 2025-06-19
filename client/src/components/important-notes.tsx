@@ -22,6 +22,14 @@ export default function ImportantNotes() {
           <p className="text-gray-300 text-lg max-w-3xl mx-auto">
             Before you begin, please keep these key points in mind to get the most out of your experience
           </p>
+          <div className="mt-6">
+            <Button 
+              onClick={() => setCurrentStep('flowchart')}
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              View Study Flow
+            </Button>
+          </div>
         </div>
 
         <div className="space-y-6 mb-12">

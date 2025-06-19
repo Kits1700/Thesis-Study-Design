@@ -12,16 +12,6 @@ export default function TaskSelection() {
   const tasks = [
     {
       id: 1,
-      title: "Literature Review",
-      type: "Full AI Assistance",
-      description: "Immediate access to AI responses",
-      color: "teal",
-      taskType: "literature_review",
-      frictionType: "full_ai",
-      category: "summative"
-    },
-    {
-      id: 2,
       title: "Literature Review", 
       type: "AI Assistance with Brief Reflection Step",
       description: "Complete preparatory work before accessing AI",
@@ -31,23 +21,33 @@ export default function TaskSelection() {
       category: "summative"
     },
     {
-      id: 3,
-      title: "Argument Exploration",
-      type: "Full AI Assistance", 
+      id: 2,
+      title: "Literature Review",
+      type: "Full AI Assistance",
       description: "Immediate access to AI responses",
-      color: "purple",
-      taskType: "argument_exploration",
+      color: "teal",
+      taskType: "literature_review",
       frictionType: "full_ai",
-      category: "generative"
+      category: "summative"
     },
     {
-      id: 4,
+      id: 3,
       title: "Argument Exploration",
       type: "AI Assistance with Brief Reflection Step",
       description: "Complete preparatory work before accessing AI",
       color: "purple",
       taskType: "argument_exploration", 
       frictionType: "selective_friction",
+      category: "generative"
+    },
+    {
+      id: 4,
+      title: "Argument Exploration",
+      type: "Full AI Assistance", 
+      description: "Immediate access to AI responses",
+      color: "purple",
+      taskType: "argument_exploration",
+      frictionType: "full_ai",
       category: "generative"
     },
   ];

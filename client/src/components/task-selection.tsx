@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useStudyStore } from "@/lib/study-store";
@@ -6,6 +6,7 @@ import { Circle, CheckCircle } from "lucide-react";
 
 export default function TaskSelection() {
   const { setCurrentStep, setCurrentTask, completedTasks } = useStudyStore();
+  const [taskOrder, setTaskOrder] = useState<'friction-first' | 'ai-first'>('friction-first');
 
 
   interface Task {
@@ -19,7 +20,7 @@ export default function TaskSelection() {
     category: string;
   }
 
-  const staticTasks = [
+  const frictionFirstTasks = [
     {
       id: 1,
       title: "Literature Review", 
@@ -62,7 +63,56 @@ export default function TaskSelection() {
     }
   ];
 
-  const tasks = staticTasks;
+  const aiFirstTasks = [
+    {
+      id: 1,
+      title: "Literature Review",
+      type: "Full AI Assistance",
+      description: "Immediate access to AI responses",
+      color: "teal",
+      taskType: "literature_review",
+      frictionType: "full_ai",
+      category: "summative"
+    },
+    {
+      id: 2,
+      title: "Argument Exploration",
+      type: "Full AI Assistance", 
+      description: "Immediate access to AI responses",
+      color: "purple",
+      taskType: "argument_exploration",
+      frictionType: "full_ai",
+      category: "generative"
+    },
+    {
+      id: 3,
+      title: "Literature Review", 
+      type: "AI Assistance with Brief Reflection Step",
+      description: "Complete preparatory work before accessing AI",
+      color: "teal",
+      taskType: "literature_review",
+      frictionType: "selective_friction",
+      category: "summative"
+    },
+    {
+      id: 4,
+      title: "Argument Exploration",
+      type: "AI Assistance with Brief Reflection Step",
+      description: "Complete preparatory work before accessing AI",
+      color: "purple",
+      taskType: "argument_exploration", 
+      frictionType: "selective_friction",
+      category: "generative"
+    }
+  ];
+
+  // Randomize task order on component mount
+  useEffect(() => {
+    const isAiFirst = Math.random() < 0.5;
+    setTaskOrder(isAiFirst ? 'ai-first' : 'friction-first');
+  }, []);
+
+  const tasks = taskOrder === 'friction-first' ? frictionFirstTasks : aiFirstTasks;
 
   const handleStartTask = (task: Task) => {
     // Don't allow clicking on completed tasks
@@ -99,7 +149,9 @@ export default function TaskSelection() {
           <div className="space-y-4">
             <div className="text-center text-gray-300 mb-4">
               <p className="text-sm mb-2">
-                <strong>Task Order:</strong> Friction tasks first (with reflection steps), then full AI assistance tasks
+                <strong>Task Order:</strong> {taskOrder === 'friction-first' 
+                  ? 'Friction tasks first (with reflection steps), then full AI assistance'
+                  : 'Full AI assistance first, then friction tasks (with reflection steps)'}
               </p>
               <div className="text-xs text-gray-400 flex justify-center space-x-8">
                 <div className="flex items-center space-x-1">

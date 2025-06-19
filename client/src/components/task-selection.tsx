@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useStudyStore } from "@/lib/study-store";
@@ -6,10 +6,20 @@ import { Circle, CheckCircle } from "lucide-react";
 
 export default function TaskSelection() {
   const { setCurrentStep, setCurrentTask, completedTasks } = useStudyStore();
+  const [randomizedTasks, setRandomizedTasks] = useState<any[]>([]);
 
-  // Remove auto-start logic - let users click to start tasks
+  interface Task {
+    id: number;
+    title: string;
+    type: string;
+    description: string;
+    color: string;
+    taskType: string;
+    frictionType: string;
+    category: string;
+  }
 
-  const tasks = [
+  const baseTasks = [
     {
       id: 1,
       title: "Literature Review", 
@@ -49,10 +59,23 @@ export default function TaskSelection() {
       taskType: "argument_exploration",
       frictionType: "full_ai",
       category: "generative"
-    },
+    }
   ];
 
-  const handleStartTask = (task: any) => {
+  // Randomize task order on component mount
+  useEffect(() => {
+    const shuffled = [...baseTasks].sort(() => Math.random() - 0.5);
+    // Reassign IDs to maintain sequential order
+    const reorderedTasks = shuffled.map((task, index) => ({
+      ...task,
+      id: index + 1
+    }));
+    setRandomizedTasks(reorderedTasks);
+  }, [baseTasks]);
+
+  const tasks = randomizedTasks;
+
+  const handleStartTask = (task: Task) => {
     // Only allow sequential task completion
     const nextTaskId = completedTasks.length + 1;
     if (task.id !== nextTaskId) {

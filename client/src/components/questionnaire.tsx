@@ -145,7 +145,7 @@ export default function Questionnaire() {
   };
 
   const handleSubmit = () => {
-    console.log("Submitted questionnaire responses:", responses);
+    console.log("Task questionnaire responses for task", currentTask?.id, ":", responses);
 
     if (currentTask?.id) {
       saveQuestionnaireResponse(currentTask.id, responses);

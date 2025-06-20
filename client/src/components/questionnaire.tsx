@@ -10,7 +10,7 @@ export default function Questionnaire() {
     currentTask,
     setCurrentStep,
     completedTasks,
-    saveQuestionnaireResponse,
+    saveQuestionnaireResponse
   } = useStudyStore();
 
   const showFrictionQuestions = currentTask?.id === 1 || currentTask?.id === 2;
@@ -195,21 +195,16 @@ export default function Questionnaire() {
                     <span>1 = {scaleDescriptions[q.id]?.low || "Low"}</span>
                     <span>7 = {scaleDescriptions[q.id]?.high || "High"}</span>
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <Slider
-                      id={q.id}
-                      name={q.id}
-                      min={1}
-                      max={7}
-                      step={1}
-                      value={[responses[q.id]]}
-                      onValueChange={(val) => handleChange(q.id, val[0])}
-                      className="w-full"
-                    />
-                    <span className="text-sm text-gray-300 w-6 text-center">
-                      {responses[q.id]}
-                    </span>
-                  </div>
+                  <Slider
+                    id={q.id}
+                    name={q.id}
+                    min={1}
+                    max={7}
+                    step={1}
+                    value={[responses[q.id]]}
+                    onValueChange={(val) => handleChange(q.id, val[0])}
+                    className="w-full"
+                  />
                 </CardContent>
               </Card>
             ))}

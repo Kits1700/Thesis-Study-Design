@@ -32,10 +32,7 @@ export default function PreStudyQuestionnaire() {
     responses.q2_frequency &&
     responses.q3_knowledge.length &&
     responses.q4_trust1.length &&
-    responses.q5_trust2.length &&
-    responses.q6_age.trim() &&
-    responses.q7_gender.trim() &&
-    responses.q8_field.trim();
+    responses.q5_trust2.length;
 
   const handleSliderChange = (key: string, value: number[]) => {
     setResponses((prev) => ({ ...prev, [key]: value }));

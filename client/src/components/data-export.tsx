@@ -8,6 +8,7 @@ export default function DataExport() {
 
   const downloadData = () => {
     const studyData = exportStudyData();
+    console.log("Exporting study data:", studyData);
     
     // Organize data by participant with clear sections
     const organizedData = {

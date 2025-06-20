@@ -168,6 +168,8 @@ export const useStudyStore = create<StudyStore>()(
           submittedAt: new Date().toISOString()
         };
         
+        console.log("Saving questionnaire response for taskId:", taskId, "Response:", response);
+        
         // Check if response already exists
         const existingIndex = questionnaireResponses.findIndex(r => r.taskId === taskId);
         if (existingIndex >= 0) {
@@ -175,9 +177,12 @@ export const useStudyStore = create<StudyStore>()(
           const updatedResponses = [...questionnaireResponses];
           updatedResponses[existingIndex] = response;
           set({ questionnaireResponses: updatedResponses });
+          console.log("Updated existing response. All responses:", updatedResponses);
         } else {
           // Add new response
-          set({ questionnaireResponses: [...questionnaireResponses, response] });
+          const newResponses = [...questionnaireResponses, response];
+          set({ questionnaireResponses: newResponses });
+          console.log("Added new response. All responses:", newResponses);
         }
       },
 

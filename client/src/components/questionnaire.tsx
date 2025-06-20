@@ -10,24 +10,15 @@ export default function Questionnaire() {
     currentTask,
     setCurrentStep,
     completedTasks,
-    saveQuestionnaireResponse
+    saveQuestionnaireResponse,
   } = useStudyStore();
 
   const showFrictionQuestions = currentTask?.id === 1 || currentTask?.id === 2;
 
   const scaleDescriptions: Record<string, { low: string; high: string }> = {
-    mental_demand: {
-      low: "Very Low",
-      high: "Very High",
-    },
-    usefulness: {
-      low: "Not at all useful",
-      high: "Extremely useful",
-    },
-    satisfaction: {
-      low: "Very Unsatisfied",
-      high: "Very Satisfied",
-    },
+    mental_demand: { low: "Very Low", high: "Very High" },
+    usefulness: { low: "Not at all useful", high: "Extremely useful" },
+    satisfaction: { low: "Very Unsatisfied", high: "Very Satisfied" },
     critical_evaluation: {
       low: "Did not evaluate critically",
       high: "Evaluated very critically",
@@ -36,26 +27,11 @@ export default function Questionnaire() {
       low: "Relied entirely on own ideas",
       high: "Relied entirely on AI's output",
     },
-    dependable: {
-      low: "Not at all",
-      high: "Extremely",
-    },
-    confidence: {
-      low: "Not at all",
-      high: "Extremely",
-    },
-    integrity: {
-      low: "Not at all",
-      high: "Extremely",
-    },
-    reliable: {
-      low: "Not at all",
-      high: "Extremely",
-    },
-    trust: {
-      low: "Not at all",
-      high: "Extremely",
-    },
+    dependable: { low: "Not at all", high: "Extremely" },
+    confidence: { low: "Not at all", high: "Extremely" },
+    integrity: { low: "Not at all", high: "Extremely" },
+    reliable: { low: "Not at all", high: "Extremely" },
+    trust: { low: "Not at all", high: "Extremely" },
     friction_step_value: {
       low: "A frustrating obstacle",
       high: "A helpful step for reflection",
@@ -64,6 +40,9 @@ export default function Questionnaire() {
       low: "No influence",
       high: "Made me much more critical",
     },
+    ux_control: { low: "Strongly disagree", high: "Strongly agree" },
+    ux_clarity: { low: "Strongly disagree", high: "Strongly agree" },
+    ux_responsiveness: { low: "Strongly disagree", high: "Strongly agree" },
   };
 
   const questions = [
@@ -131,9 +110,26 @@ export default function Questionnaire() {
           },
         ]
       : []),
+    {
+      section: "E",
+      title: "User Experience",
+      items: [
+        {
+          id: "ux_control",
+          text: "I felt in control while using the system.",
+        },
+        {
+          id: "ux_clarity",
+          text: "The interface was well organized and clear.",
+        },
+        {
+          id: "ux_responsiveness",
+          text: "The system responded quickly to my actions.",
+        },
+      ],
+    },
   ];
 
-  // State to store slider values for each question
   const [responses, setResponses] = useState<Record<string, number>>(() => {
     const initial: Record<string, number> = {};
     questions.forEach((section) => {
@@ -152,7 +148,6 @@ export default function Questionnaire() {
     console.log("Submitted questionnaire responses:", responses);
 
     if (currentTask?.id) {
-      // Save questionnaire responses for this task
       saveQuestionnaireResponse(currentTask.id, responses);
 
       const totalCompleted = new Set([
@@ -161,7 +156,6 @@ export default function Questionnaire() {
       ]).size;
 
       if (totalCompleted >= 4) {
-        // Check if all tasks are completed
         if (completedTasks.length >= 4) {
           setCurrentStep("final_questionnaire");
         } else {
@@ -195,16 +189,21 @@ export default function Questionnaire() {
                     <span>1 = {scaleDescriptions[q.id]?.low || "Low"}</span>
                     <span>7 = {scaleDescriptions[q.id]?.high || "High"}</span>
                   </div>
-                  <Slider
-                    id={q.id}
-                    name={q.id}
-                    min={1}
-                    max={7}
-                    step={1}
-                    value={[responses[q.id]]}
-                    onValueChange={(val) => handleChange(q.id, val[0])}
-                    className="w-full"
-                  />
+                  <div className="flex items-center space-x-4">
+                    <Slider
+                      id={q.id}
+                      name={q.id}
+                      min={1}
+                      max={7}
+                      step={1}
+                      value={[responses[q.id]]}
+                      onValueChange={(val) => handleChange(q.id, val[0])}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-300 w-6 text-center">
+                      {responses[q.id]}
+                    </span>
+                  </div>
                 </CardContent>
               </Card>
             ))}

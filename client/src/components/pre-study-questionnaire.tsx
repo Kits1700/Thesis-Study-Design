@@ -32,7 +32,10 @@ export default function PreStudyQuestionnaire() {
     responses.q2_frequency &&
     responses.q3_knowledge.length &&
     responses.q4_trust1.length &&
-    responses.q5_trust2.length;
+    responses.q5_trust2.length &&
+    responses.q6_age.trim() &&
+    responses.q7_gender.trim() &&
+    responses.q8_field.trim();
 
   const handleSliderChange = (key: string, value: number[]) => {
     setResponses((prev) => ({ ...prev, [key]: value }));
@@ -56,6 +59,7 @@ export default function PreStudyQuestionnaire() {
       q8_field: responses.q8_field || null,
     };
 
+    console.log("Pre-study questionnaire responses:", formatted);
     saveQuestionnaireResponse(0, formatted);
     setCurrentStep("task_selection");
   };

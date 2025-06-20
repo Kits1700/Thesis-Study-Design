@@ -10,7 +10,7 @@ export default function Questionnaire() {
     currentTask,
     setCurrentStep,
     completedTasks,
-    // saveCompletedTask (removed as it does not exist on StudyStore)
+    saveQuestionnaireResponse
   } = useStudyStore();
 
   const showFrictionQuestions = currentTask?.id === 1 || currentTask?.id === 2;
@@ -152,7 +152,8 @@ export default function Questionnaire() {
     console.log("Submitted questionnaire responses:", responses);
 
     if (currentTask?.id) {
-      // saveCompletedTask(currentTask.id); (removed as it does not exist on StudyStore)
+      // Save questionnaire responses for this task
+      saveQuestionnaireResponse(currentTask.id, responses);
 
       const totalCompleted = new Set([
         ...completedTasks.map((t) => t.taskId),

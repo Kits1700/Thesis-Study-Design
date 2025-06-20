@@ -194,6 +194,7 @@ export default function PreStudyQuestionnaire() {
                   onChange={(e) =>
                     handleInputChange("q8_field", e.target.value)
                   }
+                  required
                 />
               </div>
             </div>

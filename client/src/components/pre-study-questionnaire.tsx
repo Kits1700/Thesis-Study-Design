@@ -59,7 +59,6 @@ export default function PreStudyQuestionnaire() {
       q8_field: responses.q8_field || null,
     };
 
-    console.log("Pre-study questionnaire responses:", formatted);
     saveQuestionnaireResponse(0, formatted);
     setCurrentStep("task_selection");
   };

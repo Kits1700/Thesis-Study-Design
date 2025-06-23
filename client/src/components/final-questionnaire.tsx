@@ -46,7 +46,23 @@ function LikertSlider({
 
 export default function FinalQuestionnaire() {
   const { saveQuestionnaireResponse, setCurrentStep } = useStudyStore();
-  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [responses, setResponses] = useState<Record<string, any>>({
+    // Initialize with default values so they register as responses
+    deepThinking: "",
+    outputQuality: "", 
+    aiDeceptive: "4",
+    aiUnderhanded: "4",
+    aiSuspicious: "4",
+    aiConfident: "4",
+    aiHarmful: "4",
+    aiSecurity: "4",
+    aiIntegrity: "4",
+    aiDependable: "4",
+    aiReliable: "4",
+    aiTrustworthy: "4",
+    workingRelationship: "4",
+    finalThoughts: ""
+  });
 
   const handleSubmit = async () => {
     console.log("Final questionnaire responses:", responses);

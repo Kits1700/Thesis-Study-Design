@@ -4,6 +4,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { HelpCircle } from "lucide-react";
 
 export default function Questionnaire() {
   const {
@@ -48,55 +50,43 @@ export default function Questionnaire() {
   const questionSections = [
     {
       title: "Section A: Task Workload (NASA-TLX)",
-      subtitle: "Source: Hart, S. G., & Staveland, L. E. (1988). Development of NASA-TLX...",
       scale: "1 = Very Low, 7 = Very High",
       items: [
-        { id: "mental_demand", text: "1. How mentally demanding was the task?" },
-        { id: "physical_demand", text: "2. How physically demanding was the task?" },
-        { id: "temporal_demand", text: "3. How hurried or rushed was the pace of the task?" },
-        { id: "performance", text: "4. How successful were you in accomplishing what you were asked to do?" },
-        { id: "effort", text: "5. How hard did you have to work to accomplish your level of performance?" },
-        { id: "frustration", text: "6. How insecure, discouraged, irritated, stressed, and annoyed were you?" },
+        { id: "mental_demand", text: "1. How mentally demanding was the task?", tooltip: "How much mental and perceptual activity was required? Was the task easy or demanding, simple or complex?" },
+        { id: "physical_demand", text: "2. How physically demanding was the task?", tooltip: "How much physical activity was required? Was the task easy or demanding, slack or strenuous?" },
+        { id: "temporal_demand", text: "3. How hurried or rushed was the pace of the task?", tooltip: "How much time pressure did you feel due to the pace at which the tasks or task elements occurred?" },
+        { id: "performance", text: "4. How successful were you in accomplishing what you were asked to do?", tooltip: "How successful do you think you were in accomplishing the goals of the task set by the experimenter?" },
+        { id: "effort", text: "5. How hard did you have to work to accomplish your level of performance?", tooltip: "How hard did you have to work (mentally and physically) to accomplish your level of performance?" },
+        { id: "frustration", text: "6. How insecure, discouraged, irritated, stressed, and annoyed were you?", tooltip: "How insecure, discouraged, irritated, stressed and annoyed versus secure, gratified, content, relaxed and complacent did you feel during the task?" },
       ],
     },
     {
       title: "Section B: Task Usefulness & Satisfaction",
       scale: "1 = Not at all useful/Very Unsatisfied, 7 = Extremely useful/Very Satisfied",
       items: [
-        { id: "usefulness", text: "7. How useful was the AI-generated output for accomplishing your task goal?" },
-        { id: "satisfaction", text: "8. How satisfied are you with the quality of the final output you created?" },
+        { id: "usefulness", text: "7. How useful was the AI-generated output for accomplishing your task goal?", tooltip: "Rate how helpful the AI's response was for completing your assigned task" },
+        { id: "satisfaction", text: "8. How satisfied are you with the quality of the final output you created?", tooltip: "Rate your overall satisfaction with the final result you produced" },
       ],
     },
     {
       title: "Section C: Reliance & Critical Engagement",
       scale: "1 = Not at all/Relied entirely on own ideas, 7 = Very critically/Relied entirely on AI's output",
       items: [
-        { id: "critical_evaluation", text: "9. To what extent did you critically evaluate the AI's response instead of accepting it as correct?" },
-        { id: "reliance", text: "10. Please rate your reliance on the AI's output for this task." },
+        { id: "critical_evaluation", text: "9. To what extent did you critically evaluate the AI's response instead of accepting it as correct?", tooltip: "How much did you question, analyze, or verify the AI's output rather than accepting it at face value?" },
+        { id: "reliance", text: "10. Please rate your reliance on the AI's output for this task.", tooltip: "How much did you depend on the AI's response versus your own knowledge and ideas?" },
       ],
     },
     {
-      title: "Section D: Perceived AI Trustworthiness (TPA)",
-      subtitle: "Source: Jian, J.-Y., Bisantz, A. M., & Drury, C. G. (2000). Foundations for an empirically determined scale of trust in automated systems.",
+      title: "Section D: Perceived AI Trustworthiness",
       scale: "1 = Strongly Disagree, 7 = Strongly Agree",
       items: [
-        { id: "dependable", text: "11. The AI is dependable." },
-        { id: "confident", text: "12. I am confident in the AI." },
-        { id: "integrity", text: "13. The AI has integrity." },
-        { id: "reliable", text: "14. The AI is reliable." },
+        { id: "dependable", text: "11. The AI is dependable.", tooltip: "The AI performs consistently and reliably" },
+        { id: "confident", text: "12. I am confident in the AI.", tooltip: "You feel assured about the AI's capabilities" },
+        { id: "integrity", text: "13. The AI has integrity.", tooltip: "The AI is honest and operates with good intentions" },
+        { id: "reliable", text: "14. The AI is reliable.", tooltip: "The AI produces consistent and accurate results" },
       ],
     },
-    {
-      section: "C",
-      title: "Perceived AI Trustworthiness for This Task",
-      items: [
-        { id: "dependable", text: "The AI is dependable." },
-        { id: "confidence", text: "I am confident in the AI." },
-        { id: "integrity", text: "The AI has integrity." },
-        { id: "reliable", text: "The AI is reliable." },
-        { id: "trust", text: "I can trust the AI." },
-      ],
-    },
+
     ...(showFrictionQuestions
       ? [
           {
@@ -160,14 +150,17 @@ export default function Questionnaire() {
     {
       id: "ux_control",
       text: "18. I felt in control while using the system.",
+      tooltip: "You felt you had agency and could direct the interaction effectively"
     },
     {
       id: "ux_clarity",
       text: "19. The interface was well organized and clear.",
+      tooltip: "The layout and design were easy to understand and navigate"
     },
     {
       id: "ux_responsiveness",
       text: "20. The system responded quickly to my actions.",
+      tooltip: "The system provided timely feedback and responses to your inputs"
     },
   ];
 
@@ -239,9 +232,23 @@ export default function Questionnaire() {
             {section.items.map((q) => (
               <Card key={q.id} className="bg-gray-800 border-gray-700">
                 <CardContent className="p-6">
-                  <Label htmlFor={q.id} className="text-white block mb-1">
-                    {q.text}
-                  </Label>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Label htmlFor={q.id} className="text-white">
+                      {q.text}
+                    </Label>
+                    {q.tooltip && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <HelpCircle className="h-4 w-4 text-gray-400 hover:text-gray-300" />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">
+                            <p>{q.tooltip}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </div>
                   <div className="flex justify-between text-xs text-gray-400 mb-2 px-1 select-none">
                     <span>1 = {scaleDescriptions[q.id]?.low || "Low"}</span>
                     <span>7 = {scaleDescriptions[q.id]?.high || "High"}</span>
@@ -281,9 +288,23 @@ export default function Questionnaire() {
             {frictionQuestions.map((q) => (
               <Card key={q.id} className="bg-gray-800 border-gray-700">
                 <CardContent className="p-6">
-                  <Label htmlFor={q.id} className="text-white block mb-1">
-                    {q.text}
-                  </Label>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Label htmlFor={q.id} className="text-white">
+                      {q.text}
+                    </Label>
+                    {q.tooltip && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <HelpCircle className="h-4 w-4 text-gray-400 hover:text-gray-300" />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">
+                            <p>{q.tooltip}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </div>
                   <p className="text-sm text-gray-400 mb-2">({q.scale})</p>
                   <div className="flex items-center space-x-4">
                     <Slider
@@ -319,9 +340,23 @@ export default function Questionnaire() {
           {uxQuestions.map((q) => (
             <Card key={q.id} className="bg-gray-800 border-gray-700">
               <CardContent className="p-6">
-                <Label htmlFor={q.id} className="text-white block mb-1">
-                  {q.text}
-                </Label>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Label htmlFor={q.id} className="text-white">
+                      {q.text}
+                    </Label>
+                    {q.tooltip && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <HelpCircle className="h-4 w-4 text-gray-400 hover:text-gray-300" />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-xs">
+                            <p>{q.tooltip}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </div>
                 <div className="flex items-center space-x-4">
                   <Slider
                     id={q.id}

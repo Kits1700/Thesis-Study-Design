@@ -138,12 +138,55 @@ export default function Questionnaire() {
     },
   ];
 
+  const frictionQuestions = [
+    {
+      id: "friction_feeling",
+      text: `15. This task required you to ${currentTask?.taskType === 'literature_review' ? 'find 5 abstracts' : 'provide a counter-argument'} before seeing the AI's response. How did this extra step feel to you?`,
+      scale: "1 = A frustrating obstacle, 7 = A helpful step for reflection"
+    },
+    {
+      id: "friction_influence", 
+      text: "16. How did this extra step influence your approach to the AI-generated text?",
+      scale: "1 = No influence, 7 = Made me much more critical of the AI's text"
+    },
+    {
+      id: "friction_engagement",
+      text: "17. Did the extra step help you engage more deeply with the task?",
+      scale: "1 = Not at all, 7 = Very much"
+    },
+  ];
+
+  const uxQuestions = [
+    {
+      id: "ux_control",
+      text: "18. I felt in control while using the system.",
+    },
+    {
+      id: "ux_clarity",
+      text: "19. The interface was well organized and clear.",
+    },
+    {
+      id: "ux_responsiveness",
+      text: "20. The system responded quickly to my actions.",
+    },
+  ];
+
   const [responses, setResponses] = useState<Record<string, number>>(() => {
     const initial: Record<string, number> = {};
     questionSections.forEach((section) => {
       section.items.forEach((item) => {
         initial[item.id] = 4; // default middle value
       });
+    });
+    // Add friction questions if applicable
+    if (showFrictionQuestions) {
+      frictionQuestions.forEach((item) => {
+        initial[item.id] = 4;
+      });
+    }
+    // Add UX questions
+    uxQuestions.forEach((item) => {
+      initial[item.id] = 4;
     });
     return initial;
   });

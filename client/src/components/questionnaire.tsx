@@ -140,7 +140,7 @@ export default function Questionnaire() {
 
   const [responses, setResponses] = useState<Record<string, number>>(() => {
     const initial: Record<string, number> = {};
-    questions.forEach((section) => {
+    questionSections.forEach((section) => {
       section.items.forEach((item) => {
         initial[item.id] = 4; // default middle value
       });
@@ -181,11 +181,17 @@ export default function Questionnaire() {
         Post-Task Questionnaire
       </h1>
 
-      {questions.map((section) => (
-        <div key={section.section} className="mb-10">
+      {questionSections.map((section) => (
+        <div key={section.title} className="mb-10">
           <h2 className="text-xl font-semibold text-gray-200 mb-3">
-            Section {section.section}: {section.title}
+            {section.title}
           </h2>
+          {section.subtitle && (
+            <p className="text-sm text-gray-400 italic mb-2">{section.subtitle}</p>
+          )}
+          {section.scale && (
+            <p className="text-sm text-gray-400 mb-3">({section.scale})</p>
+          )}
           <div className="space-y-6">
             {section.items.map((q) => (
               <Card key={q.id} className="bg-gray-800 border-gray-700">
@@ -218,6 +224,81 @@ export default function Questionnaire() {
           </div>
         </div>
       ))}
+
+      {/* Friction-specific questions for tasks 3 and 4 */}
+      {showFrictionQuestions && (
+        <div className="space-y-4">
+          <div>
+            <h3 className="text-lg font-bold text-white">
+              Section E: Friction-Specific Questions
+            </h3>
+            <p className="text-sm text-gray-400">Only for "friction" tasks</p>
+          </div>
+          <div className="space-y-4">
+            {frictionQuestions.map((q) => (
+              <Card key={q.id} className="bg-gray-800 border-gray-700">
+                <CardContent className="p-6">
+                  <Label htmlFor={q.id} className="text-white block mb-1">
+                    {q.text}
+                  </Label>
+                  <p className="text-sm text-gray-400 mb-2">({q.scale})</p>
+                  <div className="flex items-center space-x-4">
+                    <Slider
+                      id={q.id}
+                      name={q.id}
+                      min={1}
+                      max={7}
+                      step={1}
+                      value={[responses[q.id] || 4]}
+                      onValueChange={(val) => handleChange(q.id, val[0])}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-300 w-6 text-center">
+                      {responses[q.id] || 4}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Section F: User Experience */}
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-lg font-bold text-white">
+            Section F: User Experience
+          </h3>
+          <p className="text-sm text-gray-400">(1 = Strongly Disagree, 7 = Strongly Agree)</p>
+        </div>
+        <div className="space-y-4">
+          {uxQuestions.map((q) => (
+            <Card key={q.id} className="bg-gray-800 border-gray-700">
+              <CardContent className="p-6">
+                <Label htmlFor={q.id} className="text-white block mb-1">
+                  {q.text}
+                </Label>
+                <div className="flex items-center space-x-4">
+                  <Slider
+                    id={q.id}
+                    name={q.id}
+                    min={1}
+                    max={7}
+                    step={1}
+                    value={[responses[q.id] || 4]}
+                    onValueChange={(val) => handleChange(q.id, val[0])}
+                    className="w-full"
+                  />
+                  <span className="text-sm text-gray-300 w-6 text-center">
+                    {responses[q.id] || 4}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
 
       <div className="flex justify-center mt-8">
         <Button onClick={handleSubmit} className="px-8 py-3">

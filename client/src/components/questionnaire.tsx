@@ -115,17 +115,20 @@ export default function Questionnaire() {
     {
       id: "friction_feeling",
       text: `15. This task required you to ${currentTask?.taskType === 'literature_review' ? 'find 5 abstracts' : 'provide a counter-argument'} before seeing the AI's response. How did this extra step feel to you?`,
-      scale: "1 = A frustrating obstacle, 7 = A helpful step for reflection"
+      scale: "1 = A frustrating obstacle, 7 = A helpful step for reflection",
+      tooltip: "Rate whether the required preliminary step felt helpful for reflection or like an unnecessary barrier"
     },
     {
       id: "friction_influence", 
       text: "16. How did this extra step influence your approach to the AI-generated text?",
-      scale: "1 = No influence, 7 = Made me much more critical of the AI's text"
+      scale: "1 = No influence, 7 = Made me much more critical of the AI's text",
+      tooltip: "Consider whether having to complete the preliminary step changed how you evaluated the AI's response"
     },
     {
       id: "friction_engagement",
       text: "17. Did the extra step help you engage more deeply with the task?",
-      scale: "1 = Not at all, 7 = Very much"
+      scale: "1 = Not at all, 7 = Very much",
+      tooltip: "Reflect on whether the preliminary step increased your involvement and thinking about the topic"
     },
   ];
 

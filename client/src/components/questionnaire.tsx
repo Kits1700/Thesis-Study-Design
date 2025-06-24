@@ -108,24 +108,7 @@ export default function Questionnaire() {
           },
         ]
       : []),
-    {
-      section: "E",
-      title: "User Experience",
-      items: [
-        {
-          id: "ux_control",
-          text: "I felt in control while using the system.",
-        },
-        {
-          id: "ux_clarity",
-          text: "The interface was well organized and clear.",
-        },
-        {
-          id: "ux_responsiveness",
-          text: "The system responded quickly to my actions.",
-        },
-      ],
-    },
+
   ];
 
   const frictionQuestions = [
@@ -212,12 +195,13 @@ export default function Questionnaire() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold text-white mb-6">
-        Post-Task Questionnaire
-      </h1>
+    <TooltipProvider>
+      <div className="max-w-3xl mx-auto py-8 px-4">
+        <h1 className="text-2xl font-bold text-white mb-6">
+          Post-Task Questionnaire
+        </h1>
 
-      {questionSections.map((section) => (
+        {questionSections.map((section) => (
         <div key={section.title} className="mb-10">
           <h2 className="text-xl font-semibold text-gray-200 mb-3">
             {section.title}
@@ -382,7 +366,8 @@ export default function Questionnaire() {
         <Button onClick={handleSubmit} className="px-8 py-3">
           Submit
         </Button>
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 }

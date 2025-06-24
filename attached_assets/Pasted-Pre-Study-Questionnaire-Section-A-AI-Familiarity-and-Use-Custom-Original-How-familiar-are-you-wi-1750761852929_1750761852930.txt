@@ -1,0 +1,117 @@
+Pre-Study Questionnaire
+Section A: AI Familiarity and Use (Custom/Original)
+
+How familiar are you with Large Language Models (LLMs)?
+(1 = Not at all familiar, 7 = Extremely familiar)
+
+In the past month, how often have you used an LLM for tasks related to writing, brainstorming, or research?
+(Never / Rarely / Sometimes / Often / Daily)
+
+Please rate your agreement: "I have a great deal of knowledge about LLMs."
+(1 = Strongly Disagree, 7 = Strongly Agree)
+
+Section B: General Trust Propensity
+Source: Yamagishi, T., & Yamagishi, M. (1994). Trust and commitment in the United States and Japan.
+4. In general, I believe that most people can be counted on to do what they say they will do.
+(1 = Strongly Disagree, 7 = Strongly Agree)
+5. I am inclined to trust people until I see evidence to the contrary.
+(1 = Strongly Disagree, 7 = Strongly Agree)
+
+Section C: Demographics (Custom/Original)
+6. What is your age?
+7. What is your gender?
+8. What is your primary field of study or profession?
+
+Questionnaire After Each Task
+Section A: Task Workload (NASA-TLX)
+Source: Hart, S. G., & Staveland, L. E. (1988). Development of NASA-TLX...
+
+How mentally demanding was the task?
+
+How physically demanding was the task?
+
+How hurried or rushed was the pace of the task?
+
+How successful were you in accomplishing what you were asked to do?
+
+How hard did you have to work to accomplish your level of performance?
+
+How insecure, discouraged, irritated, stressed, and annoyed were you?
+(All: 1 = Very Low, 7 = Very High)
+
+Section B: Task Usefulness & Satisfaction (Custom/Original)
+7. How useful was the AI-generated output for accomplishing your task goal?
+8. How satisfied are you with the quality of the final output you created?
+(1 = Not at all useful/Very Unsatisfied, 7 = Extremely useful/Very Satisfied)
+
+Section C: Reliance & Critical Engagement (Custom/Original)
+9. To what extent did you critically evaluate the AI's response instead of accepting it as correct?
+10. Please rate your reliance on the AI's output for this task.
+(1 = Not at all/Relied entirely on own ideas, 7 = Very critically/Relied entirely on AI's output)
+
+Section D: Perceived AI Trustworthiness (TPA)
+Source: Jian, J.-Y., Bisantz, A. M., & Drury, C. G. (2000). Foundations for an empirically determined scale of trust in automated systems.
+11. The AI is dependable.
+12. I am confident in the AI.
+13. The AI has integrity.
+14. The AI is reliable.
+(1 = Strongly Disagree, 7 = Strongly Agree)
+
+Section E: Friction-Specific Questions (Custom/Original; only for "friction" tasks)
+15. This task required you to [find 5 abstracts / provide a counter-argument] before seeing the AI’s response. How did this extra step feel to you?
+(1 = A frustrating obstacle, 7 = A helpful step for reflection)
+16. How did this extra step influence your approach to the AI-generated text?
+(1 = No influence, 7 = Made me much more critical of the AI's text)
+17. Did the extra step help you engage more deeply with the task?
+(1 = Not at all, 7 = Very much)
+
+Section F: User Experience (Custom/Original)
+18. I felt in control while using the system.
+19. The interface was well organized and clear.
+20. The system responded quickly to my actions.
+(1 = Strongly Disagree, 7 = Strongly Agree)
+
+Final Questionnaire (After All Tasks)
+Section A: Comparative Judgment (Friction vs. No Friction) (Custom/Original)
+
+Reflecting on all tasks, which format encouraged you to think more deeply and critically about the subject matter?
+
+The format without the extra "friction" step.
+
+The format with the extra "friction" step.
+
+Both formats encouraged equal depth of thought.
+
+Which format do you believe resulted in a higher quality final output?
+
+The format without friction was much better.
+
+The format without friction was slightly better.
+
+Both formats produced similar quality outputs.
+
+The format with friction was slightly better.
+
+The format with friction was much better.
+
+Section B: Overall Trust & Distrust in the AI (TPA, Two-Factor Structure)
+Sources: Jian, J.-Y., Bisantz, A. M., & Drury, C. G. (2000); Scharowski, N., et al. (2024). To Trust or Distrust Trust Measures.
+Distrust Subscale
+3. The AI is deceptive.
+4. The AI behaves in an underhanded manner.
+5. I am suspicious of the AI’s intent, action, or outputs.
+6. The AI’s actions will have a harmful or injurious outcome.
+Trust Subscale
+7. I am confident in the AI.
+8. The AI provides security.
+9. The AI has integrity.
+10. The AI is dependable.
+11. The AI is reliable.
+12. I can trust the AI.
+(All: 1 = Not at all, 7 = Extremely)
+
+Section C: Final Reflections & Behavioral Intent (Custom/Original)
+13. Overall, how would you describe your final working relationship with the AI across the tasks?
+(1 = I passively accepted what the AI provided, 7 = I actively collaborated with the AI)
+14. Please briefly describe any final thoughts on how the "friction" steps changed your relationship with or reliance on the AI, if at all.
+(Open-ended)

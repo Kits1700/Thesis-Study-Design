@@ -77,7 +77,7 @@ export default function PreStudyQuestionnaire() {
           {/* Section A: Slider-Based Questions */}
           <section className="space-y-6">
             <h3 className="text-xl font-semibold">
-              Section A: Familiarity & Trust (Sliders)
+              Section A: AI Familiarity and Use
             </h3>
 
             {[
@@ -188,7 +188,7 @@ export default function PreStudyQuestionnaire() {
 
               <div className="md:col-span-2">
                 <Label htmlFor="field">
-                  Primary field of study or profession
+                  8. What is your primary field of study or profession?
                 </Label>
                 <Input
                   id="field"

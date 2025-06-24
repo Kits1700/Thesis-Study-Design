@@ -45,37 +45,45 @@ export default function Questionnaire() {
     ux_responsiveness: { low: "Strongly disagree", high: "Strongly agree" },
   };
 
-  const questions = [
+  const questionSections = [
     {
-      section: "A",
-      title: "Task Perception & Usefulness",
+      title: "Section A: Task Workload (NASA-TLX)",
+      subtitle: "Source: Hart, S. G., & Staveland, L. E. (1988). Development of NASA-TLX...",
+      scale: "1 = Very Low, 7 = Very High",
       items: [
-        {
-          id: "mental_demand",
-          text: "How mentally demanding was this task?",
-        },
-        {
-          id: "usefulness",
-          text: "How useful was the AI-generated output for accomplishing your task goal?",
-        },
-        {
-          id: "satisfaction",
-          text: "How satisfied are you with the quality of the final output you created?",
-        },
+        { id: "mental_demand", text: "1. How mentally demanding was the task?" },
+        { id: "physical_demand", text: "2. How physically demanding was the task?" },
+        { id: "temporal_demand", text: "3. How hurried or rushed was the pace of the task?" },
+        { id: "performance", text: "4. How successful were you in accomplishing what you were asked to do?" },
+        { id: "effort", text: "5. How hard did you have to work to accomplish your level of performance?" },
+        { id: "frustration", text: "6. How insecure, discouraged, irritated, stressed, and annoyed were you?" },
       ],
     },
     {
-      section: "B",
-      title: "Reliance & Critical Engagement",
+      title: "Section B: Task Usefulness & Satisfaction",
+      scale: "1 = Not at all useful/Very Unsatisfied, 7 = Extremely useful/Very Satisfied",
       items: [
-        {
-          id: "critical_evaluation",
-          text: "To what extent did you critically evaluate the AI's response instead of accepting it as correct?",
-        },
-        {
-          id: "reliance",
-          text: "Please rate your reliance on the AI's output for this task.",
-        },
+        { id: "usefulness", text: "7. How useful was the AI-generated output for accomplishing your task goal?" },
+        { id: "satisfaction", text: "8. How satisfied are you with the quality of the final output you created?" },
+      ],
+    },
+    {
+      title: "Section C: Reliance & Critical Engagement",
+      scale: "1 = Not at all/Relied entirely on own ideas, 7 = Very critically/Relied entirely on AI's output",
+      items: [
+        { id: "critical_evaluation", text: "9. To what extent did you critically evaluate the AI's response instead of accepting it as correct?" },
+        { id: "reliance", text: "10. Please rate your reliance on the AI's output for this task." },
+      ],
+    },
+    {
+      title: "Section D: Perceived AI Trustworthiness (TPA)",
+      subtitle: "Source: Jian, J.-Y., Bisantz, A. M., & Drury, C. G. (2000). Foundations for an empirically determined scale of trust in automated systems.",
+      scale: "1 = Strongly Disagree, 7 = Strongly Agree",
+      items: [
+        { id: "dependable", text: "11. The AI is dependable." },
+        { id: "confident", text: "12. I am confident in the AI." },
+        { id: "integrity", text: "13. The AI has integrity." },
+        { id: "reliable", text: "14. The AI is reliable." },
       ],
     },
     {

@@ -235,18 +235,18 @@ export default function FinalQuestionnaire() {
                 Distrust Subscale
               </h3>
               {[
-                { key: "aiDeceptive", text: "5. The AI is deceptive." },
+                { key: "aiDeceptive", text: "3. The AI is deceptive." },
                 {
                   key: "aiUnderhanded",
-                  text: "6. The AI behaves in an underhanded manner.",
+                  text: "4. The AI behaves in an underhanded manner.",
                 },
                 {
                   key: "aiSuspicious",
-                  text: "7. I am suspicious of the AI's intent, action, or outputs.",
+                  text: "5. I am suspicious of the AI's intent, action, or outputs.",
                 },
                 {
                   key: "aiHarmful",
-                  text: "8. The AI's actions will have a harmful or injurious outcome.",
+                  text: "6. The AI's actions will have a harmful or injurious outcome.",
                 },
               ].map((item) => (
                 <LikertSlider
@@ -264,12 +264,12 @@ export default function FinalQuestionnaire() {
                 Trust Subscale
               </h3>
               {[
-                { key: "aiConfident", text: "9. I am confident in the AI." },
-                { key: "aiSecurity", text: "10. The AI provides security." },
-                { key: "aiIntegrity", text: "11. The AI has integrity." },
-                { key: "aiDependable", text: "12. The AI is dependable." },
-                { key: "aiReliable", text: "13. The AI is reliable." },
-                { key: "aiTrustworthy", text: "14. I can trust the AI." },
+                { key: "aiConfident", text: "7. I am confident in the AI." },
+                { key: "aiSecurity", text: "8. The AI provides security." },
+                { key: "aiIntegrity", text: "9. The AI has integrity." },
+                { key: "aiDependable", text: "10. The AI is dependable." },
+                { key: "aiReliable", text: "11. The AI is reliable." },
+                { key: "aiTrustworthy", text: "12. I can trust the AI." },
               ].map((item) => (
                 <LikertSlider
                   key={item.key}
@@ -295,7 +295,7 @@ export default function FinalQuestionnaire() {
                 onChange={(value) =>
                   handleResponseChange("workingRelationship", value)
                 }
-                label="15. Overall, how would you describe your final working relationship with the AI across the tasks?"
+                label="13. Overall, how would you describe your final working relationship with the AI across the tasks?"
                 minLabel="Passively accepted"
                 maxLabel="Actively collaborated"
               />
@@ -318,15 +318,15 @@ export default function FinalQuestionnaire() {
               {[
                 {
                   key: "uxControl",
-                  text: "16. I felt in control while using the system.",
+                  text: "14. I felt in control while using the system.",
                 },
                 {
                   key: "uxClarity",
-                  text: "16. The interface was well organized and clear.",
+                  text: "15. The interface was well organized and clear.",
                 },
                 {
-                  key: "uxResponsiveness",
-                  text: "17. The system responded quickly to my actions.",
+                  key: "uxResponsive",
+                  text: "16. The system responded quickly to my actions.",
                 },
               ].map((item) => (
                 <LikertSlider

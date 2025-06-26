@@ -113,22 +113,28 @@ export default function Questionnaire() {
 
   const frictionQuestions = [
     {
-      id: "friction_feeling",
-      text: `15. This task required you to ${currentTask?.taskType === 'literature_review' ? 'find 5 abstracts' : 'provide a counter-argument'} before seeing the AI's response. How did this extra step feel to you?`,
-      scale: "1 = A frustrating obstacle, 7 = A helpful step for reflection",
-      tooltip: "Rate whether the required preliminary step felt helpful for reflection or like an unnecessary barrier"
+      id: "friction_thoughtful_engagement",
+      text: currentTask?.taskType === "literature_review"
+        ? "15. How did completing the preparatory task (ranking abstracts) before accessing the AI's response affect your level of thoughtful engagement with the task?"
+        : "15. How did completing the preparatory task (formulating a counterargument) before accessing the AI's response affect your level of thoughtful engagement with the task?",
+      scale: "1 = It felt like an unnecessary barrier, 7 = It significantly encouraged reflective thinking",
+      tooltip: "Consider whether the preparatory step enhanced your thoughtful engagement with the overall task"
     },
     {
-      id: "friction_influence", 
-      text: "16. How did this extra step influence your approach to the AI-generated text?",
-      scale: "1 = No influence, 7 = Made me much more critical of the AI's text",
-      tooltip: "Consider whether having to complete the preliminary step changed how you evaluated the AI's response"
+      id: "friction_scrutiny_influence",
+      text: currentTask?.taskType === "literature_review"
+        ? "16. To what extent did the preparatory task (ranking abstracts) influence your scrutiny of the AI-generated output?"
+        : "16. To what extent did the preparatory task (formulating a counterargument) influence your scrutiny of the AI-generated output?",
+      scale: "1 = No influence on my scrutiny, 7 = Greatly increased my scrutiny of the AI output",
+      tooltip: "Reflect on whether the preparatory work changed how critically you examined the AI's response"
     },
     {
-      id: "friction_engagement",
-      text: "17. Did the extra step help you engage more deeply with the task?",
-      scale: "1 = Not at all, 7 = Very much",
-      tooltip: "Reflect on whether the preliminary step increased your involvement and thinking about the topic"
+      id: "friction_reasoning_confidence",
+      text: currentTask?.taskType === "literature_review"
+        ? "17. How did the preparatory task (ranking abstracts) influence your confidence in relying on your own reasoning versus the AI's output?"
+        : "17. How did the preparatory task (formulating a counterargument) influence your confidence in relying on your own reasoning versus the AI's output?",
+      scale: "1 = No influence, I relied entirely on the AI, 7 = Greatly increased my confidence in my own reasoning over the AI's output",
+      tooltip: "Consider whether the preparatory step affected your trust in your own judgment versus the AI's recommendations"
     },
   ];
 

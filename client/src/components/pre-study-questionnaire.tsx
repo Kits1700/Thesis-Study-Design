@@ -83,7 +83,7 @@ export default function PreStudyQuestionnaire() {
             {[
               {
                 key: "q1_familiarity",
-                text: "1. How familiar are you with Large Language Models (LLMs)?",
+                text: "1. I am familiar with Large Language Models (LLMs).",
               },
               {
                 key: "q3_knowledge",
@@ -103,13 +103,17 @@ export default function PreStudyQuestionnaire() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs text-gray-400 px-1 select-none">
                     <span>1 = Strongly Disagree</span>
-                    <span className="text-gray-300 font-medium">4 = Neutral</span>
+                    <span className="text-gray-300 font-medium">
+                      4 = Neutral
+                    </span>
                     <span>7 = Strongly Agree</span>
                   </div>
                   <div className="flex items-center space-x-4">
                     <div className="flex-1 relative">
                       <Slider
-                        value={responses[key as keyof typeof responses] as number[]}
+                        value={
+                          responses[key as keyof typeof responses] as number[]
+                        }
                         onValueChange={(v) => handleSliderChange(key, v)}
                         min={1}
                         max={7}
@@ -127,7 +131,11 @@ export default function PreStudyQuestionnaire() {
                       </div>
                     </div>
                     <span className="text-sm text-gray-300 w-8 text-center font-medium bg-gray-700 px-2 py-1 rounded">
-                      {Math.round((responses[key as keyof typeof responses] as number[])[0])}
+                      {Math.round(
+                        (
+                          responses[key as keyof typeof responses] as number[]
+                        )[0],
+                      )}
                     </span>
                   </div>
                 </div>

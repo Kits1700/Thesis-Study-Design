@@ -236,24 +236,38 @@ export default function Questionnaire() {
                       </TooltipProvider>
                     )}
                   </div>
-                  <div className="flex justify-between text-xs text-gray-400 mb-2 px-1 select-none">
-                    <span>1 = {scaleDescriptions[q.id]?.low || "Low"}</span>
-                    <span>7 = {scaleDescriptions[q.id]?.high || "High"}</span>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <Slider
-                      id={q.id}
-                      name={q.id}
-                      min={1}
-                      max={7}
-                      step={1}
-                      value={[responses[q.id]]}
-                      onValueChange={(val) => handleChange(q.id, val[0])}
-                      className="w-full"
-                    />
-                    <span className="text-sm text-gray-300 w-6 text-center">
-                      {responses[q.id]}
-                    </span>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs text-gray-400 px-1 select-none">
+                      <span>1 = {scaleDescriptions[q.id]?.low || "Low"}</span>
+                      <span className="text-gray-300 font-medium">4 = Neutral</span>
+                      <span>7 = {scaleDescriptions[q.id]?.high || "High"}</span>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-1 relative">
+                        <Slider
+                          id={q.id}
+                          name={q.id}
+                          min={1}
+                          max={7}
+                          step={1}
+                          value={[responses[q.id]]}
+                          onValueChange={(val) => handleChange(q.id, val[0])}
+                          className="w-full"
+                        />
+                        <div className="flex justify-between text-xs text-gray-500 mt-1 px-1">
+                          <span>1</span>
+                          <span>2</span>
+                          <span>3</span>
+                          <span className="font-bold text-gray-300">4</span>
+                          <span>5</span>
+                          <span>6</span>
+                          <span>7</span>
+                        </div>
+                      </div>
+                      <span className="text-sm text-gray-300 w-8 text-center font-medium bg-gray-700 px-2 py-1 rounded">
+                        {responses[q.id]}
+                      </span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

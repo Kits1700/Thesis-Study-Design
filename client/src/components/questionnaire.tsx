@@ -267,7 +267,7 @@ export default function Questionnaire() {
         <div className="space-y-4">
           <div>
             <h3 className="text-lg font-bold text-white">
-              Section E: Friction-Specific Questions
+              Section E: Reflection on Extra Step
             </h3>
             <p className="text-sm text-gray-400">Only for "friction" tasks</p>
           </div>

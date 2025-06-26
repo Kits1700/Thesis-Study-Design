@@ -300,21 +300,7 @@ export default function FinalQuestionnaire() {
                 maxLabel="Actively collaborated"
               />
 
-              <div className="space-y-4">
-                <Label className="text-white text-base">
-                  14. Please briefly describe any final thoughts on how the
-                  "friction" steps changed your relationship with or reliance on
-                  the AI, if at all.
-                </Label>
-                <Textarea
-                  value={responses.finalThoughts || ""}
-                  onChange={(e) =>
-                    handleResponseChange("finalThoughts", e.target.value)
-                  }
-                  placeholder="Share your reflections on the friction steps and their impact on your AI interaction..."
-                  className="bg-gray-700 border-gray-600 text-white min-h-24"
-                />
-              </div>
+
             </div>
 
             {/* Section D: UX Reflections */}
@@ -332,7 +318,7 @@ export default function FinalQuestionnaire() {
               {[
                 {
                   key: "uxControl",
-                  text: "15. I felt in control while using the system.",
+                  text: "14. I felt in control while using the system.",
                 },
                 {
                   key: "uxClarity",

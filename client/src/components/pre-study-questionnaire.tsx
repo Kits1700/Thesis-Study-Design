@@ -100,20 +100,37 @@ export default function PreStudyQuestionnaire() {
             ].map(({ key, text }, index) => (
               <div key={key} className="space-y-2">
                 <p className="font-medium">{text}</p>
-                <Slider
-                  value={responses[key as keyof typeof responses] as number[]}
-                  onValueChange={(v) => handleSliderChange(key, v)}
-                  min={1}
-                  max={7}
-                  step={0.1}
-                />
-                <p className="text-sm text-muted-foreground text-center">
-                  Current:{" "}
-                  {Math.round(
-                    (responses[key as keyof typeof responses] as number[])[0],
-                  )}{" "}
-                  (1 = Strongly Disagree, 7 = Strongly Agree)
-                </p>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs text-gray-400 px-1 select-none">
+                    <span>1 = Strongly Disagree</span>
+                    <span className="text-gray-300 font-medium">4 = Neutral</span>
+                    <span>7 = Strongly Agree</span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-1 relative">
+                      <Slider
+                        value={responses[key as keyof typeof responses] as number[]}
+                        onValueChange={(v) => handleSliderChange(key, v)}
+                        min={1}
+                        max={7}
+                        step={0.1}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-gray-500 mt-1 px-1">
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span className="font-bold text-gray-300">4</span>
+                        <span>5</span>
+                        <span>6</span>
+                        <span>7</span>
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-300 w-8 text-center font-medium bg-gray-700 px-2 py-1 rounded">
+                      {Math.round((responses[key as keyof typeof responses] as number[])[0])}
+                    </span>
+                  </div>
+                </div>
               </div>
             ))}
           </section>

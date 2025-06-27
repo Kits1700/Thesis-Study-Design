@@ -64,8 +64,8 @@ export default function FinalQuestionnaire() {
   const { saveQuestionnaireResponse, setCurrentStep } = useStudyStore();
   const [responses, setResponses] = useState<Record<string, any>>({
     // Initialize with default values so they register as responses
-    deepThinking: "",
-    outputQuality: "", 
+    deepThinking: "4",
+    outputQuality: "4", 
     aiDeceptive: "4",
     aiUnderhanded: "4",
     aiSuspicious: "4",
@@ -135,89 +135,23 @@ export default function FinalQuestionnaire() {
                 Section A: Comparative Judgment (Friction vs. No Friction)
               </h2>
 
-              <div className="space-y-4">
-                <Label className="text-white text-base">
-                  1. Reflecting on all tasks, which format encouraged you to
-                  think more deeply and critically about the subject matter?
-                </Label>
-                <RadioGroup
-                  value={responses.deepThinking}
-                  onValueChange={(value) =>
-                    handleResponseChange("deepThinking", value)
-                  }
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="no-friction" id="deep-no-friction" />
-                    <Label htmlFor="deep-no-friction" className="text-gray-300">
-                      The format without the extra "friction" step.
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value="with-friction"
-                      id="deep-with-friction"
-                    />
-                    <Label
-                      htmlFor="deep-with-friction"
-                      className="text-gray-300"
-                    >
-                      The format with the extra "friction" step.
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="equal" id="deep-equal" />
-                    <Label htmlFor="deep-equal" className="text-gray-300">
-                      Both formats encouraged equal depth of thought.
-                    </Label>
-                  </div>
-                </RadioGroup>
-              </div>
+              <LikertSlider
+                name="deepThinking"
+                value={responses.deepThinking || "4"}
+                onChange={(value) => handleResponseChange("deepThinking", value)}
+                label="1. Reflecting on all tasks, which format encouraged you to think more deeply and critically about the subject matter?"
+                minLabel="Format without friction encouraged much deeper thinking"
+                maxLabel="Format with friction encouraged much deeper thinking"
+              />
 
-              <div className="space-y-4">
-                <Label className="text-white text-base">
-                  2. Which format do you believe resulted in a higher quality
-                  final output?
-                </Label>
-                <RadioGroup
-                  value={responses.outputQuality}
-                  onValueChange={(value) =>
-                    handleResponseChange("outputQuality", value)
-                  }
-                >
-                  {[
-                    {
-                      value: "no-friction-much-better",
-                      label: "The format without friction was much better.",
-                    },
-                    {
-                      value: "no-friction-slightly-better",
-                      label: "The format without friction was slightly better.",
-                    },
-                    {
-                      value: "similar",
-                      label: "Both formats produced similar quality outputs.",
-                    },
-                    {
-                      value: "friction-slightly-better",
-                      label: "The format with friction was slightly better.",
-                    },
-                    {
-                      value: "friction-much-better",
-                      label: "The format with friction was much better.",
-                    },
-                  ].map((opt) => (
-                    <div
-                      className="flex items-center space-x-2"
-                      key={opt.value}
-                    >
-                      <RadioGroupItem value={opt.value} id={opt.value} />
-                      <Label htmlFor={opt.value} className="text-gray-300">
-                        {opt.label}
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </div>
+              <LikertSlider
+                name="outputQuality"
+                value={responses.outputQuality || "4"}
+                onChange={(value) => handleResponseChange("outputQuality", value)}
+                label="2. Which format do you believe resulted in a higher quality final output?"
+                minLabel="Format without friction produced much higher quality"
+                maxLabel="Format with friction produced much higher quality"
+              />
             </div>
 
             {/* Section B: Trust & Distrust */}

@@ -77,6 +77,9 @@ export default function FinalQuestionnaire() {
     aiReliable: "4",
     aiTrustworthy: "4",
     workingRelationship: "4",
+    uxControl: "4",
+    uxClarity: "4",
+    uxResponsiveness: "4",
     finalThoughts: ""
   });
 
@@ -291,7 +294,7 @@ export default function FinalQuestionnaire() {
                   text: "15. The interface was well organized and clear.",
                 },
                 {
-                  key: "uxResponsive",
+                  key: "uxResponsiveness",
                   text: "16. The system responded quickly to my actions.",
                 },
               ].map((item) => (

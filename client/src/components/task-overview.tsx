@@ -14,10 +14,11 @@ export default function TaskOverview() {
             Encouraging Thought Before Completion
           </h1>
           <h2 className="text-xl md:text-2xl text-gray-300 mb-3">
-            The Role of Friction in LLM - Assisted Tasks
+            The Role of Friction in AI - Assisted Tasks
           </h2>
           <p className="text-gray-400 italic text-lg">
-            Exploring how reflective pauses influence user engagement and critical thinking in Human LLM interactions
+            Exploring how reflective pauses influence user engagement and
+            critical thinking in Human LLM interactions
           </p>
         </div>
 
@@ -25,8 +26,8 @@ export default function TaskOverview() {
         <div className="bg-gray-800 border border-gray-700 rounded-lg p-8 mb-8">
           <h3 className="text-xl font-semibold mb-4">What you'll do</h3>
           <p className="text-gray-300 mb-8">
-            You'll complete two types of tasks with different levels of LLM assistance to help us understand 
-            how friction affects thinking.
+            You'll complete two types of tasks with different levels of LLM
+            assistance to help us understand how friction affects thinking.
           </p>
 
           {/* Task Types */}
@@ -37,7 +38,9 @@ export default function TaskOverview() {
               </div>
               <div>
                 <h4 className="font-semibold text-white">Literature Review</h4>
-                <p className="text-gray-400 text-sm">Generate comprehensive reviews with AI assistance</p>
+                <p className="text-gray-400 text-sm">
+                  Generate comprehensive reviews with AI assistance
+                </p>
               </div>
             </div>
             <div className="bg-gray-700 border border-gray-600 rounded-lg p-4 flex items-center space-x-3">
@@ -45,8 +48,12 @@ export default function TaskOverview() {
                 2
               </div>
               <div>
-                <h4 className="font-semibold text-white">Argument Exploration</h4>
-                <p className="text-gray-400 text-sm">Develop complex arguments with AI support</p>
+                <h4 className="font-semibold text-white">
+                  Argument Exploration
+                </h4>
+                <p className="text-gray-400 text-sm">
+                  Develop complex arguments with AI support
+                </p>
               </div>
             </div>
           </div>
@@ -59,13 +66,17 @@ export default function TaskOverview() {
                 <div className="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center text-black font-bold text-xs">
                   1
                 </div>
-                <span className="text-gray-300">Full LLM assistance with immediate access</span>
+                <span className="text-gray-300">
+                  Full LLM assistance with immediate access
+                </span>
               </div>
               <div className="flex items-center space-x-3">
                 <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
                   2
                 </div>
-                <span className="text-gray-300">LLM assistance with brief reflection step</span>
+                <span className="text-gray-300">
+                  LLM assistance with brief reflection step
+                </span>
               </div>
             </div>
           </div>
@@ -98,7 +109,7 @@ export default function TaskOverview() {
 
         {/* CTA Section */}
         <div className="text-center">
-          <Button 
+          <Button
             onClick={() => setCurrentStep("important_notes")}
             className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 text-lg rounded-lg mb-3"
           >

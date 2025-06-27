@@ -62,8 +62,10 @@ export default function FinalQuestionnaire() {
   const { saveQuestionnaireResponse, setCurrentStep } = useStudyStore();
   const [responses, setResponses] = useState<Record<string, any>>({
     // Initialize with default values so they register as responses
-    deepThinking: "4",
-    outputQuality: "4", 
+    deepThinkingNoFriction: "4",
+    deepThinkingWithFriction: "4",
+    outputQualityNoFriction: "4",
+    outputQualityWithFriction: "4",
     aiDeceptive: "4",
     aiUnderhanded: "4",
     aiSuspicious: "4",
@@ -93,8 +95,10 @@ export default function FinalQuestionnaire() {
 
   const isFormValid = () => {
     const requiredFields = [
-      "deepThinking",
-      "outputQuality",
+      "deepThinkingNoFriction",
+      "deepThinkingWithFriction",
+      "outputQualityNoFriction",
+      "outputQualityWithFriction",
       "workingRelationship",
       "aiDeceptive",
       "aiUnderhanded",
@@ -133,23 +137,53 @@ export default function FinalQuestionnaire() {
                 Section A: Comparative Judgment (Friction vs. No Friction)
               </h2>
 
-              <LikertSlider
-                name="deepThinking"
-                value={responses.deepThinking || "4"}
-                onChange={(value) => handleResponseChange("deepThinking", value)}
-                label="1. Reflecting on all tasks, which format encouraged you to think more deeply and critically about the subject matter?"
-                minLabel="Format without friction encouraged much deeper thinking"
-                maxLabel="Format with friction encouraged much deeper thinking"
-              />
+              <div className="space-y-6">
+                <h3 className="text-lg font-medium text-white">
+                  1. Rate how much each format encouraged you to think deeply and critically:
+                </h3>
+                
+                <LikertSlider
+                  name="deepThinkingNoFriction"
+                  value={responses.deepThinkingNoFriction || "4"}
+                  onChange={(value) => handleResponseChange("deepThinkingNoFriction", value)}
+                  label="The format WITHOUT the extra 'friction' step."
+                  minLabel="Did not encourage at all"
+                  maxLabel="Encouraged very much"
+                />
 
-              <LikertSlider
-                name="outputQuality"
-                value={responses.outputQuality || "4"}
-                onChange={(value) => handleResponseChange("outputQuality", value)}
-                label="2. Which format do you believe resulted in a higher quality final output?"
-                minLabel="Format without friction produced much higher quality"
-                maxLabel="Format with friction produced much higher quality"
-              />
+                <LikertSlider
+                  name="deepThinkingWithFriction"
+                  value={responses.deepThinkingWithFriction || "4"}
+                  onChange={(value) => handleResponseChange("deepThinkingWithFriction", value)}
+                  label="The format WITH the extra 'friction' step."
+                  minLabel="Did not encourage at all"
+                  maxLabel="Encouraged very much"
+                />
+              </div>
+
+              <div className="space-y-6">
+                <h3 className="text-lg font-medium text-white">
+                  2. Rate the quality of the final output you produced with each format:
+                </h3>
+                
+                <LikertSlider
+                  name="outputQualityNoFriction"
+                  value={responses.outputQualityNoFriction || "4"}
+                  onChange={(value) => handleResponseChange("outputQualityNoFriction", value)}
+                  label="The output from the format WITHOUT friction."
+                  minLabel="Very Low Quality"
+                  maxLabel="Very High Quality"
+                />
+
+                <LikertSlider
+                  name="outputQualityWithFriction"
+                  value={responses.outputQualityWithFriction || "4"}
+                  onChange={(value) => handleResponseChange("outputQualityWithFriction", value)}
+                  label="The output from the format WITH friction."
+                  minLabel="Very Low Quality"
+                  maxLabel="Very High Quality"
+                />
+              </div>
             </div>
 
             {/* Section B: Trust & Distrust */}

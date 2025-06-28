@@ -34,14 +34,7 @@ export default function Questionnaire() {
     integrity: { low: "Not at all", high: "Extremely" },
     reliable: { low: "Not at all", high: "Extremely" },
     trust: { low: "Not at all", high: "Extremely" },
-    friction_step_value: {
-      low: "A frustrating obstacle",
-      high: "A helpful step for reflection",
-    },
-    friction_step_impact: {
-      low: "No influence",
-      high: "Made me much more critical",
-    },
+
     ux_control: { low: "Strongly disagree", high: "Strongly agree" },
     ux_clarity: { low: "Strongly disagree", high: "Strongly agree" },
     ux_responsiveness: { low: "Strongly disagree", high: "Strongly agree" },

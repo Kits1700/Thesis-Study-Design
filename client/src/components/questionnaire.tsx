@@ -20,7 +20,7 @@ export default function Questionnaire() {
     saveQuestionnaireResponse,
   } = useStudyStore();
 
-  const showFrictionQuestions = currentTask?.id === 1 || currentTask?.id === 2;
+  const showFrictionQuestions = currentTask?.id === 3 || currentTask?.id === 4;
 
   const scaleDescriptions: Record<string, { low: string; high: string }> = {
     mental_demand: { low: "Very Low", high: "Very High" },

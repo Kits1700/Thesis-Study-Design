@@ -137,6 +137,7 @@ npm run db:push
 
 ## Changelog
 - July 18, 2025. Task order changed: friction tasks (1-2) first, non-friction tasks (3-4) second
+- July 18, 2025. Task order reverted: non-friction tasks (1-2) first, friction tasks (3-4) second
 - July 17, 2025. Task order finalized: non-friction tasks (1-2) first, friction tasks (3-4) second
 - July 8, 2025. Task order changed: friction tasks (1-2) first, non-friction tasks (3-4) second
 - June 30, 2025. Task order reverted: non-friction tasks (1-2) first, friction tasks (3-4) second

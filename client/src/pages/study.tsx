@@ -12,6 +12,7 @@ import Questionnaire from "@/components/questionnaire";
 import FinalQuestionnaire from "@/components/final-questionnaire";
 import CompletionScreen from "@/components/completion-screen";
 import HelpTooltip from "@/components/ui/help-tooltip";
+import MusicPlayer from "@/components/music-player";
 
 export default function StudyPage() {
   const { 
@@ -56,7 +57,12 @@ export default function StudyPage() {
       case "pre_study_questionnaire":
         return <PreStudyQuestionnaire />;
       case "task_selection":
-        return <TaskSelection />;
+        return (
+          <div>
+            <MusicPlayer />
+            <TaskSelection />
+          </div>
+        );
       case "literature_review":
         return <LiteratureReview />;
       case "argument_exploration":

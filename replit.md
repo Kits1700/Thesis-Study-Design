@@ -28,9 +28,10 @@ The application follows a modern full-stack architecture:
 
 ### Frontend Architecture
 - **Pages**: Study workflow, admin dashboard, response viewer
-- **Components**: Task interfaces, questionnaires, progress tracking
+- **Components**: Task interfaces, questionnaires, progress tracking, music player
 - **State Management**: Centralized study state with local persistence
 - **UI Library**: shadcn/ui components with consistent design system
+- **Music Integration**: Background audio with vibe selection and volume controls
 
 ### Backend Architecture
 - **API Routes**: Participant management, task handling, response collection
@@ -136,6 +137,7 @@ npm run db:push
 ```
 
 ## Changelog
+- July 29, 2025. Added music player feature with vibe selection (indie, carnatic, mellow, lo-fi) and audio controls
 - July 18, 2025. Task order changed: friction tasks (1-2) first, non-friction tasks (3-4) second
 - July 18, 2025. Task order reverted: non-friction tasks (1-2) first, friction tasks (3-4) second
 - July 17, 2025. Task order finalized: non-friction tasks (1-2) first, friction tasks (3-4) second

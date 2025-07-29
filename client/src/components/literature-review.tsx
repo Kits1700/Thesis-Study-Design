@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useStudyStore } from "@/lib/study-store";
 import { apiRequest } from "@/lib/queryClient";
 import { Loader2, RefreshCw, CheckCircle, GripVertical, Download } from "lucide-react";
+import MusicPlayer from "@/components/music-player";
 
 export default function LiteratureReview() {
   const { currentTask, setCurrentStep, participantId, markTaskComplete } = useStudyStore();
@@ -234,6 +235,8 @@ export default function LiteratureReview() {
   return (
     <div className="min-h-screen bg-gray-900 py-8 px-6">
       <div className="max-w-4xl mx-auto">
+        <MusicPlayer />
+        
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2 text-white">
             Task {currentTask?.id}: Literature Review{" "}
